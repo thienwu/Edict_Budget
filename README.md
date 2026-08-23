@@ -1,6 +1,6 @@
 # edictbudget
 
-<https://github.com/thienwu/Edict-Budget>
+<https://github.com/thienwu/Edict_Budget>
 
 *Tiếng Việt (bản chính) · [English](README.en.md)*
 
@@ -12,6 +12,32 @@ ED_Alloc: no free edicts
 ```
 
 Không cần SourceMod. Không mở rộng giới hạn entity của engine.
+
+---
+
+## 📌 Trạng thái — 23/08/2026: **đã đạt giới hạn**
+
+Dự án tuyên bố dừng việc tìm thêm chỗ cắt. Bốn cơ chế đang chạy đã lấy **hết những gì lấy
+được mà không phải trả giá bằng thứ người chơi nhìn thấy hoặc chạm vào**.
+
+Ba mặt trận đã đóng, có bằng chứng:
+
+| hướng | kết quả |
+|---|---|
+| `noedict` | trạng thái chỉ sống sót ngoài entity qua **đúng ba cửa** (`LightStyle`, `StaticDecal`, `EmitAmbientSound`). Hai cửa đầu **đã dùng**, cửa ba **bị cấm** vì entity tự nhét `entindex` vào gói tin. **Không có cửa thứ tư.** |
+| `swap` | quét **108 × 549** cặp lớp ⇒ **đúng một cặp** dùng được |
+| `nonetkill` / `killent` | **tập rỗng** (chứng minh bằng phản chứng), và `killent` **bị bác bỏ** vì bộ điều kiện chưa bao giờ hỏi entity **có va chạm không** — xem dưới |
+
+Cái lớn nhất còn nhìn thấy được — `phys_bone_follower` ≈ **587 edict** — **cấm vĩnh viễn**,
+và chính tài liệu Valve chứng thực lý do.
+
+📖 Hai tài liệu quan trọng nhất nếu bạn muốn **dùng lại** hoặc **kiểm lại** công trình này:
+
+- 🔑 [**docs/06-dia-chi.md**](docs/06-dia-chi.md) — **toàn bộ địa chỉ dịch ngược đã xác
+  minh** cho từng tính năng: RVA, số hiệu vtable slot, chuỗi neo, phiên bản game và md5
+  của nhị phân tham chiếu, cùng **cách suy lại tất cả** sau khi Valve cập nhật.
+- 🛑 [**docs/07-het-huong.md**](docs/07-het-huong.md) — mọi hướng đã tìm, đã đo, đã bác bỏ,
+  và **những gì còn chưa chắc chắn**.
 
 ---
 
@@ -122,6 +148,10 @@ gốc của Valve, map finale, map Versus, hay map của tác giả khác.
 - **Chưa test với đông người chơi.** Hầu hết phép đo có 1–4 người.
 - Sai số công thức đo được là **2–6%, luôn thiên về cao**. Dùng làm cận trên và bảng
   xếp hạng, **không dùng làm phán quyết** map nào sẽ chết.
+- **Ba lớp `noedict` thêm ngày 21–22/08 chưa nghiệm thu dài hạn.** Đã biết là chúng chạy
+  được và không mất gì nhìn thấy được; **chưa** biết chúng hành xử ra sao trên nhiều chiến
+  dịch có độ phức tạp khác nhau, hay sau nhiều tuần vận hành. `func_nav_blocker` để **tắt**
+  và chưa chạy lần nào. Chi tiết: [docs/07-het-huong.md](docs/07-het-huong.md) mục 9.
 
 Ai dùng plugin này nên bật `mapclear=1` và `heartbeat=300` (chỉ ghi log, không đụng
 entity nào) chạy vài ngày trước, đọc log, rồi mới bật các cơ chế can thiệp.
@@ -241,6 +271,30 @@ ch04_pripyat03:
   Kiem bang mat: khong mat decal, anh sang dung.
 ```
 
+#### Danh sách lớp hiện tại
+
+Sáu lớp đang bật trong `noedict.txt`, cộng một lớp **để tắt**:
+
+| lớp | số cái / 17 map | trạng thái |
+|---|---|---|
+| `infodecal` | 853 riêng `ch04_pripyat03` | 🟢 chạy từ đầu |
+| `light`, `light_spot` | — | 🟢 chạy từ đầu |
+| `path_track` | 25 trên `the_hive_m4` | 🟢 chạy từ đầu |
+| `func_areaportal` | 179 | 🟢 chạy thật từ 21/08 |
+| `info_zombie_spawn` | 86 | 🟢 chạy thật từ 22/08 |
+| `func_nav_blocker` | 64 | ⏸️ **để tắt** — bỏ `#` để bật, và **phải test riêng một mình** |
+
+> ⚠️ **Ba lớp cuối chưa nghiệm thu dài hạn.** Đã biết là chúng **chạy được** và **không mất
+> gì nhìn thấy được**; **chưa** biết chúng hành xử ra sao trên nhiều chiến dịch có độ phức
+> tạp khác nhau, hay sau nhiều tuần vận hành. `func_nav_blocker` có triệu chứng **không
+> nhìn thấy được** — phải quan sát **hành vi AI**. Chi tiết ở
+> [docs/07-het-huong.md](docs/07-het-huong.md) mục 9.
+
+> 🛑 **Vá theo VTABLE, không theo CLASSNAME.** Có **20 nhóm** classname dùng chung một
+> vtable — bật một tên có thể **kéo theo cả nhóm**. Và **8 lớp** hiện giải sai vtable, liệt
+> kê ở [docs/06-dia-chi.md](docs/06-dia-chi.md). **Đừng thêm lớp mới** trước khi đọc đủ sáu
+> điều kiện ghi trong chính `noedict.txt`.
+
 ---
 
 ### 4. `swap` — đổi lớp entity sang lớp rẻ hơn
@@ -358,6 +412,43 @@ Entity có classname engine không nhận sẽ **không được sinh ra**, khô
 Nhưng nó **giết luôn `Spawn()`/`Activate()`** — và với `infodecal`/`light` thì **toàn bộ giá trị nằm ở tác dụng phụ lúc spawn**: dán decal, đặt lightstyle. Kết quả: **mất decal, sai ánh sáng**.
 
 Khác biệt sinh tử với `noedict`: `noedict` vẫn tạo entity, vẫn chạy `Spawn()`/`Activate()`, chỉ không cấp edict.
+
+### `killent` — xoá hẳn entity khỏi map: **hướng lớn nhất, và đã bác bỏ**
+
+Đây là hướng **đo được nhiều nhất** của cả dự án: **6200 edict** trên 16 map, riêng
+`the_hive_m4` **1227** — trong khi biên độ sống/chết của chính map đó chỉ **122**.
+
+Cơ chế đã dịch ngược xong: trả `false` ở `IMapEntityFilter::ShouldCreateEntity` (**vtable
+slot 0**) của cả ba bộ lọc. Entity **không tồn tại**. Kèm một bộ điều kiện tự động năm
+tầng để chọn cái nào được xoá.
+
+**Lỗ hổng chí mạng: bộ điều kiện chưa bao giờ hỏi entity có VA CHẠM hay không.**
+
+Tài liệu Valve, [`prop_dynamic`](https://developer.valvesoftware.com/wiki/Prop_dynamic):
+
+> **Collisions (solid)**: `0` Not solid · `2` Use bounding box · **`6` Use VPhysics (default)**
+
+Một `prop_dynamic` **không ghi khoá `solid`** vẫn là **vật đặc**.
+
+Đo lại trên **60 file BSP gốc của Valve**: **809 `prop_dynamic` ĐẶC** lọt qua cả năm điều
+kiện — riêng `left4dead2/maps` là **472/602 = 78%**. Trong đó có **30 lan can cầu**
+(`bridge_rail`), **12 tường hầm mộ** (`crypts_wall`), **89 cổng**, **39 rào chắn bê
+tông/gỗ**. Xoá 30 lan can cầu ⇒ người chơi **rơi khỏi cầu**.
+
+Ba xác nhận từ bên ngoài:
+
+1. **Valve nói thẳng rằng cắt edict và mất va chạm là cùng một việc.** Khoá
+   `DisableBoneFollowers`: *"`phys_bone_followers` **can quickly eat up the edict count**...
+   **This will however make the collision model no longer function**."*
+2. **SourceMod đã GỠ BỎ** cơ chế sửa lump ở `LevelInit`
+   ([PR #1534](https://github.com/alliedmodders/sourcemod/pull/1534)) — *"some maps have
+   over 16MB of entity data"*.
+3. **15 năm cộng đồng dùng Stripper:Source chưa bao giờ xoá theo LỚP** — họ xoá từng cá
+   thể theo `hammerid`, và luôn **sửa nav mesh kèm theo**. Dự án này bị cấm sửa BSP ⇒
+   **không bao giờ bù được nav** ⇒ bot kẹt, Director tính sai đường.
+
+Điều kiện tối thiểu nếu ai muốn làm tiếp — cùng phần còn lại đo được (**~4450** thay vì
+6200) — ghi ở [docs/07-het-huong.md](docs/07-het-huong.md) mục 4.
 
 ### `mapclear` — dọn entity lúc chuyển màn
 
@@ -495,16 +586,34 @@ Mọi kết luận trong tài liệu này đều kèm số đo từ máy chủ t
 
 ## Ai viết cái này
 
-**Toàn bộ mã nguồn do AI viết: Claude (Anthropic), chạy trong Claude Code.**
+Dự án là kết quả của **hai phần việc khác nhau, không tách rời được**.
 
-Không phải một phần, không phải "có AI hỗ trợ" — là toàn bộ: thiết kế, đọc ngược
-`server.dll`/`engine.dll`, viết mã, đo đạc, và mọi ghi chú trong repo này.
+### Ý tưởng, bài toán và định hướng — **thienwu**, người vận hành máy chủ thật
 
-Người dùng là **người vận hành máy chủ thật**. Họ đặt bài toán, chạy thử, chụp log,
-phát hiện lỗi, và **bác bỏ nhiều kết luận sai của AI**. Trong mã nguồn có nhiều đoạn
-ghi thẳng *"SAI, đã sửa"* — đó chính là dấu vết của những lần bị bác bỏ.
+Bài toán đến từ một sự cố thật trên máy chủ đang chạy, không phải từ một bài tập. Người
+vận hành quyết định mọi hướng đi lớn — và quan trọng hơn, quyết định **những hướng KHÔNG
+được đi**:
 
-Nói rõ điều này vì hai lý do:
+- **cấm hướng 4096**, kèm luật tự kiểm gọn một câu: *"Nó có cần `bigarray` không?"*
+- **cấm động vào họ `phys` / `prop_physics`** — vì mất vật lý là đi xuyên qua vật thể
+- **cấm sửa file BSP** — chỉ được **đọc** để đo
+- yêu cầu **CÔNG THỨC CHUNG**: phải áp dụng cho **mọi map**, kể cả map chưa từng thấy, và
+  plugin phải **tự kiểm lúc chạy**, không dùng danh sách viết tay
+- **cảnh báo trước rằng hướng `killent` nguy hiểm** — dẫn thẳng tới việc tìm ra lỗ hổng
+  **va chạm** mà bộ điều kiện tự động đã bỏ sót hoàn toàn
+
+Và họ chạy thử, chụp log, đo trên máy chủ thật, rồi **bác bỏ nhiều kết luận sai của AI**.
+Trong mã nguồn có nhiều đoạn ghi thẳng *"SAI, đã sửa"* — đó chính là dấu vết của những
+lần bị bác bỏ đó.
+
+### Dịch ngược, viết mã, đo đạc và tài liệu — **Claude (Anthropic)**, chạy trong Claude Code
+
+Đọc ngược `server.dll` / `engine.dll` / `client.dll`, thiết kế và viết toàn bộ mã nguồn,
+chạy các phép đo, và viết mọi tài liệu trong repo này.
+
+### Vì sao nói rõ cách chia này
+
+Vì hai lý do:
 
 1. **Ai đọc mã nên biết nó đến từ đâu** để tự quyết định mức độ tin tưởng.
 2. **Nhiều kết luận rút ra từ đọc ngược nhị phân, không phải từ tài liệu chính thức.**

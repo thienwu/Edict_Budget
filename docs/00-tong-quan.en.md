@@ -11,14 +11,21 @@ edictbudget - keep an L4D2 server from dying with "ED_Alloc: no free edicts"
 ===========================================================================
  AUTHORSHIP - READ FIRST
 
- All of this source was written by an AI: Claude (Anthropic), running in
- Claude Code. Not part of it, not "AI-assisted" - all of it: the design, the
- reverse engineering of server.dll/engine.dll, the code, the measurements,
- and the notes you are reading.
+ This project is the result of TWO distinct jobs that cannot be separated.
 
- The user is a real server OPERATOR: they set the problem, ran the tests,
- captured the logs, found the failures, and rejected many of the AI's wrong
- conclusions. That is why several places here read "WRONG, corrected".
+ IDEA, PROBLEM AND DIRECTION - thienwu, a real server OPERATOR.
+   They set the problem from a real failure on a running server, decided every
+   major direction, and - more importantly - decided the directions NOT to
+   take: banned the 4096 direction, banned touching the phys family, banned
+   editing BSP files, and demanded a GENERAL RULE that applies to every map
+   with the plugin self-checking at runtime. They ran the tests, captured the
+   logs, measured on a live server, and rejected many of the AI's wrong
+   conclusions. That is why several places here read "WRONG, corrected".
+
+ REVERSE ENGINEERING, CODE, MEASUREMENT, DOCS - Claude (Anthropic), in Claude
+   Code. Reverse engineered server.dll/engine.dll/client.dll, designed and
+   wrote all of the source, ran the measurements, and wrote the notes you are
+   reading.
 
  Stated plainly for two reasons:
    1. Anyone reading this code should know where it came from and decide for

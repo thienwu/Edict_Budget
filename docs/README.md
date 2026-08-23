@@ -1,46 +1,55 @@
 # docs/
 
-Detailed notes extracted from `src/sample_mm.cpp`, so the source keeps only short
-comments with pointers here.
+Ghi chép chi tiết tách ra từ `src/sample_mm.cpp`, để mã nguồn chỉ giữ chú thích ngắn kèm
+con trỏ tới đây.
 
-Every conclusion carries a function address and an instruction listing so it can be
-re-checked against your own copy of `server.dll` / `engine.dll`. Anything that could not
-be verified is labelled **not determined** rather than guessed.
+Mọi kết luận đều kèm **địa chỉ hàm** và **đoạn lệnh** để kiểm lại được trên bản
+`server.dll` / `engine.dll` của chính bạn. Cái gì không xác minh được thì ghi thẳng là
+**KHÔNG XÁC ĐỊNH**, không đoán.
 
-| topic | Tiếng Việt | English |
+| chủ đề | Tiếng Việt | English |
 |---|---|---|
-| Overview — mission, limits, measurements across 3 campaigns, config files, build | [00-tong-quan.md](00-tong-quan.md) | [00-tong-quan.en.md](00-tong-quan.en.md) |
-| The four live mechanisms — `noedict`, `freegate`, `wipeclear`, `swap` | [01-co-che.md](01-co-che.md) | [01-co-che.en.md](01-co-che.en.md) |
-| `mapclear` — and why carry-over entities must never be deleted | [02-mapclear.md](02-mapclear.md) | [02-mapclear.en.md](02-mapclear.en.md) |
-| The 4096 direction — the whole switch group, **disabled** | [03-huong-4096.md](03-huong-4096.md) | [03-huong-4096.en.md](03-huong-4096.en.md) |
-| `nonetkill` — renaming classnames in the lump, **rejected** | [04-nonetkill.md](04-nonetkill.md) | [04-nonetkill.en.md](04-nonetkill.en.md) |
-| CEF — dropped from the plan | [04-cef.md](04-cef.md) | [04-cef.en.md](04-cef.en.md) |
-| Measurement — logging, inventory, traps, `heartbeat`, `loadprobe` | [05-do-dac.md](05-do-dac.md) | [05-do-dac.en.md](05-do-dac.en.md) |
+| **Tổng quan** — nhiệm vụ, giới hạn, số liệu đo trên 3 chiến dịch, file cấu hình, build | [00-tong-quan.md](00-tong-quan.md) | [00-tong-quan.en.md](00-tong-quan.en.md) |
+| **Bốn cơ chế đang chạy** — `noedict`, `freegate`, `wipeclear`, `swap` | [01-co-che.md](01-co-che.md) | [01-co-che.en.md](01-co-che.en.md) |
+| **`mapclear`** — và vì sao không bao giờ được xoá cái mang sang màn | [02-mapclear.md](02-mapclear.md) | [02-mapclear.en.md](02-mapclear.en.md) |
+| **Hướng 4096** — toàn bộ nhóm công tắc, **đã tắt** | [03-huong-4096.md](03-huong-4096.md) | [03-huong-4096.en.md](03-huong-4096.en.md) |
+| **`nonetkill`** — đổi tên classname trong lump, **đã loại bỏ** | [04-nonetkill.md](04-nonetkill.md) | [04-nonetkill.en.md](04-nonetkill.en.md) |
+| **CEF** — đã gỡ khỏi kế hoạch | [04-cef.md](04-cef.md) | [04-cef.en.md](04-cef.en.md) |
+| **Đo đạc** — log, kiểm kê, bẫy, `heartbeat`, `loadprobe` | [05-do-dac.md](05-do-dac.md) | [05-do-dac.en.md](05-do-dac.en.md) |
+| 🔑 **Địa chỉ dịch ngược đã xác minh** — bảng tra cho từng tính năng | [06-dia-chi.md](06-dia-chi.md) | [06-dia-chi.en.md](06-dia-chi.en.md) |
+| 🛑 **Hết hướng** — vì sao không còn gì để cắt nữa | [07-het-huong.md](07-het-huong.md) | [07-het-huong.en.md](07-het-huong.en.md) |
 
-## Notes
+## Ghi chú
 
-**The Vietnamese files are the originals** and are kept most current. Where a translation
-disagrees with the Vietnamese, trust the Vietnamese.
+**Bản tiếng Việt là bản gốc** và được giữ cập nhật nhất. Chỗ nào bản dịch nói khác bản tiếng
+Việt thì tin bản tiếng Việt.
 
-**The text is a verbatim extraction.** It is wrapped in code fences on purpose: the
-ASCII tables and assembly listings only line up in a monospace font, and keeping it
-verbatim means the docs cannot drift away from what the source actually said.
+**Địa chỉ và mã máy giữ nguyên trong khối `code`** — bảng ASCII và đoạn lệnh assembly chỉ
+thẳng hàng ở font đơn cách, và giữ nguyên văn nghĩa là tài liệu không trôi khỏi thứ mà mã
+nguồn thực sự nói.
 
-**Vietnamese is written without diacritics** throughout, matching the source comments.
+*(Trước bản 23/08/2026 các tài liệu này viết tiếng Việt **không dấu** để khớp với chú thích
+trong mã nguồn. Nay đã chuyển sang **có dấu** cho dễ đọc; nội dung kỹ thuật giữ nguyên.)*
 
-## Reading order
+## Thứ tự đọc
 
-Start with `00-tong-quan` — it holds the mission statement, the hard limit that no
-amount of patching removes, and the measured numbers.
+Bắt đầu từ **`00-tong-quan`** — nó chứa tuyên bố nhiệm vụ, cái giới hạn cứng mà không bản vá
+nào gỡ được, và các con số đã đo.
 
-Then `01-co-che` for what the plugin actually does.
+Rồi **`01-co-che`** để biết plugin thực sự làm gì.
 
-`02-mapclear` is worth reading even if you never enable `mapclear`, because it contains
-the single most expensive lesson in the project: **deleting a carry-over entity at a
-level transition crashes the server**, and the "delete fewer things" rule that everyone
-reaches first is the wrong rule.
+**`06-dia-chi`** là thứ đáng đọc nhất nếu bạn muốn **dùng lại** hoặc **kiểm lại** công trình
+này: toàn bộ RVA, số hiệu vtable slot, chuỗi neo, và cách suy lại tất cả sau khi Valve cập
+nhật game.
 
-`03-huong-4096` is history: that switch group is disabled and must stay disabled. It is
-documented so nobody re-derives it and re-enables it.
+**`02-mapclear`** đáng đọc **ngay cả khi bạn không bao giờ bật `mapclear`**, vì nó chứa bài
+học đắt nhất của dự án: **xoá một entity mang sang màn ở chuyển màn thì máy chủ sập**, và
+quy tắc *"xoá ít đi"* mà ai cũng nghĩ ra đầu tiên là **quy tắc sai**.
 
-`04-nonetkill` and `04-cef` are rejected directions, kept for the same reason.
+**`03-huong-4096`** là lịch sử: nhóm công tắc đó đã tắt và phải giữ tắt. Nó được ghi lại để
+không ai suy lại rồi bật lại.
+
+**`04-nonetkill`** và **`04-cef`** là những hướng đã bác bỏ, giữ lại vì cùng lý do đó.
+
+**`07-het-huong`** là kết luận: mọi hướng đã tìm, đã đo, đã bác bỏ — và **những gì còn chưa
+chắc chắn** về ba lớp mới thêm gần đây.

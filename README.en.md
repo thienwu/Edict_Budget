@@ -1,6 +1,6 @@
 # edictbudget
 
-<https://github.com/thienwu/Edict-Budget>
+<https://github.com/thienwu/Edict_Budget>
 
 *English version. The Vietnamese original is [README.md](README.md) and is the one kept
 most current — if the two disagree, trust the Vietnamese.*
@@ -14,6 +14,34 @@ ED_Alloc: no free edicts
 ```
 
 No SourceMod required. It does **not** raise the engine's entity limit.
+
+---
+
+## 📌 Status — 23 August 2026: **limit reached**
+
+This project declares the search for further savings closed. The four live mechanisms have
+taken **everything that can be taken without paying for it in something players can see or
+touch**.
+
+Three fronts are closed, with evidence:
+
+| direction | result |
+|---|---|
+| `noedict` | state survives outside an entity through **exactly three doors** (`LightStyle`, `StaticDecal`, `EmitAmbientSound`). The first two are **already used**; the third is **forbidden** because the entity puts its own `entindex` in the packet. **There is no fourth door.** |
+| `swap` | a **108 × 549** class sweep produced **exactly one** viable pair |
+| `nonetkill` / `killent` | **provably the empty set**, and `killent` is **rejected** because its condition set never asked whether an entity has **collision** — see below |
+
+The largest remaining visible quantity — `phys_bone_follower` ≈ **587 edicts** — is
+**permanently off limits**, and Valve's own documentation states why.
+
+📖 The two most useful files if you want to **reuse** or **re-check** this work:
+
+- 🔑 [**docs/06-dia-chi.en.md**](docs/06-dia-chi.en.md) — **every verified
+  reverse-engineered address** per feature: RVAs, vtable slot numbers, string anchors, the
+  game version and md5 of the reference binaries, and **how to re-derive all of it** after a
+  Valve update.
+- 🛑 [**docs/07-het-huong.en.md**](docs/07-het-huong.en.md) — every direction searched,
+  measured, and rejected, plus **what is still uncertain**.
 
 ---
 
@@ -142,6 +170,11 @@ hold** for Valve's stock maps, finale maps, Versus maps, or other authors' work.
 - **Not tested with many players.** Most measurements had 1–4.
 - The formula's measured error is **2–6%, always on the high side**. Use it as an upper
   bound and a ranking, **not as a verdict** on which map will die.
+- **The three `noedict` classes added on 21–22 Aug are not validated long-term.** They are
+  known to work and to cost nothing visible; what is **not** known is how they behave across
+  campaigns of differing complexity, or after weeks of uptime. `func_nav_blocker` ships
+  **disabled** and has never run. Details:
+  [docs/07-het-huong.en.md](docs/07-het-huong.en.md) section 9.
 
 Anyone deploying this should run with `mapclear=1` and `heartbeat=300` (log-only, they
 touch no entity) for a few days first, read the log, and only then enable the
@@ -287,6 +320,31 @@ ch04_pripyat03:
   Verified visually: no decals lost, lighting correct.
 ```
 
+#### Current class list
+
+Six classes are enabled in `noedict.txt`, plus one shipped **disabled**:
+
+| class | count across 17 maps | status |
+|---|---|---|
+| `infodecal` | 853 on `ch04_pripyat03` alone | 🟢 live from the start |
+| `light`, `light_spot` | — | 🟢 live from the start |
+| `path_track` | 25 on `the_hive_m4` | 🟢 live from the start |
+| `func_areaportal` | 179 | 🟢 live since 21 Aug |
+| `info_zombie_spawn` | 86 | 🟢 live since 22 Aug |
+| `func_nav_blocker` | 64 | ⏸️ **disabled** — remove the `#` to enable, and **test it alone** |
+
+> ⚠️ **The last three are not validated long-term.** They are known to **work** and to cost
+> **nothing visible**; what is **not** known is how they behave across campaigns of differing
+> complexity, or after weeks of uptime. `func_nav_blocker`'s failure mode is **invisible** —
+> it must be judged by **AI behaviour**. Details in
+> [docs/07-het-huong.en.md](docs/07-het-huong.en.md) section 9.
+
+> 🛑 **Patching is by VTABLE, not by CLASSNAME.** **20 groups** of classnames share a vtable —
+> enabling one name can **drag in the whole group**. And **8 classes** currently resolve to
+> the wrong vtable; they are listed in [docs/06-dia-chi.en.md](docs/06-dia-chi.en.md).
+> **Do not add new classes** before reading the full six conditions written inside
+> `noedict.txt` itself.
+
 ### 4. `swap` — substitute a cheaper entity class
 
 Different in kind from the three above: **nothing is un-networked and nothing is
@@ -422,6 +480,46 @@ lightstyle. Result: **missing decals, wrong lighting**.
 The life-or-death difference from `noedict`: `noedict` still creates the entity and still
 runs `Spawn()`/`Activate()`, it merely withholds the edict.
 
+### `killent` — deleting entities from the map outright: **the biggest direction, rejected**
+
+This was the **largest measured** opportunity in the whole project: **6200 edicts** across
+16 maps, of which `the_hive_m4` alone accounts for **1227** — while that map's entire
+live-or-die margin is **122**.
+
+The mechanism was fully reverse-engineered: return `false` from
+`IMapEntityFilter::ShouldCreateEntity` (**vtable slot 0**) on all three filters. The entity
+does not exist. A five-condition automatic filter decided what was eligible.
+
+**The fatal gap: the condition set never asked whether an entity has COLLISION.**
+
+Valve's own documentation,
+[`prop_dynamic`](https://developer.valvesoftware.com/wiki/Prop_dynamic):
+
+> **Collisions (solid)**: `0` Not solid · `2` Use bounding box · **`6` Use VPhysics (default)**
+
+A `prop_dynamic` **with no `solid` key written** is still **solid**.
+
+Re-measured across **60 stock Valve BSPs**: **809 solid `prop_dynamic`** pass all five
+conditions — **472/602 = 78%** in `left4dead2/maps` alone. Among them: **30 bridge railings**
+(`bridge_rail`), **12 crypt walls** (`crypts_wall`), **89 gates**, and **39 concrete/plywood
+barricades**. Delete 30 bridge railings and players **fall off the bridge**.
+
+Three external confirmations:
+
+1. **Valve states plainly that freeing edicts and losing collision are the same act.** The
+   `DisableBoneFollowers` key: *"`phys_bone_followers` **can quickly eat up the edict
+   count**... **This will however make the collision model no longer function**."*
+2. **SourceMod REMOVED** lump manipulation from `LevelInit`
+   ([PR #1534](https://github.com/alliedmodders/sourcemod/pull/1534)) — *"some maps have over
+   16MB of entity data"*.
+3. **Fifteen years of Stripper:Source use has never deleted by CLASS** — the community
+   deletes individual instances by `hammerid`, and always **edits the nav mesh alongside**.
+   This project is forbidden from editing the BSP ⇒ it can **never compensate the nav mesh**
+   ⇒ stuck bots, wrong Director flow.
+
+The minimum conditions for anyone continuing — along with what would remain (**~4450**
+instead of 6200) — are in [docs/07-het-huong.en.md](docs/07-het-huong.en.md) section 4.
+
 ### Un-networking the spotlight trio — **closed**, but the problem was solved another way
 
 The original plan was to add `point_spotlight` / `spotlight_end` / `beam` to
@@ -546,16 +644,35 @@ and makes `SH_CALL` invoke the wrong engine function.
 
 ## Who wrote this
 
-**All of the source was written by an AI: Claude (Anthropic), running in Claude Code.**
+This project is the result of **two distinct jobs that cannot be separated**.
 
-Not part of it, not "AI-assisted" — all of it: the design, the reverse engineering of
-`server.dll`/`engine.dll`, the code, the measurements, and every note in this repo.
+### The idea, the problem and the direction — **thienwu**, a real server operator
 
-The user is a **real server operator**. They set the problem, ran the tests, captured the
-logs, found the failures, and **rejected many of the AI's wrong conclusions**. Several
-places in the source read *"WRONG, corrected"* — that is the trace of those rejections.
+The problem came from a real failure on a running server, not from an exercise. The
+operator decided every major direction — and, more importantly, decided the directions
+that were **not** to be taken:
 
-This is stated plainly for two reasons:
+- **banned the 4096 direction**, with a one-line self-check: *"Does it need `bigarray`?"*
+- **banned touching the `phys` / `prop_physics` family** — losing physics means walking
+  through solid objects
+- **banned editing BSP files** — they may only be **read** for measurement
+- demanded a **GENERAL RULE**: it must apply to **every** map, including maps never seen,
+  and the plugin must **self-check at runtime** rather than rely on a hand-written list
+- **warned in advance that the `killent` direction was dangerous** — which led directly to
+  finding the **collision** gap that the automatic condition set had missed entirely
+
+And they ran the tests, captured the logs, measured on a live server, and **rejected many
+of the AI's wrong conclusions**. Several places in the source read *"WRONG, corrected"* —
+that is the trace of those rejections.
+
+### Reverse engineering, code, measurement and documentation — **Claude (Anthropic)**, in Claude Code
+
+Reverse engineered `server.dll` / `engine.dll` / `client.dll`, designed and wrote all of
+the source, ran the measurements, and wrote every document in this repo.
+
+### Why the split is stated plainly
+
+For two reasons:
 
 1. **Anyone reading the code should know where it came from** and decide for themselves
    how much to trust it.

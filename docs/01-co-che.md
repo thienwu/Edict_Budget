@@ -1,342 +1,390 @@
-# Bon co che dang chay
+# Bốn cơ chế đang chạy
 
-*Trich tu `src/sample_mm.cpp`. Giu nguyen tieng Viet khong dau va cac dia chi
-ham nhu trong ma nguon, de doi chieu duoc.*
+*Tiếng Việt (bản chính) · [English](01-co-che.en.md)*
 
-## Hai cong tac xu ly thuc the khong dung mang
+Địa chỉ đầy đủ cho từng cơ chế: [06-dia-chi.md](06-dia-chi.md).
 
-```
-HAI CONG TAC XU LY THUC THE KHONG DUNG MANG
+> ⚠️ **Lưu ý về địa chỉ:** mọi RVA ở đây tính theo ImageBase `0x10000000`. Lúc chạy module
+> nạp ở base khác, nên mọi phép so sánh **PHẢI** làm với `base + RVA`, **tuyệt đối không**
+> so thẳng giá trị tĩnh. Đây là lỗi đã mắc thật — xem mục 3 bên dưới.
 
-Van de: entity khong can gui cho client VAN chiem edict trong dai 0-2047 -
-dai ma giao thuc 11 bit danh cho thu phai gui. Do la lang phi thuan.
-Khong go duoc edict cua entity dang song (DetachEdict() la private, chi
-destructor goi duoc). Nen chi con hai duong:
+---
 
-  nonetkill = 1   XOA HAN chung sau khi map nap xong.
-                  Duyet gEntList, UTIL_Remove lop khop serveronly.txt,
-                  roi CleanupDeleteList() de tra edict ngay.
-                  Duoc: tra slot ve dai 0-2047 vinh vien.
-                  Mat: mat luon chuc nang cua entity do.
+## 1. Hai công tắc cũ xử lý thực thể không dùng mạng
 
-  nonethigh = 1   DAY len dai 2048-4095 thay vi xoa.
-                  Dung lai duong Hook_CreateEdict san co (cap phat xuong tu
-                  4095) - xem khoi chu thich tai ham do.
-                  !!  CAN bigarray=1 VA snapshot=1, neu khong g_ExtReady=false
-                  va no khong lam gi ca.
-                  !!  Muc 0-AAA: huong nay TUNG gay crash trong phep A/B sach
-                  nhat cua du an. Bat lai la co y chap nhan rui ro do de do lai.
+**Vấn đề:** entity không cần gửi cho client **vẫn** chiếm edict trong dải 0–2047 — dải mà
+giao thức 11 bit dành cho thứ **phải gửi**. Đó là lãng phí thuần.
 
-Ca hai deu doc danh sach lop tu serveronly.txt (quy tac khop: dong ket thuc
-'_' = khop tien to, con lai = khop chinh xac).
+Không gỡ được edict của entity **đang sống** (`DetachEdict()` là `private`, chỉ destructor
+gọi được). Nên chỉ còn hai đường:
 
-!!  KHONG bat ca hai cung luc - chung mau thuan. Neu bat ca hai, nonetkill
-thang va nonethigh bi bo qua (co canh bao trong log).
-```
+| công tắc | làm gì | được | mất |
+|---|---|---|---|
+| `nonetkill = 1` | **XOÁ HẲN** sau khi map nạp xong. Duyệt `gEntList`, `UTIL_Remove` lớp khớp, rồi `CleanupDeleteList()` để trả edict ngay | trả slot về dải 0–2047 **vĩnh viễn** | **mất luôn chức năng** của entity đó |
+| `nonethigh = 1` | **ĐẨY** lên dải 2048–4095 thay vì xoá | không mất chức năng | 🛑 **CẦN `bigarray=1` VÀ `snapshot=1`** — tức thuộc **hướng 4096 đã cấm** |
 
-## noedict - khien mot so lop KHONG BAO GIO duoc cap edict
+> 🛑 `nonethigh` **từng gây crash** trong phép A/B sạch nhất của dự án. Bật lại là **cố ý
+> chấp nhận rủi ro đó** để đo lại.
+>
+> ⚠️ **KHÔNG bật cả hai cùng lúc** — chúng mâu thuẫn. Nếu bật cả hai, `nonetkill` thắng và
+> `nonethigh` bị bỏ qua (có cảnh báo trong log).
 
-```
-NOEDICT - khien mot so lop KHONG BAO GIO duoc cap edict
-==========================================================================
+Cả hai đều đọc danh sách lớp từ file (quy tắc khớp: dòng kết thúc `_` = khớp **tiền tố**,
+còn lại = khớp **chính xác**).
 
-XXX DAY KHONG PHAI HUONG 4096. Khong dung bigarray/snapshot/pinmax/pinglobals/
-   markfree. Khong va mot byte nao cua engine.dll. Neu ai do sua ham nay ma
-   thay minh can bat mot trong nam cong tac do => DA DI SAI DUONG, dung lai.
+**Cả hai đều đã bị thay thế bởi `noedict`** — xem [04-nonetkill.md](04-nonetkill.md) và
+[07-het-huong.md](07-het-huong.md).
 
-CO CHE (da xac minh tren binary):
-  CBaseEntity::PostConstructor @ 0x10055620  (RVA 0x55620) la noi QUYET DINH:
-      mov  eax, [esi+0x138]      ; m_iEFlags
-      shr  edx, 9
-      test dl, 1                 ; bit 9 = EFL_SERVER_ONLY
-      je   <nhanh CAP EDICT>     ; = 0 -> AddNetworkableEntity, dai 0-2047
-      mov  ecx, gEntList
-      call AddNonNetworkableEntity   ; = 1 -> dai 2049-4095, KHONG EDICT
-  Ta chi can bat bit 9 TRUOC khi ham goc chay.
+---
 
-DIEM MOC: PostConstructor la HAM AO, o vtable slot 29 (+0x74). Moi lop co
-vtable RIENG, nen thay slot 29 cua rieng vtable lop muc tieu => chi tac dong
-dung lop do. Khong detour byte, khong dung toi lop khac.
+## 2. `noedict` — khiến một số lớp KHÔNG BAO GIỜ được cấp edict
 
-Factory Create cua moi lop co dang:
-    push <sizeof>              ; operator new
-    call operator new
-    push 0                     ; <- bServerOnly = FALSE (co Valve noi toi)
-    call <ctor>
-    mov  dword ptr [esi], <VTABLE>   ; <- ta tim con so nay
-    ...
-    call [vtable+0x74]         ; PostConstructor
+> 🛑 **ĐÂY KHÔNG PHẢI HƯỚNG 4096.** Không dùng `bigarray`/`snapshot`/`pinmax`/`pinglobals`/
+> `markfree`. Không vá một byte nào của `engine.dll`.
+>
+> Nếu ai đó sửa hàm này mà thấy mình **cần bật một trong năm công tắc đó** ⇒ **ĐÃ ĐI SAI
+> ĐƯỜNG, dừng lại.**
 
-XXX CAM DUA VAO DANH SACH:
-  - lop SOLID hoac CO DI CHUYEN: IVEngineServer::SolidMoved / TriggerMoved
-    deu nhan edict_t*. Khong edict => khong cap nhat phan vung khong gian.
-  - moi lop trigger_*  (cung ly do)
-  - lop co ServerClass RIENG (co DT_ rieng) - client can dung lai chung.
-AN TOAN da kiem cho: infodecal (StaticDecal dung chi so BE MAT, khong phai
-chi so cua chinh no) va ho light (LightStyle khong kem chi so entity nao).
+### Cơ chế (đã xác minh trên binary)
+
+`CBaseEntity::PostConstructor` @ `0x10055620` (RVA `0x55620`) là nơi **quyết định**:
+
+```asm
+mov  eax, [esi+0x138]      ; m_iEFlags
+shr  edx, 9
+test dl, 1                 ; bit 9 = EFL_SERVER_ONLY
+je   <nhánh CẤP EDICT>     ; = 0 -> AddNetworkableEntity, dải 0-2047
+mov  ecx, gEntList
+call AddNonNetworkableEntity   ; = 1 -> dải 2049-4095, KHÔNG EDICT
 ```
 
-## noedict: cong an toan 3 - dieu kien 1 (SendTable rieng)
+Ta chỉ cần **bật bit 9 TRƯỚC** khi hàm gốc chạy.
 
-```
-Cong an toan 3: DIEU KIEN 1 - lop KHONG duoc co SendTable rieng.
+### Điểm móc
 
-Day la dieu kien loc manh nhat trong 6 dieu kien, va la dieu kien DUY NHAT
-may kiem duoc thay nguoi. Truoc day no nam trong ghi chu cua noedict.txt,
-ai khong doc thi them bua vao va hong khi chay.
+`PostConstructor` là **hàm ảo**, ở vtable **slot 29** (`+0x74`). Mỗi lớp có vtable **riêng**,
+nên thay slot 29 của riêng vtable lớp mục tiêu ⇒ **chỉ tác động đúng lớp đó**. Không detour
+byte, không đụng tới lớp khác.
 
-GetServerClass() = vtable slot 9. Than ham la `mov eax, imm32 ; ret`:
-    B8 <imm32> C3
-  imm32 == 0x107D78A8  -> ServerClass CBaseEntity / DT_BaseEntity -> CHO PHEP
-  imm32 != 0x107D78A8  -> lop co SendTable rieng                  -> TU CHOI
+Factory `Create` của mọi lớp có dạng:
 
-Da quet 24 lop bang cach nay, hieu chuan voi 8 gia tri biet chac, khop 100%.
-Bon lop dang chay (infodecal/light/light_spot/path_track) deu tra 0x107D78A8.
-Vi du bi tu choi: spotlight_end (CSpotlightEnd), beam (CBeam),
-                  env_sprite (CSprite), light_dynamic (DT_DynamicLight),
-                  ca ho trigger_* (CBaseTrigger).
-
-LUU Y: imm32 la dia chi trong ANH TINH. Luc chay module nap o base khac va con
-tro doc tu vtable DA DUOC DOI THEO BASE, nen phep so PHAI la voi
-base + DT_BASEENTITY_RVA, TUYET DOI khong so thang gia tri tinh.
-So thang da lam ca bon lop dang chay bi TU CHOI am tham va noedict tat hoan
-toan - log ghi "da sua 0 vtable / 4 lop yeu cau", trong khi ca bon deu tra dung
-0x540378A8 = 0x53860000 (base that) + 0x7D78A8. Cung loai loi voi vu chu ky
-mapclear bi tu choi vi prologue chua co mat na.
+```asm
+push <sizeof>                    ; operator new
+call operator new
+push 0                           ; <- bServerOnly = FALSE (chỗ Valve nói tới)
+call <ctor>
+mov  dword ptr [esi], <VTABLE>   ; <- ta tìm con số này
+...
+call [vtable+0x74]               ; PostConstructor
 ```
 
-## freegate - bo thoi gian cho 1 giay
+### 🛑 Cấm đưa vào danh sách
+
+- lớp **SOLID** hoặc **CÓ DI CHUYỂN**: `IVEngineServer::SolidMoved` / `TriggerMoved` đều
+  nhận `edict_t*`. Không edict ⇒ **không cập nhật phân vùng không gian**.
+- **mọi lớp `trigger_*`** (cùng lý do)
+- lớp có **ServerClass RIÊNG** (có `DT_` riêng) — client cần dùng lại chúng.
+
+**An toàn đã kiểm cho:** `infodecal` (`StaticDecal` dùng chỉ số **BỀ MẶT**, không phải chỉ số
+của chính nó) và họ `light` (`LightStyle` **không kèm chỉ số entity nào**).
+
+---
+
+## 3. `noedict`: cổng an toàn 3 — điều kiện 1 (SendTable riêng)
+
+Đây là điều kiện lọc **mạnh nhất** trong 6 điều kiện, và là điều kiện **DUY NHẤT máy kiểm
+được thay người**. Trước đây nó nằm trong ghi chú của `noedict.txt`, ai không đọc thì thêm
+bừa vào và hỏng khi chạy.
+
+`GetServerClass()` = **vtable slot 9**. Thân hàm là `mov eax, imm32 ; ret`:
 
 ```
-Yeu cau engine BO thoi gian cho 1 giay truoc khi mot edict vua giai phong
-duoc cap phat lai.
+B8 <imm32> C3
 
-ED_Alloc tu choi tai su dung mot edict cho toi 1 giay sau khi no duoc giai
-phong. Ma mot lan wipe giai phong hang tram entity roi tao lai chung trong
-CUNG MOT FRAME, nen khong cai nao du dieu kien, va engine buoc phai noi them
-edict moi - do chinh la thu lam can kiet mot map dang o muc 2012/2047.
-
-IVEngineServer::AllowImmediateEdictReuse() la cau tra loi cua chinh Valve cho
-viec nay ("Tells the engine we can immdiately re-use all edict indices even
-though we may not have waited enough time", eiface.h:345). Convar di kem
-sv_useexplicitdelete - mac dinh BAT - lam engine bao cho client biet entity cu
-da bien mat TRUOC khi chi so cua no duoc tai dung, va do dung la thu ma thoi
-gian cho kia dang bao ve.
-
-Huong nay danh dung vao co che hong that su. Phan tach chi bao gio cung chi
-them bien do; con cai nay xoa bo NHU CAU phai co bien do.
+imm32 == 0x107D78A8  ->  ServerClass CBaseEntity / DT_BaseEntity  ->  CHO PHÉP
+imm32 != 0x107D78A8  ->  lớp có SendTable riêng                   ->  TỪ CHỐI
 ```
 
-## freegate: chi tiet vong lap ED_Alloc
+Đã quét **24 lớp** bằng cách này, hiệu chuẩn với **8 giá trị biết chắc**, khớp **100%**.
 
-```
-Bo thoi gian cho 1 giay truoc khi tai su dung edict
-==========================================================================
+Bốn lớp gốc (`infodecal` / `light` / `light_spot` / `path_track`) đều trả `0x107D78A8`.
 
-ED_Alloc chi nhan mot edict da giai phong khi:
-    comiss  2.0f, freetime[i]      ; freetime < 2.0 (giai phong dau map)
-    ja      lay_no
-    fsub    freetime[i]            ; curtime - freetime
-    fcompi  1.0
-    jae     lay_no                 ; hoac da qua 1 GIAY   <-- va o day
+**Ví dụ bị từ chối:** `spotlight_end` (`CSpotlightEnd`), `beam` (`CBeam`), `env_sprite`
+(`CSprite`), `light_dynamic` (`DT_DynamicLight`), cả họ `trigger_*` (`CBaseTrigger`).
 
-Do do wipe (xoa roi tao lai hang tram entity trong CUNG mot frame) khong co
-edict nao du dieu kien, engine buoc phai cap moi, num_edicts leo toi tran.
-Da do thuc te: num_edicts=2012 voi 906-918 edict DANG TRONG ma engine van
-bao "ED_Alloc: no free edicts". Day dung la loi engine Source 2009 ma tac
-gia CEF mo ta: "running out of edicts when you have 1000 free".
+### ⚠️ Bài học: `imm32` là địa chỉ trong ẢNH TĨNH
 
-Doi mot byte 73 -> EB (jae -> jmp) lam moi edict trong deu dung lai duoc
-ngay. Dich nhay giu nguyen, khong doi do dai lenh, khong trampoline.
+Lúc chạy module nạp ở base khác và **con trỏ đọc từ vtable ĐÃ ĐƯỢC ĐỔI THEO BASE**, nên phép
+so **PHẢI** là với `base + DT_BASEENTITY_RVA`, **tuyệt đối không** so thẳng giá trị tĩnh.
 
-An toan: engine da co san sv_useexplicitdelete (mac dinh BAT) - khi mot chi
-so duoc tai dung som, no gui lenh xoa tuong minh xuong client truoc. Do
-chinh la co che Valve thiet ke thay cho thoi gian cho nay.
-```
+> So thẳng đã làm **cả bốn lớp đang chạy bị TỪ CHỐI âm thầm** và `noedict` **tắt hoàn toàn** —
+> log ghi *"đã sửa 0 vtable / 4 lớp yêu cầu"*, trong khi cả bốn đều trả đúng
+> `0x540378A8 = 0x53860000 (base thật) + 0x7D78A8`.
+>
+> Cùng loại lỗi với vụ chữ ký `mapclear` bị từ chối vì prologue chưa có mặt nạ
+> (xem [02-mapclear.md](02-mapclear.md) mục 5).
 
-## wipeclear - don thuc the o dau RestartRound
+---
 
-```
-WIPECLEAR: don thuc the o dau CTerrorGameRules::RestartRound (vtable slot 178),
-truoc vong hoi sinh player. Xem khoi giai thich day du gan InstallWipeClear().
+## 4. `freegate` — bỏ thời gian chờ 1 giây
 
-BA TRANG THAI, khong phai hai - de moi buoc thu chi doi MOT thu:
-  0 = TAT HOAN TOAN. Khong moc vtable, khong nghe su kien. No-op that su,
-      dung lam moc doi chieu.
-  1 = CHI QUAN SAT. Moc vtable + nghe su kien, log day du moc thoi gian va
-      so slot, nhung KHONG xoa mot entity nao. Rui ro gan bang khong, va no
-      tra loi cau con treo: tin hieu thua ban TRUOC hay SAU RestartRound,
-      va num_edicts cham 2048 o doan nao.
-  2 = DON THAT. Lam nua "don" cua CleanUpMap ngay dau RestartRound.
+Yêu cầu engine **bỏ** thời gian chờ 1 giây trước khi một edict vừa giải phóng được cấp phát
+lại.
 
-Mac dinh 0. Doi trong patches.txt, khong can build lai.
-```
+`ED_Alloc` từ chối tái sử dụng một edict cho tới **1 giây** sau khi nó được giải phóng. Mà
+một lần wipe giải phóng **hàng trăm** entity rồi tạo lại chúng trong **CÙNG MỘT FRAME**, nên
+không cái nào đủ điều kiện, và engine buộc phải nối thêm edict mới — đó chính là thứ làm cạn
+kiệt một map đang ở mức 2012/2047.
 
-## wipeclear: co che day du
+`IVEngineServer::AllowImmediateEdictReuse()` là **câu trả lời của chính Valve** cho việc này:
 
-```
-WIPECLEAR - don thuc the o DAU chuoi restart, TRUOC vong hoi sinh player.
+> *"Tells the engine we can immediately re-use all edict indices even though we may not have
+> waited enough time"* — `eiface.h:345`
 
-CTerrorGameRules::CleanUpMap() (RVA 0x2DDB10) da tu lam dung viec nay:
-    UTIL_Remove(moi thu ngoai preserve list)
-      -> CleanupDeleteList() -> AllowImmediateEdictReuse()
-      -> MapEntity_ParseAllEntities()
-Van de la no chay MUON. Trinh tu that (da kiem bang capstone tren server.dll
-cua chinh server nay, 9.130.288 byte, ImageBase 0x10000000):
+Convar đi kèm `sv_useexplicitdelete` — **mặc định BẬT** — làm engine báo cho client biết
+entity cũ đã biến mất **TRƯỚC** khi chỉ số của nó được tái dùng, và đó đúng là thứ mà thời
+gian chờ kia đang bảo vệ.
 
-  CDirector::Restart          0x2700D0
-    m_bRestarting = 1         0x27045F
-    RestartRound()            0x2704C4   <- vtable slot 178
-      VONG HOI SINH PLAYER    0x2E0794..0x2E08A3   <== tieu edict O DAY
-      FIRE round_start_pre_entity        0x2E08CE
-      CleanUpMap()            0x2E08DF   <== game moi don O DAY
-    m_bRestarting = 0         0x2705DF
+> 📌 Hướng này đánh **đúng vào cơ chế hỏng thật sự**. Phân tách chỉ bao giờ cũng **thêm biên
+> độ**; còn cái này **xoá bỏ NHU CẦU phải có biên độ**.
 
-Moi thu truoc 0x2E08DF chay khi map VAN giu du 2012 entity / 35 slot trong.
-Khoi nay lam nua "don" cua CleanUpMap ngay dau RestartRound roi de game chay
-tiep binh thuong - CleanUpMap se thay gan nhu khong con gi de xoa, va
-MapEntity_ParseAllEntities van dung lai day du tu entity lump.
+### Chi tiết vòng lặp `ED_Alloc`
 
-QUAN TRONG - day vua la BAN VA vua la PHEP DO:
-  log "slot trong truoc -> sau" tra loi luon cau hoi con treo:
-    +~1100 slot va het crash  => lo nam TRUOC CleanUpMap, ban va dung
-    +~1100 slot ma van crash  => lo nam SAU khi dung lai xong; luc do bai
-                                 toan tro ve muc 0-KET-LUAN (map that su
-                                 can 2012/2047, khong co lang phi de thu hoi)
+`ED_Alloc` chỉ nhận một edict đã giải phóng khi:
 
-Giu nguyen tap "preserve" CUA CHINH GAME (doc runtime tu RVA 0x7ACE40) nen
-ngu nghia y het CleanUpMap - chi khac THOI DIEM. Do la lua chon co y: doi
-mot bien duy nhat.
+```asm
+comiss  2.0f, freetime[i]      ; freetime < 2.0 (giải phóng đầu map)
+ja      lấy_nó
+fsub    freetime[i]            ; curtime - freetime
+fcompi  1.0
+jae     lấy_nó                 ; hoặc đã qua 1 GIÂY   <-- vá ở đây
 ```
 
-## wipeclear: nghe su kien (chi de chan doan)
+🟢 **Đã đo thực tế:** `num_edicts=2012` với **906–918 edict ĐANG TRỐNG** mà engine vẫn báo
+*"ED_Alloc: no free edicts"*. Đây đúng là lỗi engine Source 2009 mà tác giả CEF mô tả:
+*"running out of edicts when you have 1000 free"*.
+
+Đổi **một byte** `73` → `EB` (`jae` → `jmp`) làm mọi edict trống đều dùng lại được ngay.
+Đích nhảy giữ nguyên, không đổi độ dài lệnh, không trampoline.
+
+**Định vị bằng quét chữ ký**, không dùng RVA cứng. RVA đối chiếu: `engine.dll` `0x1E022A`.
+
+> ⚠️ **Chưa nghiệm thu dài hạn** với ≥ 4 người chơi — gói xuất bản để `freegate=1`. Xem
+> [06-dia-chi.md](06-dia-chi.md) mục 3.
+
+---
+
+## 5. `wipeclear` — dọn thực thể ở đầu `RestartRound`
+
+Dọn thực thể ở đầu `CTerrorGameRules::RestartRound` (**vtable slot 178**), **trước** vòng
+hồi sinh player.
+
+### Ba trạng thái — không phải hai
+
+Để mỗi bước thử chỉ đổi **MỘT** thứ:
+
+| giá trị | nghĩa |
+|---|---|
+| `0` | **TẮT HOÀN TOÀN.** Không móc vtable, không nghe sự kiện. No-op thật sự, dùng làm **mốc đối chiếu** |
+| `1` | **CHỈ QUAN SÁT.** Móc vtable + nghe sự kiện, log đầy đủ mốc thời gian và số slot, nhưng **KHÔNG xoá một entity nào**. Rủi ro gần bằng không |
+| `2` | **DỌN THẬT.** Làm nửa "dọn" của `CleanUpMap` ngay đầu `RestartRound` |
+
+Mặc định `0`. Đổi trong `patches.txt`, **không cần build lại**.
+
+### Cơ chế đầy đủ
+
+`CTerrorGameRules::CleanUpMap()` (RVA `0x2DDB10`) **đã tự làm đúng việc này**:
 
 ```
---- Nghe su kien: CHI DE CHAN DOAN, khong con quyen chan ------------------
-
-Ban dau dinh dung 'mission_lost' lam cong chan. DA BO (phuong an A).
-Ly do, xac minh tren binary chu khong phai suy doan:
-  mission_lost ban DUY NHAT tai 0x10269096, trong ham 0x10268CA0. Ham do chi
-  push bon chuoi: 'trigger_finale', 'finale_trigger', 'FinaleLost',
-  'mission_lost' => day la duong THUA FINALE.
-  11 vi tri push mission_lost con lai deu la AddListener(+0x0C) hoac so chuoi.
-  c6m1_riverbank khong phai finale => cong se khong bao gio mo.
-
-Van giu listener vi no tra loi mot cau van con treo: thuc te mission_lost co
-ban khong, va ban truoc hay sau RestartRound. Log se noi.
-CO MOT-LAN, KHONG dung cua so thoi gian.
-
-Ban dau dung cua so 5.0s. SAI: do that te cho thay mission_lost ban luc
-t=63.47 con RestartRound chay luc t=70.50 - cach 7.03s, VUOT cua so 5s
-=> cong se truot luon ca wipe that.
-Khoang cach nay do Director quyet dinh (man hinh thua, dem nguoc...), khong
-co gia tri nao an toan de doan. Dung co mot-lan thi khong phai doan:
-  mission_lost  -> bat co
-  RestartRound  -> co bat thi don, roi TAT co ngay
-  nap map moi   -> tat co (tranh co cu sot lai)
+UTIL_Remove(mọi thứ ngoài preserve list)
+  -> CleanupDeleteList() -> AllowImmediateEdictReuse()
+  -> MapEntity_ParseAllEntities()
 ```
 
-## wipeclear: danh sach giu bo sung - wipekeep.txt
+**Vấn đề là nó chạy MUỘN.** Trình tự thật (đã kiểm bằng capstone trên `server.dll` của chính
+server này, 9.130.288 byte, ImageBase `0x10000000`):
 
 ```
-DANH SACH GIU BO SUNG - wipekeep.txt
-
-Preserve list cua game (0x7ACE40) la thu game DUNG. Nhung co nhung lop game
-san sang xoa ma XOA SOM lai sinh loi phia client. Ca dau tien gap:
-  viec giu lai thuc the cua nguoi choi gay loi MAT BONG.
-
-Nen can mot danh sach GIU THEM, sua duoc bang file, khong phai build lai -
-dung kieu nhu serveronly.txt:
-  dong ket thuc bang '_'  -> khop TIEN TO ca ho   (vi du "weapon_")
-  con lai                 -> khop CHINH XAC ten lop
-
-Dat o: left4dead2/addons/edictbudget/wipekeep.txt
-Thieu file = khong giu them gi (chi dung preserve list cua game).
+CDirector::Restart          0x2700D0
+  m_bRestarting = 1         0x27045F
+  RestartRound()            0x2704C4   <- vtable slot 178
+    VÒNG HỒI SINH PLAYER    0x2E0794..0x2E08A3   <== tiêu edict Ở ĐÂY
+    FIRE round_start_pre_entity        0x2E08CE
+    CleanUpMap()            0x2E08DF   <== game mới dọn Ở ĐÂY
+  m_bRestarting = 0         0x2705DF
 ```
 
-## wipeclear: cong chan
+Mọi thứ trước `0x2E08DF` chạy khi map **vẫn giữ đủ 2012 entity / 35 slot trống**.
+
+Khối này làm nửa "dọn" của `CleanUpMap` ngay đầu `RestartRound` rồi để game chạy tiếp bình
+thường — `CleanUpMap` sẽ thấy gần như không còn gì để xoá, và `MapEntity_ParseAllEntities`
+vẫn dựng lại đầy đủ từ entity lump.
+
+> 📌 **QUAN TRỌNG — đây vừa là BẢN VÁ vừa là PHÉP ĐO.**
+>
+> Log *"slot trống trước → sau"* trả lời luôn câu hỏi còn treo:
+>
+> | kết quả | kết luận |
+> |---|---|
+> | +~1100 slot và **hết crash** | lỗ nằm **TRƯỚC** `CleanUpMap`, bản vá **đúng** |
+> | +~1100 slot mà **vẫn crash** | lỗ nằm **SAU** khi dựng lại xong; bài toán trở về "map thật sự cần 2012/2047, không có lãng phí để thu hồi" |
+
+Giữ nguyên tập **"preserve" CỦA CHÍNH GAME** (đọc runtime từ RVA `0x7ACE40`) nên ngữ nghĩa
+y hệt `CleanUpMap` — **chỉ khác THỜI ĐIỂM**. Đó là lựa chọn có ý: **đổi một biến duy nhất**.
+
+### Nghe sự kiện — chỉ để chẩn đoán
+
+Ban đầu định dùng `mission_lost` làm cổng chặn. **ĐÃ BỎ** (phương án A). Lý do, xác minh
+trên binary chứ không phải suy đoán:
+
+`mission_lost` bắn **DUY NHẤT** tại `0x10269096`, trong hàm `0x10268CA0`. Hàm đó chỉ push
+bốn chuỗi: `trigger_finale`, `finale_trigger`, `FinaleLost`, `mission_lost` ⇒ đây là **đường
+THUA FINALE**. 11 vị trí push `mission_lost` còn lại đều là `AddListener(+0x0C)` hoặc so
+chuỗi. `c6m1_riverbank` không phải finale ⇒ cổng sẽ không bao giờ mở.
+
+Vẫn giữ listener vì nó trả lời một câu còn treo: thực tế `mission_lost` có bắn không, và bắn
+trước hay sau `RestartRound`.
+
+**Cờ MỘT-LẦN, KHÔNG dùng cửa sổ thời gian.**
+
+Ban đầu dùng cửa sổ 5,0 s. **SAI:** đo thật tế cho thấy `mission_lost` bắn lúc `t=63.47` còn
+`RestartRound` chạy lúc `t=70.50` — cách **7,03 s**, **vượt cửa sổ 5 s** ⇒ cổng sẽ trượt luôn
+cả wipe thật.
+
+Khoảng cách này do Director quyết định (màn hình thua, đếm ngược...), **không có giá trị nào
+an toàn để đoán**. Dùng cờ một-lần thì không phải đoán:
 
 ```
---- CONG CHAN (KHOI PHUC 07/08 sau khi do that te) ---
-
-Da tung bo cong nay, dua tren suy luan tu disassembly rang mission_lost
-"chi ban khi thua finale" (ham 0x10268CA0 co push trigger_finale /
-FinaleLost). SUY LUAN DO SAI - do that te tren c6m1_riverbank (KHONG phai
-finale) cho thay mission_lost VAN BAN, luc t=63.47.
-Lai dung cai bay muc 0-BAI-HOC: suy tu chuoi nam gan nhau.
-
-Hau qua khi khong co cong (log 07/08, wipeclear=2):
-  RestartRound duoc goi ngay luc t=1.00 KHI MAP VUA NAP (vong choi dau
-  tien, khong phai wipe). Ban va da xoa 1155 entity cua map ngay tai do,
-  va slot trong SAU RestartRound van o 1462 (nen la 474) => map KHONG
-  duoc dung lai. Pha map.
-
-=> Chi don khi CO mission_lost dang cho. Co mot-lan, khong cua so gio.
+mission_lost  -> bật cờ
+RestartRound  -> có cờ thì dọn, rồi TẮT cờ ngay
+nạp map mới   -> tắt cờ (tránh cờ cũ sót lại)
 ```
 
-## swap - doi mot lop entity thanh lop RE HON
+### ⚠️ Cổng chặn — KHÔI PHỤC 07/08 sau khi đo thật tế
+
+Đã từng **bỏ** cổng này, dựa trên suy luận từ disassembly rằng `mission_lost` *"chỉ bắn khi
+thua finale"* (hàm `0x10268CA0` có push `trigger_finale` / `FinaleLost`).
+
+**SUY LUẬN ĐÓ SAI** — đo thật tế trên `c6m1_riverbank` (**KHÔNG** phải finale) cho thấy
+`mission_lost` **VẪN BẮN**, lúc `t=63.47`.
+
+> Lại dính cái bẫy: **suy từ chuỗi nằm gần nhau**.
+
+**Hậu quả khi không có cổng** (log 07/08, `wipeclear=2`): `RestartRound` được gọi ngay lúc
+`t=1.00` **KHI MAP VỪA NẠP** (vòng chơi đầu tiên, không phải wipe). Bản vá đã xoá **1155
+entity** của map ngay tại đó, và slot trống **sau** `RestartRound` vẫn ở 1462 (nền là 474)
+⇒ map **KHÔNG được dựng lại**. **Phá map.**
+
+⇒ **Chỉ dọn khi CÓ `mission_lost` đang chờ.** Cờ một-lần, không cửa sổ giờ.
+
+### `wipekeep.txt` — danh sách giữ bổ sung
+
+Preserve list của game (`0x7ACE40`) là thứ **game dùng**. Nhưng có những lớp game sẵn sàng
+xoá mà **xoá sớm** lại sinh lỗi phía client. Ca đầu tiên gặp: giữ lại thực thể của người
+chơi gây **lỗi MẤT BÓNG**.
+
+Nên cần một danh sách **GIỮ THÊM**, sửa được bằng file, không phải build lại:
 
 ```
- SWAP: doi mot lop entity thanh lop khac RE HON ngay luc tao
-=====================================================================
-
-Bai toan: `point_spotlight` khi spawn TU TAO THEM `spotlight_end` + `beam`
-  => 3 edict cho moi dong trong lump BSP.
-  `beam_spotlight` lam viec tuong tu nhung VE HOAN TOAN PHIA CLIENT,
-  khong sinh entity con => 1 edict.
-  Chinh tac gia the_hive da dung ca hai lop trong cung chien dich
-  (m1 co 2 beam_spotlight, m5 co 21, m4 co 312 point_spotlight).
-  Doi duoc: m4 937 -> 313, m3 240 -> 80, m5 41 -> 33. Tong 792 edict.
-
-KHAC HAN noedict: day KHONG phai go mang. Client van nhan entity, van ve
-  tia sang. Chi la mot lop re hon. Nen khong dinh 6 dieu kien nao het.
-
-CHO MOC â vi sao cho nay sach:
-  CreateEntityByName (0x101196B0) khong tu tao gi, no goi qua
-    EntityFactoryDictionary()->vtable[1]:
-      101196E7 call 0x1020CA70 ; mov eax,[edx+4] ; call eax
-  Quet ca .text: 562 cho goi 0x1020CA70, trong do
-    558 dung slot 0 (InstallFactory), 1 dung slot 4 (GetCannonicalName),
-    va DUNG 3 cho dung slot 1 (Create): CreateEntityByName + 2 nhanh cua
-    bo phan tich lump BSP.
-  => Va MOT con tro vtable phu ca luc nap lump lan luc choi.
-  0x1020CA70 la dia chi plugin DA dung san trong ResolveClassVtable.
-  Dung SourceHook-style vtable swap, KHONG detour byte.
-
-ANH XA KEYVALUE (doc datamap cua ca hai lop):
-  SpotlightLength / SpotlightWidth / HDRColorScale  TRUNG TEN TUYET DOI
-  input LightOn / LightOff, output OnLightOn        trung ten
-  cung baseMap = CBaseEntity                        moi khoa ke thua giong het
-  MAT DUNG MOT KHOA: HaloScale - client.dll ghi cung halo = 60.0 tai 1006CC80.
-    => map nao dat HaloScale 10 (vd the_hive_m4) se thay halo TO GAP 6.
-    43/517 point_spotlight tren 50 map von da dat 60 = dung mac dinh, khong doi gi.
-
-spawnflags: bit 0 (bat san) va bit 1 (khong den dong) GIONG HET giua hai lop.
-  Quet 517 point_spotlight tren 45 map goc + 5 map hive: chi tung la 2 hoac 3,
-  chua cai nao dat bit 2/3/6 => rui ro bat nham xoay/nofog = 0.
-
-m_iClassname tu lump se ghi de lai thanh "point_spotlight". Da chung minh
-  server.dll khong co cho nao tra cuu chuoi do ngoai InstallFactory => vo hai,
-  va giu tuong thich nguoc cho plugin SourceMod dang loc theo ten lop.
-
-CHUA LAM (co y, de test dan):
-  Tu so datamap cua hai lop luc khoi dong de bao khoa nao bi mat.
-  GetDataDescMap() = vtable slot 11 (+0x2C), cung khuon `B8 imm32 C3` nhu slot 9.
-  datamap_t 24 byte {dataDesc, nFields, className, baseMap};
-  typedescription_t 60 byte, ten keyvalue o +0x10.
-  Chua viet vi day la doc con tro chua kiem chung tren ban nay - them sau,
-  khi co che doi lop da chay on.
+dòng kết thúc bằng '_'  ->  khớp TIỀN TỐ cả họ   (ví dụ "weapon_")
+còn lại                 ->  khớp CHÍNH XÁC tên lớp
 ```
 
-## swap: dat lai bo dem tai LevelInit
+Đặt ở `left4dead2/addons/edictbudget/wipekeep.txt`. Thiếu file = không giữ thêm gì.
 
-```
-Bo dem SWAP ve 0 tai DAY, khong phai o SwapReport() (ServerActivate).
+> ⚠️ **Để TRỐNG mới đúng.** Ở wipe, entity bị xoá sẽ **được dựng lại** từ entity lump, nên
+> giữ thêm chỉ làm **hẹp biên độ**. Ngược hẳn với `mapkeep.txt` — xem
+> [02-mapclear.md](02-mapclear.md).
 
-15/08: log cho thay co lan bao "gap 392" = 312 (m4) + 80 (m3), tuc MOT bao cao
-gom HAI lan nap map - ServerActivate khong chay dung nhip voi moi lan nap.
-Cung the voi "gap 82" (80 + 2). Chi sai con so trong log, khong sai viec doi lop
-(`doi` luon bang `gap`), nhung doc log de suy ra map nao thi bi nham.
-LevelInit chay dung mot lan cho moi map va TRUOC khi lump duoc phan tich,
-nen dat lai o day moi khop.
+---
+
+## 6. `swap` — đổi một lớp entity thành lớp RẺ HƠN
+
+### Bài toán
+
+`point_spotlight` khi spawn **TỰ TẠO THÊM** `spotlight_end` + `beam` ⇒ **3 edict** cho mỗi
+dòng trong lump BSP.
+
+`beam_spotlight` làm việc tương tự nhưng **VẼ HOÀN TOÀN PHÍA CLIENT**, không sinh entity con
+⇒ **1 edict**.
+
+> Chính tác giả `the_hive` đã dùng **cả hai lớp** trong cùng chiến dịch (`m1` có 2
+> `beam_spotlight`, `m5` có 21, `m4` có 312 `point_spotlight`).
+
+🟢 Đổi được: `m4` 937 → 313, `m3` 240 → 80, `m5` 41 → 33. **Tổng 792 edict.**
+
+> **KHÁC HẲN `noedict`:** đây **KHÔNG** phải gỡ mạng. Client vẫn nhận entity, vẫn vẽ tia
+> sáng. Chỉ là một lớp rẻ hơn. Nên **không dính 6 điều kiện nào hết**.
+
+### Chỗ móc — vì sao chỗ này sạch
+
+`CreateEntityByName` (`0x101196B0`) không tự tạo gì, nó gọi qua
+`EntityFactoryDictionary()->vtable[1]`:
+
+```asm
+101196E7  call 0x1020CA70 ; mov eax,[edx+4] ; call eax
 ```
+
+Quét cả `.text`: **562 chỗ** gọi `0x1020CA70`, trong đó:
+
+| slot | số chỗ | hàm |
+|---|---|---|
+| 0 | 558 | `InstallFactory` |
+| 4 | 1 | `GetCannonicalName` |
+| **1** | **3** | **`Create`** — `CreateEntityByName` + 2 nhánh của bộ phân tích lump BSP |
+
+> ⇒ Vá **MỘT** con trỏ vtable phủ **cả lúc nạp lump lẫn lúc chơi**.
+
+`0x1020CA70` là địa chỉ plugin **đã dùng sẵn** trong `ResolveClassVtable`. Dùng
+SourceHook-style vtable swap, **KHÔNG detour byte**.
+
+### Ánh xạ keyvalue (đọc datamap của cả hai lớp)
+
+| khoá | kết quả |
+|---|---|
+| `SpotlightLength` / `SpotlightWidth` / `HDRColorScale` | **TRÙNG TÊN TUYỆT ĐỐI** |
+| input `LightOn` / `LightOff`, output `OnLightOn` | trùng tên |
+| cùng `baseMap = CBaseEntity` | mọi khoá kế thừa giống hệt |
+| **`HaloScale`** | ❌ **MẤT** — `client.dll` ghi cứng `halo = 60.0` tại `0x1006CC80` |
+
+⇒ map nào đặt `HaloScale 10` (ví dụ `the_hive_m4`) sẽ thấy **halo TO GẤP 6**.
+
+43/517 `point_spotlight` trên 50 map vốn đã đặt 60 = đúng mặc định, không đổi gì.
+
+### `spawnflags`
+
+Bit 0 (bật sẵn) và bit 1 (không đèn động) **GIỐNG HỆT** giữa hai lớp.
+
+Quét **517** `point_spotlight` trên 45 map gốc + 5 map hive: chỉ từng là **2 hoặc 3**, chưa
+cái nào đặt bit 2/3/6 ⇒ **rủi ro bật nhầm xoay/nofog = 0**.
+
+### `m_iClassname`
+
+Từ lump sẽ ghi đè lại thành `"point_spotlight"`. Đã chứng minh `server.dll` **không có chỗ
+nào tra cứu chuỗi đó** ngoài `InstallFactory` ⇒ **vô hại**, và giữ **tương thích ngược** cho
+plugin SourceMod đang lọc theo tên lớp.
+
+### Chưa làm (cố ý, để test dần)
+
+Tự so datamap của hai lớp lúc khởi động để báo khoá nào bị mất.
+
+`GetDataDescMap()` = vtable **slot 11** (`+0x2C`), cùng khuôn `B8 imm32 C3` như slot 9.
+`datamap_t` 24 byte `{dataDesc, nFields, className, baseMap}`; `typedescription_t` 60 byte,
+tên keyvalue ở `+0x10`.
+
+Chưa viết vì đây là **đọc con trỏ chưa kiểm chứng** trên bản này — thêm sau, khi cơ chế đổi
+lớp đã chạy ổn.
+
+### Đặt lại bộ đếm tại `LevelInit`
+
+Bộ đếm `swap` về 0 tại **`LevelInit`**, không phải ở `SwapReport()` (`ServerActivate`).
+
+**15/08:** log cho thấy có lần báo *"gặp 392"* = 312 (`m4`) + 80 (`m3`), tức **MỘT báo cáo
+gộp HAI lần nạp map** — `ServerActivate` không chạy đúng nhịp với mỗi lần nạp. Cũng thế với
+*"gặp 82"* (80 + 2).
+
+Chỉ **sai con số trong log**, không sai việc đổi lớp (`đổi` luôn bằng `gặp`), nhưng đọc log
+để suy ra map nào thì bị nhầm.
+
+`LevelInit` chạy **đúng một lần** cho mỗi map và **TRƯỚC** khi lump được phân tích, nên đặt
+lại ở đây mới khớp.

@@ -1,7 +1,7 @@
 edictbudget
 Metamod:Source plugin for Left 4 Dead 2 dedicated servers
 
-Copyright (C) 2026  Claude (Anthropic)
+Copyright (C) 2026  thienwu
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,13 +20,34 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 ===========================================================================
 TAC GIA
 
-Toan bo ma nguon nay do AI viet: Claude (Anthropic), chay trong Claude Code.
-Khong phai mot phan, khong phai "co AI ho tro" - la TOAN BO: thiet ke, doc
-nguoc server.dll/engine.dll, viet ma, do dac, va moi ghi chu trong kho nay.
+Du an nay la ket qua cua HAI phan viec khac nhau, khong tach roi duoc.
 
-Nguoi van hanh may chu that da dat bai toan, chay thu, chup log, phat hien loi,
-va bac bo nhieu ket luan sai. Cac dong ghi "SAI, da sua" trong ma nguon chinh la
-dau vet cua nhung lan bi bac bo do.
+  Y TUONG, BAI TOAN VA DINH HUONG  --  thienwu, nguoi VAN HANH may chu that
+
+    Dat bai toan tu su co that tren may chu dang chay. Quyet dinh moi huong di
+    lon - va quan trong hon, quyet dinh nhung huong KHONG duoc di:
+
+      - cam huong 4096, kem luat tu kiem "no co can bigarray khong?"
+      - cam dong vao ho phys / prop_physics
+      - cam sua file BSP: chi duoc DOC de do
+      - yeu cau CONG THUC CHUNG - phai ap dung cho MOI map ke ca map chua tung
+        thay, va plugin phai TU KIEM luc chay, khong dung danh sach viet tay
+      - canh bao truoc rang huong killent nguy hiem, dan thang toi viec tim ra
+        lo hong VA CHAM ma bo dieu kien tu dong da bo sot hoan toan
+
+    Chay thu, chup log, do tren may chu that, va BAC BO nhieu ket luan sai cua
+    AI. Cac dong ghi "SAI, da sua" trong ma nguon la dau vet cua nhung lan do.
+
+  DICH NGUOC, VIET MA, DO DAC, TAI LIEU  --  Claude (Anthropic), Claude Code
+
+    Doc nguoc server.dll / engine.dll / client.dll, thiet ke va viet toan bo ma
+    nguon, chay cac phep do, va viet moi tai lieu trong kho nay.
+
+Noi ro cach chia nay vi hai ly do:
+  1. Ai doc ma nen biet no den tu dau de tu quyet dinh muc do tin tuong.
+  2. Nhieu ket luan rut ra tu doc nguoc nhi phan, khong phai tu tai lieu chinh
+     thuc. Chung deu kem dia chi ham va doan lenh de kiem lai duoc. Cai gi khong
+     xac minh duoc thi ghi thang la KHONG XAC DINH.
 
 
 ===========================================================================

@@ -34,3 +34,64 @@ light_spot
 # path_track: SetSolid(SOLID_NONE), khong model, khong ai tro toi qua SendProp.
 #   25 cai tren the_hive_m4.
 path_track
+
+# ===========================================================================
+#  BO 3 LOP THEM 21/08/2026 - da tham du SAU TANG, doc thang ma may server.dll
+# ===========================================================================
+#
+# Sau tang (khong phai sau dieu kien roi rac - thu tu QUAN TRONG, tang 4 nam
+# DUOI ba tang de kiem, va tang 4 chinh la tang da giet prop_physics):
+#   1 DK1 co SendTable rieng khong        4 DK2 chuc nang co can phan vung/trace
+#   2 DK4 da san server-only chua         5 DK5 ai giu EHANDLE tro toi
+#   3 DK6 client co nhan khong            6 DK3 tu nhet entindex vao goi mang
+#
+# Ket qua: 5/6 tang SACH cho ca ba. Tang 5 la "manh nhung chua vet can" -
+# 229 cho goi SetOwnerEntity toan .text, 0 cho nam trong vung ma cua ba lop.
+# Phep quet tu kiem chung dung: no bat duoc CPointSpotlight::SpotlightCreate
+# (0x1018E5xx) - phan vi du da biet.
+#
+# --- func_areaportal : 179 cai / 17 map --- DA CHAY THAT, DAT ---
+#   DK6: vtable slot21 = 0x100DA8F0 chi 3 lenh: push 0x10 (FL_EDICT_DONTSEND) ;
+#        call SetTransmitState ; ret  => VO DIEU KIEN, client chua bao gio nhan
+#   DK2: Spawn 0x100DA8A0 KHONG goi SetSolid. Engine goi SetAreaPortalState
+#        (vtable +0xF4) voi m_portalNumber [+0x42C] va m_state [+0x438]
+#        = HAI SO NGUYEN, khong edict, khong entindex
+#   0/179 co keyvalue "model", 0/179 co "parentname"
+#   NGHIEM THU 21/08 14:24 tren may chu chinh: "slot29 -> thunk (OK)",
+#   nap 2 map, song qua 2 lan wipe, 0 dong ED_ALLOC.
+func_areaportal
+#
+# --- info_zombie_spawn : 86 cai / 17 map --- DA CHAY THAT TU 22/08 23:46 ---
+#   !! Luot "test" ngay 22/08 truoc do la NO-OP: ban DLL cu khong giai duoc
+#      vtable nen bo qua am tham ("khong tim duoc vtable, BO QUA"), suot 6 phien.
+#      Chi tu ban DLL 22/08 23:29 (sua ResolveClassVtable) no moi thuc su duoc bat:
+#      NOEDICT: 'info_zombie_spawn' vtable=64C48B8C slot29 -> thunk (OK)
+#      va con so tong nhay tu "da sua 4 vtable" len "da sua 6 vtable".
+#   Phan bo: the_hive_m1 38, the_hive_m3 36, ch05 5, ch03 3, ch04 3, m4 1
+#   DK6: 0/86 co "model" => UpdateTransmitState nhanh B goi GetModelIndex()
+#        tra 0 => je 0x10056A84 = DONTSEND
+#   DK2: Director tim no bang FindEntityByClassname (0x100B47F0). Ham do duyet
+#        danh sach CEntInfo ([esi+0x10004]), so [esi+0x74]=m_iClassname, va
+#        KHONG doc [this+0x28] lan nao => entity khong edict VAN TIM THAY DUOC
+#   !! 1/86 co parentname: the_hive_m4, alexi_5000_hunter_spawner gan vao
+#      alexi_5000_body (diem sinh hunter theo kich ban). Khong doi phan quyet
+#      DK6, chieu handle an toan, nhung day la cho duy nhat chua chac chan.
+info_zombie_spawn
+#
+# --- func_nav_blocker : 64 cai / 17 map --- DA THAM XONG, CHUA CHAY LAN NAO ---
+#   DE TAT. Bo dau # o dong cuoi khoi nay de bat, va PHAI test rieng mot minh.
+#   DK6: Spawn 0x1048C80E: push 0x20 (EF_NODRAW) ; call AddEffects.
+#        0/64 co parentname => handle cha = -1 => je 0x10056A84 = DONTSEND.
+#        (CO EF_NODRAW MA CO CHA thi SE duoc gui - phai theo trang thai cua cha.
+#         Hien khong map nao gan cha, nhung MAP MOI co the pha dieu do.)
+#   DK2: day la brush entity that nen tang nay quan trong nhat. Spawn goi
+#        SetSolid(SOLID_NONE) 0x100940D0 + AddSolidFlags(FSOLID_NOT_SOLID)
+#        0x10093D80 => von da khong dac. Bo tieu thu @0x1048BD58 duyet CHINH
+#        BANG RIENG cua no (0x107C31A4) bang con tro thang, doc offset tho
+#        [esi+0x42C]/[+0x438]/[+0x444]. KHONG dung phan vung khong gian.
+#   CANH BAO doc ma: lop nay doc [esi+0x28] 6 lan nhung esi la CAU TRUC LUOI
+#        NAV chu khong phai this ([esi+0x24] = co o, [esi+0x28] = so o de kep
+#        chi so). Duong tinh gia - dung ket luan la truy cap edict.
+#   NHIN CAI GI: zombie/bot co di vao vung le ra bi chan khong. Khong co trieu
+#        chung hinh anh - phai quan sat HANH VI AI.
+#func_nav_blocker

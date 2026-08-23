@@ -1,9 +1,14 @@
 // ===========================================================================
 //  edictbudget - giu so entity DANG SONG duoi tran 2048 edict cho L4D2.
 //
-//  Toan bo ma nguon nay do AI viet: Claude (Anthropic), chay trong Claude Code.
-//  Nguoi dung la nguoi VAN HANH may chu that: dat bai toan, chay thu, chup log,
-//  va bac bo nhieu ket luan sai cua AI. Chi tiet o NOTICE.
+//  Y tuong, bai toan va dinh huong: thienwu - nguoi VAN HANH may chu that.
+//  Ho quyet dinh moi huong di lon, va ca nhung huong KHONG duoc di (cam huong
+//  4096, cam dong vao ho phys, cam sua BSP, yeu cau CONG THUC CHUNG tu kiem
+//  luc chay). Ho chay thu, chup log, do tren may chu that, va bac bo nhieu ket
+//  luan sai cua AI - cac dong ghi "SAI, da sua" la dau vet cua nhung lan do.
+//
+//  Dich nguoc, viet ma, do dac va tai lieu: Claude (Anthropic), trong Claude
+//  Code. Chi tiet day du o NOTICE.
 //
 //  Giay phep: GPLv3. Xem LICENSE.
 //
@@ -18,6 +23,13 @@
 //    docs/04-nonetkill.md    doi ten classname trong lump - DA LOAI BO
 //    docs/04-cef.md          CEF - da go khoi ke hoach
 //    docs/05-do-dac.md       log, kiem ke, bay, heartbeat, loadprobe
+//    docs/06-dia-chi.md      !! BANG TRA DIA CHI DICH NGUOC DA XAC MINH cho
+//                            TUNG tinh nang: RVA, so hieu vtable slot, chuoi
+//                            neo, phien ban game + md5 nhi phan tham chieu, va
+//                            CACH SUY LAI TAT CA sau khi Valve cap nhat game
+//    docs/07-het-huong.md    !! DA DAT GIOI HAN (23/08/2026) - moi huong da
+//                            tim, da do, da bac bo; va NHUNG GI CON CHUA CHAC
+//                            ve ba lop noedict them ngay 21-22/08
 //
 //  Moi ket luan trong docs/ deu kem dia chi ham va doan lenh de kiem lai duoc.
 //  Cai gi khong xac minh duoc thi ghi thang la KHONG XAC DINH.
@@ -1610,12 +1622,57 @@ static void** ResolveClassVtable(uint8_t* base, const char* cls) {
     //     mov eax,[ebp+8] ; push eax ; push 0 ; call <helper> ; add eax,0x1c ; ret 4
     // Helper do la ban dac hoa cho rieng lop nay, nen quet trong do la DUNG.
     // Chi lan theo MOT CAP, va chi khi Create ngan (<0x30 byte den ret).
+    //
+    // !! SUA 22/08/2026 - PHAI THU MOI LOI GOI, KHONG DUOC DUNG O CAI DAU TIEN.
+    //    Ban cu tra ve NGAY tai lenh E8 dau tien, ke ca khi ket qua la NULL.
+    //    Voi info_zombie_spawn (Create 0x1029C1F0) thi E8 dau tien la
+    //    `call operator new` (0x100514D0) chu KHONG phai ctor:
+    //        1029C1F4  push 0x510
+    //        1029C1F9  call 0x100514D0   <- E8 dau tien = operator new
+    //        1029C207  call 0x1029BAC0   <- ctor THAT, luu vtable o 1029BACC
+    //    nen ham tra NULL va log ghi "khong tim duoc vtable, BO QUA" - lop khong
+    //    bao gio duoc bat, am tham, suot nhieu phien tren may chu chinh.
+    //    (func_areaportal khong dinh vi no luu vtable ngay trong Create.)
+    //
+    //    Do bang mo phong tren ca 557 lop, doi chieu output/binscan/ent_vt.json:
+    //        truoc khi sua : 348/557 giai dung (62,5%)
+    //        sau khi sua   : 485/557 giai dung (87,1%)   +137 lop
+    //
+    // !! DINH CHINH 23/08 - CAU "0 LOP BI HONG" O BAN GHI TRUOC LA SAI.
+    //    Phep do cu chi dem "cu dung -> moi sai" (= 0). No BO SOT loai nguy hiem hon:
+    //    "cu tra NULL an toan -> moi tra SAI". Dem lai dung: co DUNG 8 ca.
+    //        point_commentary_viewpoint  env_soundscape_proxy  env_soundscape_triggerable
+    //        prop_vehicle_driveable      player                weapon_first_aid_kit
+    //        weapon_defibrillator        env_fire_trail
+    //    Nguyen nhan: MSVC ghi vtable CHA truoc, CON sau. Khi duong du phong di vao mot
+    //    ham chi ghi vtable cha, ta nhan nham vtable cua LOP CO SO.
+    //    (Da thu "lay store CUOI thay vi dau": KHONG giai quyet - so ca SAI van la 21,
+    //     chi giam NULL tu 51 xuong 44.)
+    //
+    //    => TUYET DOI KHONG them 8 lop tren vao noedict.txt cho toi khi co cong chan.
+    //    7 lop dang chay (infodecal/light/light_spot/path_track/func_areaportal/
+    //    info_zombie_spawn/func_nav_blocker) deu giai DUNG - da xac minh hai lan doc lap:
+    //    mo phong, va 6 dia chi that trong edictbudget.log deu khop ent_vt.json voi
+    //    mot base duy nhat 0x645D0000.
+    //
+    // !! VA MOT BAY LON HON, KHONG LIEN QUAN BAN SUA NAY:
+    //    noedict VA THEO VTABLE, KHONG THEO CLASSNAME. Co 20 nhom classname dung chung
+    //    mot vtable. Vi du nguy hiem nhat:
+    //        0x105D517C = info_teleport_destination + info_player_start + info_landmark
+    //                     + info_hang_lighting + info_player_logo + logic_proximity
+    //    Bat info_teleport_destination se KEO THEO diem sinh survivor va moc chuyen man
+    //    ma khong bao gi ca. Truoc khi them BAT KY lop nao, phai kiem vtable cua no co
+    //    bi classname khac dung chung khong (tra output/binscan/ent_vt.json truong 'vt').
+    //    Ho light la ngoai le LANH TINH: light/light_spot/light_directional/light_glspot
+    //    dung chung 0x10612744 va ca bon deu la muc tieu hop le.
     for (int i = 0; i < 0x30; i++) {
         if (create[i] == 0xE8) {                              // call rel32
             int32_t rel = *(int32_t*)(create + i + 1);
             uint8_t* target = create + i + 5 + rel;
-            if (target < base) continue;
-            return ScanForVtableStore(base, target);
+            if (target >= base) {
+                void** viaCall = ScanForVtableStore(base, target);
+                if (viaCall) return viaCall;                  // thay thi lay, khong thi THU TIEP
+            }
         }
         if (create[i] == 0xC3 || create[i] == 0xC2) break;     // gap ret truoc -> thoi
     }

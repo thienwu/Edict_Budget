@@ -1,30 +1,51 @@
-# CEF - da go khoi ke hoach
+# CEF — đã gỡ khỏi kế hoạch
 
-*Trich tu `src/sample_mm.cpp`. Giu nguyen tieng Viet khong dau va cac dia
-chi ham nhu trong ma nguon, de doi chieu duoc.*
+*Tiếng Việt (bản chính) · [English](04-cef.en.md)*
 
-```
-CEF - DA GO KHOI KE HOACH (07/08). Ghi lai de khong ai them lai nham.
+Ghi lại để không ai thêm lại nhầm. Chốt ngày **07/08**.
 
-Y dinh ban dau: dua CEF vao chinh plugin nay, vi CEF goc (`mmscef-code`)
-VON LA Metamod plugin chu khong phai SourceMod extension.
+---
 
-NGUOI DUNG CHOT: KHONG chep CEF vao day. Ma nguon CEF goc chi de THAM KHAO,
-no KHONG ho tro day du L4D2 - can thiet ke lai neu muon co co che nay.
+## Ý định ban đầu
 
-Ly do ky thuat:
-  CEF goc dung `PEntityOfEntIndex` de tim slot trong. Tren L4D2, L4D da BO
-  ham do khoi IVEngineServer, nen `engine_wrappers.h` thay bang phep tinh
-  con tro thuan - LUON khac NULL => vong lap chay toi maxEntities roi bail.
-  Tuc CEF goc la mot NO-OP tren L4D2. No "on dinh" vi no khong lam gi ca.
-  => Chep nguyen xi sang day la chep mot thu khong chay.
+Đưa CEF vào chính plugin này, vì CEF gốc (`mmscef-code`) **vốn là Metamod plugin** chứ
+không phải SourceMod extension — nên nhìn qua thì tưởng chép sang là chạy.
 
-Neu ve sau can co che nay, phai THIET KE LAI cho L4D2:
-  - dung `edict_t::IsFree()` that, khong dung PEntityOfEntIndex
-  - va DO TRUOC: hien chua co so lieu nao cho thay co dinh nguy hiem luc
-    choi thuong. Do duoc 07/08: slot cao nhat tung dung = 682/2048, luon du
-    ~950 cho. Moi dot bung do duoc deu nam o nhanh wipe, va `wipeclear` da
-    xu ly.
-  - va nho rui ro muc 0-AA: tac gia CEF tu canh bao "PROBABLY UNSTABLE...
-    random crashing", va crash sourcemod+0x13b63 xuat hien dung khi ep chi so.
-```
+## Quyết định
+
+**Người dùng chốt: KHÔNG chép CEF vào đây.** Mã nguồn CEF gốc chỉ để **tham khảo**; nó
+**không hỗ trợ đầy đủ L4D2** — cần thiết kế lại nếu muốn có cơ chế này.
+
+## Lý do kỹ thuật
+
+CEF gốc dùng `PEntityOfEntIndex` để tìm slot trống. Trên L4D2, Valve **đã bỏ hàm đó** khỏi
+`IVEngineServer`, nên `engine_wrappers.h` thay bằng một phép tính con trỏ thuần —
+**luôn khác `NULL`** ⇒ vòng lặp chạy tới `maxEntities` rồi thoát.
+
+> Tức là **CEF gốc là một no-op trên L4D2**. Nó "ổn định" vì nó **không làm gì cả**.
+> Chép nguyên xi sang đây là chép một thứ không chạy.
+
+## Nếu về sau vẫn cần cơ chế này
+
+Phải **thiết kế lại** cho L4D2:
+
+1. Dùng `edict_t::IsFree()` thật, **không** dùng `PEntityOfEntIndex`.
+2. **Đo trước.** Hiện chưa có số liệu nào cho thấy có đọng nguy hiểm lúc chơi thường.
+   Đo được 07/08: slot cao nhất từng dùng = **682/2048**, luôn dư **~950 chỗ**. Mọi đợt
+   bùng đo được đều nằm ở **nhánh wipe**, và `wipeclear` đã xử lý.
+3. Nhớ rủi ro đã ghi: **tác giả CEF tự cảnh báo** *"PROBABLY UNSTABLE... random crashing"*,
+   và crash `sourcemod+0x13b63` xuất hiện **đúng khi ép chỉ số**.
+
+---
+
+## Cập nhật — CEF ≡ `freegate`
+
+Phần việc thực sự có giá trị của CEF — **cho phép tái dùng slot vừa được giải phóng** —
+đã có trong plugin dưới tên `freegate` (một byte tại `engine.dll` RVA `0x1E022A`).
+Xem [01-co-che.md](01-co-che.md).
+
+Và câu hỏi mở lớn nhất từng dùng để biện minh cho CEF — *"entity có tích tụ trong lúc chơi
+không?"* — **đã đo được là KHÔNG**: 7 phiên chơi dài, cả 7 đều kết thúc **thấp hơn** lúc bắt
+đầu (trung bình −114); đỉnh 1375/2048; **0 lần `ED_ALLOC`** trong 105 phiên.
+
+⇒ **Hạng mục này đóng.** Xem [07-het-huong.md](07-het-huong.md) mục 7.
