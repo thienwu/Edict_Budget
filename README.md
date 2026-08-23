@@ -339,6 +339,16 @@ Xem `configs/`. Chép `addons/` vào `left4dead2/`, khởi động lại, kiểm
 
 Mọi công tắc nằm trong `patches.txt` — **sửa file rồi khởi động lại là đủ, không cần build lại**.
 
+### Gỡ bỏ
+
+Không cần gỡ cài đặt gì. Hai cách, từ nhẹ tới triệt để:
+
+1. Đặt `stage.txt` = `0` — plugin vẫn nạp nhưng **nằm im hoàn toàn**, không móc một vtable nào.
+2. Xoá `addons/metamod/edictbudget.vdf` và thư mục `addons/edictbudget/`, rồi khởi động lại.
+
+Mọi thay đổi của plugin đều **chỉ tồn tại trong bộ nhớ tiến trình** — không ghi vào file game, không
+sửa BSP, không để lại dấu vết nào sau khi tắt.
+
 ### Chạy quan sát trước (khuyến nghị)
 
 Máy chủ của bạn có map khác, số người chơi khác, chế độ chơi khác. Nên chạy vài ngày
@@ -541,6 +551,9 @@ Thang ba bậc, mọi kết luận phải mang nhãn:
 | 🟡 đọc được | từ wiki / SDK / suy luận | đặt giả thuyết |
 | 🟠 xác minh binary | đã đọc mã trong binary **của chính L4D2**, có địa chỉ | thiết kế |
 | 🟢 đo được | đã chạy server thật, có số trong log | kết luận |
+
+*(Kho [Stringtable_Fix](https://github.com/thienwu/Stringtable_Fix) dùng **đúng thang này** — cùng
+một người đặt bài toán, nên dùng chung một bộ từ vựng. ⚪ = chưa xác định.)*
 
 Vài ví dụ về việc nhảy cóc từ 🟡 lên sản xuất:
 

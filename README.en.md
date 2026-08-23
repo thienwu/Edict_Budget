@@ -393,6 +393,17 @@ See `configs/`. Copy `addons/` into `left4dead2/`, restart, verify with `meta li
 
 Every switch lives in `patches.txt` — **edit the file and restart; no rebuild needed**.
 
+### Uninstall
+
+Nothing needs uninstalling. Two ways, least to most thorough:
+
+1. Set `stage.txt` to `0` — the plugin still loads but stays **completely inert**, hooking no
+   vtable at all.
+2. Delete `addons/metamod/edictbudget.vdf` and the `addons/edictbudget/` folder, then restart.
+
+Everything the plugin changes exists **only in process memory** — it writes no game file, edits no
+BSP, and leaves no trace once switched off.
+
 ### Run in observe mode first (recommended)
 
 Your server has different maps, a different player count, different game modes. Run for
@@ -603,6 +614,9 @@ A three-tier scale; every conclusion carries a label:
 | 🟠 verified in binary | code read inside **L4D2's own** binary, with an address | designing |
 | 🟢 measured | ran on a real server, numbers in the log | concluding |
 
+*(The [Stringtable_Fix](https://github.com/thienwu/Stringtable_Fix) repo uses **this same ladder** —
+same person setting the problems, so the same vocabulary. ⚪ = not determined.)*
+
 A few examples of jumping straight from 🟡 into production:
 
 - *"`mission_lost` only fires at a finale"* (inferred from strings sitting next to each
@@ -641,6 +655,20 @@ Requires the L4D2 SDK and Metamod:Source next to the repo. `SOURCE_ENGINE` **mus
 and makes `SH_CALL` invoke the wrong engine function.
 
 ---
+
+## Purpose
+
+This project exists to **improve entity handling and keep entity counts stable** on Left 4 Dead 2
+servers — not to extend or circumvent the engine's limits.
+
+Three things specifically:
+
+- **reclaim** edicts at the right moment, instead of letting the engine clean up too late
+- **allow reuse** of a just-freed slot, instead of leaving it idle for nothing
+- **withhold** edicts from entities that never use networking in the first place
+
+Every conclusion in this documentation carries either a measurement from a real server or an address
+in the binary. Anything not verified is stated as such, and does not go into a running build.
 
 ## Who wrote this
 
