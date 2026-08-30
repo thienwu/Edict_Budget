@@ -226,7 +226,40 @@ Engine **từ chối tái dùng** một edict trong **1 giây** sau khi nó đư
 
 `freegate` đổi **một byte** tại `0x101E022A`: `jae` → `jmp`. Đích nhảy giữ nguyên, không đổi độ dài lệnh. Định vị bằng **quét chữ ký** nên tự tìm lại được.
 
-An toàn nhờ cơ chế sẵn có của Valve: `sv_useexplicitdelete` (mặc định bật) gửi lệnh xoá tường minh xuống client khi một chỉ số bị tái dùng sớm — đó là thứ Valve thiết kế **thay cho** thời gian chờ này.
+#### 🛑 30/08/2026: vá byte vô điều kiện làm hỏng việc chuyển vật phẩm cho đồng đội
+
+Lý lẽ “an toàn nhờ `sv_useexplicitdelete`” **đúng ở mức snapshot, sai ở mức frame** — hai sự
+kiện trong cùng một frame không có snapshot nào ở giữa để lệnh xoá tường minh đi qua.
+
+Engine L4D2 **chỉ** cho chuyển tay `weapon_pain_pills` và `weapon_adrenaline`. Plugin như
+**Gear Transfer** mở rộng ra bảy loại khác bằng cách **huỷ rồi tạo lại** vật phẩm trong cùng một
+frame ⇒ vá vô điều kiện trả lại đúng chỉ số vừa giải phóng ⇒ **ghost weapon**.
+
+**Từ bản này `freegate` có ba chế độ:**
+
+| | |
+|---|---|
+| `0` | tắt — giữ nguyên cổng 1 giây |
+| **`1`** | **có danh sách (mặc định)** — móc `IVEngineServer::RemoveEdict` (vtable slot 23); lớp không nằm trong `freekeep.txt` thì đặt `freetime = 0.0` ⇒ tái dùng ngay, lớp trong danh sách thì giữ cách ly 1 giây |
+| `2` | vá byte vô điều kiện (chế độ cũ, để đối chứng) |
+
+`ED_Free` có **đúng một lối vào** nên một móc ở slot 23 phủ **100%** mọi lần giải phóng edict.
+Lúc wipe không bị hẹp biên độ: `wipeclear` gọi `AllowImmediateEdictReuse()` (slot 95) ngay sau
+`CleanupDeleteList()`, đặt `freetime = 0.0` cho **mọi** edict đang trống.
+
+> ⚠️ **`freegate` là cơ chế ÍT ĐƯỢC NGHIỆM THU NHẤT trong bốn cơ chế — CHƯA được kiểm
+> tra và nghiệm thu đầy đủ.** Nó chưa bao giờ chạy dài ngày trên máy chủ đông người, và
+> phép đo A/B từng dùng để biện minh cho nó có **trước** khi `wipeclear` có hình dạng như
+> hiện nay.
+>
+> Ngược lại, lỗi chuyển vật phẩm của chế độ `2` thì **ĐÃ XÁC MINH ĐƯỢC** — lần từ đầu đến
+> cuối bằng dịch ngược: `RemoveEdict` (slot 23) → `ED_Free` đóng dấu
+> `freetime[i] = GetTime()`; `GiveNamedItem` → `CreateEntityByName` → `ED_Alloc` trong cùng
+> frame. Cổng nguyên vẹn thì `ED_Alloc` **buộc phải** cấp chỉ số khác; vá byte thì nó trả lại
+> đúng chỉ số cũ.
+
+Chi tiết: [docs/01-co-che.md](docs/01-co-che.md) mục 4 · địa chỉ:
+[docs/06-dia-chi.md](docs/06-dia-chi.md) mục 3.
 
 ```
 Phep so co doi chung - cung tinh huong num_edicts=2048, ~999 slot trong:
@@ -356,7 +389,9 @@ Máy chủ của bạn có map khác, số người chơi khác, chế độ ch�
 
 ```
 noedict=1     manh nhat, mat mat bang 0 - bat ngay tu dau
-freegate=1    doi 1 byte engine, da do doi chung
+freegate=0    MAC DINH TAT - co che it duoc nghiem thu nhat. Chi bat khi
+              THUC SU gap ED_Alloc luc wipe, va bat = 1 (co danh sach),
+              KHONG bao gio bat = 2.
 wipeclear=2   da do qua 5 lan wipe lien tiep
 trap=1        chi ghi log khi sap chet
 mapclear=1    CHI QUAN SAT, khong xoa gi
@@ -371,7 +406,7 @@ swap=0        TAT luc dau
 | công tắc | mặc định | nghĩa |
 |---|---|---|
 | `noedict` | 1 | đặt `EFL_SERVER_ONLY` cho lớp trong `noedict.txt` ⇒ không tốn edict |
-| `freegate` | 1 | bỏ thời gian chờ 1 giây trước khi tái dùng edict |
+| `freegate` | **0** | tái dùng edict ngay, **trừ** lớp trong `freekeep.txt`. `0` tắt · `1` có danh sách · `2` vô điều kiện (làm hỏng chuyển vật phẩm). **Mặc định TẮT** — cơ chế ít được nghiệm thu nhất |
 | `wipeclear` | 2 | dọn entity lúc đội thua. `0` tắt · `1` quan sát · `2` dọn thật |
 | `swap` | 2 | đổi lớp theo `swap.txt`. `0` tắt · `1` quan sát · `2` đổi thật |
 | `swapmax` | 0 | trần số lần đổi. `0` = không giới hạn |

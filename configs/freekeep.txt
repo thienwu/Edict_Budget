@@ -1,0 +1,81 @@
+# freekeep.txt - cac lop KHONG duoc tai su dung edict NGAY LAP TUC
+#
+# Chi co tac dung khi  freegate=1  (che do co danh sach).
+# Sua file nay chi khoi dong lai server, KHONG build lai.
+#
+# ============================== CO CHE ==============================
+# Da xac minh tren binary (engine.dll, IVEngineServer vtable 0x1037D9BC):
+#   slot 23  RemoveEdict 0x10130B50 -> ED_Free 0x101DFF60   << cua DUY NHAT
+#            ED_Free:  or [edict],2 ; freetime[i] = sv.GetTime() ; serial++
+#   slot 22  CreateEdict            -> ED_Alloc 0x101E0170
+#            nhanh 1: comiss 2.0f, freetime[i] ; ja  LAY
+#            nhanh 2: curtime - freetime >= 1.0 ; jae LAY
+#
+# Plugin moc slot 23. Sau khi ED_Free chay:
+#   lop KHONG trong file nay -> dat freetime[i] = 0.0  => nhanh 1 lay NGAY
+#   lop CO    trong file nay -> de nguyen GetTime()    => giu cach ly 1 giay
+#
+# ED_Free co DUNG MOT loi vao (1 call rel32, 0 tham chieu du lieu) nen mot moc
+# nay phu 100% moi lan giai phong edict.
+#
+# Luat khop: dong ket thuc '_' = khop TIEN TO. Con lai = khop CHINH XAC.
+#
+# ========================= VI SAO CAN FILE NAY ======================
+# Engine L4D2 CHI cho chuyen tay hai thu: weapon_pain_pills va
+# weapon_adrenaline. Bay loai con lai la do plugin (vi du Gear Transfer) MO RONG
+# ra, va cach duy nhat de lam duoc la HUY roi TAO LAI vat pham:
+#
+#     RemoveEdict(ent);                  // -> ED_Free, freetime = GetTime()
+#     ent = CreateAndEquip(client, ...); // -> ED_Alloc, CUNG MOT FRAME
+#
+# Neu chi so edict duoc tra lai NGAY thi client khong bao gio thay ranh gioi
+# xoa/tao - no chi thay thuc the o chi so N dot ngot doi thuoc tinh. Ket qua:
+# "ghost weapon", vat pham dinh duoi chan bot, hoac chuyen do that bai.
+#
+# Changelog cua chinh Gear Transfer da ghi hai trieu chung nay:
+#   v2.16 (06-09-2021) "fixed ... creating a ghost weapon attached between players legs"
+#   v2.19 (19-10-2021) "fixed 'Invalid edict' error when creating items to give"
+#
+# Giu cach ly 1 giay = ED_Alloc buoc phai cap mot chi so KHAC => het loi.
+#
+# ==================== KHONG SO GIAM HIEU QUA LUC WIPE ================
+# Luc wipe, `wipeclear` goi CleanupDeleteList() roi AllowImmediateEdictReuse()
+# (IVEngineServer slot 95). Ham do dat freetime = 0.0 cho MOI edict dang trong -
+# ke ca nhung cai vua bi giu cach ly o day. Nen danh sach nay chi co tac dung
+# LUC CHOI THUONG, khong lam hep bien do o dot bung.
+
+# --- Chin lop vat pham Gear Transfer chuyen duoc ---
+# (weapon_pain_pills va weapon_adrenaline la hai cai engine von ho tro san;
+#  bay cai con lai la phan plugin mo rong)
+weapon_adrenaline
+weapon_pain_pills
+weapon_molotov
+weapon_pipe_bomb
+weapon_vomitjar
+weapon_first_aid_kit
+weapon_upgradepack_explosive
+weapon_upgradepack_incendiary
+weapon_defibrillator
+
+# --- Ban sao "_spawn" tren map: plugin cung xoa/tao chung o duong bot nhat do ---
+weapon_adrenaline_spawn
+weapon_pain_pills_spawn
+weapon_molotov_spawn
+weapon_pipe_bomb_spawn
+weapon_vomitjar_spawn
+weapon_first_aid_kit_spawn
+weapon_upgradepack_explosive_spawn
+weapon_upgradepack_incendiary_spawn
+weapon_defibrillator_spawn
+
+# --- BAO THU HON (khuyen nghi neu chay nhieu plugin doi vu khi) ---
+# Mot dong duy nhat duoi day trum TOAN BO ho weapon_ - ke ca sung, ke ca cac
+# lop _spawn o tren. Bo dau # neu muon dung, va co the xoa cac dong tren.
+#weapon_
+
+# --- Cac lop khac tung thay plugin huy-roi-tao-lai trong cung mot frame ---
+# Bo dau # neu may chu ban co plugin dong vao chung.
+#prop_physics
+#prop_dynamic
+#infected
+#witch

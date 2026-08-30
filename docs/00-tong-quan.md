@@ -87,17 +87,31 @@ rồi để game chạy tiếp; `CleanUpMap` tự dựng lại map từ entity l
 Wipe xoá rồi tạo lại **hàng trăm** entity trong **cùng một khoảnh khắc**, nên không cái nào
 qua nổi cổng đó ⇒ **chết trong khi còn ~999 slot trống**.
 
-Đổi **một byte** trong `engine.dll`: `jae` → `jmp`. Định vị bằng **quét chữ ký**.
+**Ba chế độ:**
 
-An toàn nhờ `sv_useexplicitdelete` (mặc định bật) — Valve thiết kế nó **thay cho** thời
-gian chờ này.
+| `freegate` | làm gì |
+|---|---|
+| `0` | tắt — giữ nguyên cổng 1 giây |
+| **`1`** | **có danh sách (mặc định)** — móc `IVEngineServer::RemoveEdict` (**vtable slot 23**); lớp không nằm trong `freekeep.txt` thì đặt `freetime = 0.0` ⇒ tái dùng ngay |
+| `2` | đổi **một byte** trong `engine.dll` (`jae` → `jmp`), vô điều kiện — chế độ cũ |
+
+> 🛑 **Chế độ `2` làm hỏng việc chuyển vật phẩm cho đồng đội.** Lý lẽ “an toàn nhờ
+> `sv_useexplicitdelete`” **đúng ở mức snapshot, sai ở mức frame**. Engine chỉ cho chuyển tay
+> `weapon_pain_pills` và `weapon_adrenaline`; plugin như Gear Transfer mở rộng ra bằng cách
+> **huỷ rồi tạo lại** vật phẩm trong cùng một frame ⇒ chế độ `2` trả lại đúng chỉ số vừa giải
+> phóng ⇒ **ghost weapon**. Lỗi này **đã xác minh được** bằng dịch ngược.
+> Xem [01-co-che.md](01-co-che.md) mục 4.
+
+> ⚠️ **`freegate` là cơ chế ÍT ĐƯỢC NGHIỆM THU NHẤT — CHƯA kiểm tra và nghiệm thu đầy đủ.**
+> Chưa từng chạy dài ngày trên máy chủ đông người, và phép đo A/B từng biện minh cho nó
+> có **trước** khi `wipeclear` có hình dạng như hiện nay.
 
 🟢 **Đo được (đối chứng):** cùng tình huống `num_edicts=2048` + ~999 slot trống,
 `freegate=0` → **CHẾT**, `freegate=1` → **chạy tiếp bình thường**.
 
 > ⚠️ **Chưa nghiệm thu dài hạn.** Có nghi ngờ (chưa chứng minh) rằng chạy lâu thì gây nghẽn
 > hệ thống, và làm sai lệch số entity ở máy chủ ≥ 4 người chơi. Gói xuất bản để
-> `freegate=1` vì nó đã qua phép đo đối chứng; máy chủ đông người thấy tickrate lạ thì
+> **`freegate=0`**; muốn bật thì dùng `1` (chế độ có danh sách). Máy chủ đông người thấy tickrate lạ thì
 > **đặt về 0 trước tiên**.
 
 ### 3. `noedict` — khiến lớp không dùng mạng KHÔNG lấy edict
@@ -302,6 +316,7 @@ và đều **hệ số 1** nên `swap` vô dụng.
 | `patches.txt` | công tắc từng phần; đổi xong chỉ **khởi động lại server** |
 | `noedict.txt` | lớp bật `EFL_SERVER_ONLY`. Trước khi thêm lớp mới phải qua **đủ 6 điều kiện** — ghi trong chính file đó |
 | `swap.txt` | cặp đổi lớp |
+| `freekeep.txt` | lớp **không** được tái dùng edict ngay (chỉ khi `freegate=1`). Mặc định liệt kê 9 lớp vật phẩm Gear Transfer chuyển được + 9 bản `_spawn` — nếu để trống thì **mọi** lớp đều tái dùng ngay và việc chuyển vật phẩm sẽ hỏng |
 | `wipekeep.txt` | lớp **GIỮ THÊM** khi `wipeclear` dọn. **ĐỂ TRỐNG mới đúng**: ở wipe, entity bị xoá sẽ **được dựng lại** từ entity lump, nên giữ thêm chỉ làm hẹp biên độ |
 | `mapkeep.txt` | lớp **KHÔNG ĐƯỢC DỌN** khi chuyển màn (chỉ dùng khi `mapclear >= 2`). **Ngược với `wipekeep`**: ở chuyển màn, xoá nhầm là **MẤT VĨNH VIỄN** |
 

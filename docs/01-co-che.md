@@ -169,8 +169,49 @@ jae     lấy_nó                 ; hoặc đã qua 1 GIÂY   <-- vá ở đây
 
 **Định vị bằng quét chữ ký**, không dùng RVA cứng. RVA đối chiếu: `engine.dll` `0x1E022A`.
 
-> ⚠️ **Chưa nghiệm thu dài hạn** với ≥ 4 người chơi — gói xuất bản để `freegate=1`. Xem
-> [06-dia-chi.md](06-dia-chi.md) mục 3.
+### 🛑 Chế độ vá byte vô điều kiện LÀM HỎNG việc chuyển vật phẩm (30/08/2026)
+
+Lý lẽ “an toàn nhờ `sv_useexplicitdelete`” **đúng ở mức snapshot, sai ở mức frame**. Hai sự
+kiện trong cùng một frame **không có snapshot nào ở giữa** để lệnh xoá tường minh đi qua.
+
+Engine L4D2 **chỉ** cho chuyển tay `weapon_pain_pills` và `weapon_adrenaline`. Các plugin như
+**Gear Transfer** mở rộng ra bảy loại khác bằng cách **huỷ rồi tạo lại** vật phẩm:
+
+```sourcepawn
+RemoveEdict(item);                      // -> ED_Free, freetime = GetTime()
+item = CreateAndEquip(target, type);    // -> ED_Alloc, CÙNG MỘT FRAME
+```
+
+Vá byte vô điều kiện trả lại **đúng chỉ số vừa giải phóng** ⇒ client không bao giờ thấy ranh
+giới xoá/tạo ⇒ **ghost weapon**. Changelog của chính plugin đó đã ghi hai triệu chứng này:
+v2.16 *“ghost weapon attached between players legs”*, v2.19 *“‘Invalid edict’ error when creating
+items to give”*.
+
+### Ba chế độ
+
+| `freegate` | làm gì |
+|---|---|
+| `0` | tắt — giữ nguyên cổng 1 giây của engine |
+| **`1`** | **có danh sách (mặc định).** Móc `IVEngineServer::RemoveEdict` (**vtable slot 23**). Sau khi hàm gốc chạy: lớp **không** trong `freekeep.txt` ⇒ đặt `freetime[i] = 0.0` ⇒ `ED_Alloc` **nhánh thứ nhất** lấy ngay. Lớp **có** trong danh sách ⇒ để nguyên `GetTime()` ⇒ giữ cách ly 1 giây |
+| `2` | vá byte vô điều kiện (chế độ cũ, giữ để đối chứng) |
+
+`ED_Free` có **đúng một lối vào** (1 `call rel32`, 0 tham chiếu dữ liệu) nên một móc ở slot 23
+**phủ 100%** mọi lần giải phóng edict.
+
+> 🔑 **Không làm hẹp biên độ lúc wipe:** `wipeclear` gọi `AllowImmediateEdictReuse()`
+> (**vtable slot 95**) ngay sau `CleanupDeleteList()`. Hàm đó đặt `freetime = 0.0` cho **mọi**
+> edict đang trống — kể cả những cái vừa bị giữ cách ly. Danh sách chỉ có tác dụng **lúc chơi
+> thường**.
+
+Hồ sơ đầy đủ: `tools/freegate-hong-gear-transfer.md` (kho phát triển).
+
+> ⚠️ **`freegate` là cơ chế ÍT ĐƯỢC NGHIỆM THU NHẤT trong bốn cơ chế — CHƯA được kiểm
+> tra và nghiệm thu đầy đủ.** Nó chưa bao giờ chạy dài ngày trên máy chủ đông người, và phép đo
+> A/B từng dùng để biện minh cho nó có trước khi `wipeclear` có hình dạng như hiện nay.
+> Ngược lại, lỗi chuyển vật phẩm của chế độ `2` thì **đã xác minh được** — lần được từ đầu
+> đến cuối qua `RemoveEdict` → `ED_Free` → `ED_Alloc` bằng dịch ngược.
+>
+> Xem [06-dia-chi.md](06-dia-chi.md) mục 3.
 
 ---
 

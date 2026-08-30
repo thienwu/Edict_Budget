@@ -166,6 +166,50 @@ index is recycled early it sends an explicit delete to clients first. That is th
 mechanism Valve designed as a replacement for this wait.
 ```
 
+## 🛑 `freegate`: the unconditional byte patch BREAKS item transfer (30 Aug 2026)
+
+The "safe because of `sv_useexplicitdelete`" argument is **right at snapshot level and
+wrong at frame level**. Two events inside one frame have **no snapshot boundary between
+them** for an explicit delete to travel through.
+
+The L4D2 engine only lets players hand over `weapon_pain_pills` and `weapon_adrenaline`.
+Plugins such as **Gear Transfer** extend this to seven more classes by **destroying and
+recreating** the item:
+
+```sourcepawn
+RemoveEdict(item);                      // -> ED_Free, freetime = GetTime()
+item = CreateAndEquip(target, type);    // -> ED_Alloc, SAME FRAME
+```
+
+The unconditional patch hands back **the index just freed**, so the client never observes
+a delete/create boundary ⇒ **ghost weapon**. That plugin's own changelog records both
+symptoms: v2.16 *"ghost weapon attached between players legs"*, v2.19 *"'Invalid edict'
+error when creating items to give"*.
+
+### Three modes
+
+| `freegate` | what it does |
+|---|---|
+| `0` | off — the engine's 1-second gate stays intact |
+| **`1`** | **denylist mode (default).** Hooks `IVEngineServer::RemoveEdict` (**vtable slot 23**). After the original runs: a class **not** in `freekeep.txt` gets `freetime[i] = 0.0` ⇒ `ED_Alloc`'s **first branch** takes it immediately. A class **in** the list keeps `GetTime()` ⇒ the 1-second quarantine holds |
+| `2` | the unconditional byte patch (legacy, kept for comparison) |
+
+`ED_Free` has **exactly one entry point** (1 `call rel32`, 0 data references), so a single
+hook at slot 23 covers **100%** of edict frees.
+
+> 🔑 **It does not narrow the wipe headroom:** `wipeclear` calls
+> `AllowImmediateEdictReuse()` (**vtable slot 95**) right after `CleanupDeleteList()`. That
+> function sets `freetime = 0.0` for **every** currently-free edict — including the ones
+> just quarantined. The denylist only bites **during normal play**.
+
+Full dossier: `tools/freegate-hong-gear-transfer.md` (development repo).
+
+> ⚠️ **`freegate` is the LEAST-VALIDATED of the four mechanisms — it has NOT been fully
+> tested or signed off.** It has never been exercised on a busy server over a long uptime,
+> and the original A/B measurement that justified it predates `wipeclear` in its current
+> form. The item-transfer bug of mode `2`, by contrast, **is verified** — traced end to end
+> through `RemoveEdict` → `ED_Free` → `ED_Alloc` by disassembly.
+
 ## `wipeclear` — clean at the start of RestartRound
 
 ```

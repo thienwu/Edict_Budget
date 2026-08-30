@@ -268,9 +268,42 @@ when you have 1000 free"*.
 unchanged and the instruction length is identical. It is located by **signature scan**,
 so it can find itself again after a relocation.
 
-It is safe because of a Valve mechanism that already exists: `sv_useexplicitdelete` (on
-by default) tells clients the old entity is gone before its index is recycled — which is
-precisely what the cooldown was protecting against.
+#### 🛑 30 Aug 2026: the unconditional byte patch breaks item transfer
+
+The old "safe because of `sv_useexplicitdelete`" argument is **right at snapshot level and
+wrong at frame level** — two events inside one frame have no snapshot boundary between them
+for an explicit delete to travel through.
+
+The L4D2 engine only lets players hand over `weapon_pain_pills` and `weapon_adrenaline`.
+Plugins such as **Gear Transfer** extend this to seven more classes by **destroying and
+recreating** the item inside one frame ⇒ the unconditional patch hands back the index just
+freed ⇒ **ghost weapon**.
+
+> 🟠 **The bug is verified**, by disassembly end to end: `RemoveEdict` (vtable slot 23)
+> → `ED_Free` stamps `freetime[i] = GetTime()`; `GiveNamedItem` → `CreateEntityByName` →
+> `ED_Alloc` in the same frame. With the gate intact `ED_Alloc` **must** hand out a different
+> index; with the byte patched it hands back the same one. The plugin's own changelog records
+> both symptoms (v2.16 ghost weapon, v2.19 "Invalid edict").
+>
+> ⚠️ **`freegate` as a whole is still NOT fully tested or validated.** It has never been
+> exercised on a busy server over a long uptime, and the original A/B measurement that
+> justified it was taken before `wipeclear` existed in its current form. Treat it as the
+> least-proven of the four mechanisms.
+
+**From this build `freegate` has three modes:**
+
+| | |
+|---|---|
+| `0` | off — the engine's 1-second gate stays intact |
+| **`1`** | **denylist mode (default)** — hooks `IVEngineServer::RemoveEdict` (vtable slot 23); a class not listed in `freekeep.txt` gets `freetime = 0.0` ⇒ reusable immediately, a listed class keeps its 1-second quarantine |
+| `2` | the unconditional byte patch (legacy, for comparison) |
+
+`ED_Free` has **exactly one entry point**, so one hook at slot 23 covers **100%** of edict
+frees. The wipe headroom is unaffected: `wipeclear` calls `AllowImmediateEdictReuse()`
+(slot 95) right after `CleanupDeleteList()`, zeroing `freetime` for **every** free edict.
+
+Details: [docs/01-co-che.en.md](docs/01-co-che.en.md) · addresses:
+[docs/06-dia-chi.en.md](docs/06-dia-chi.en.md) section 3.
 
 ```
 Controlled comparison - same situation, num_edicts=2048, ~999 free slots:
@@ -411,7 +444,9 @@ a few days at the least intrusive setting first:
 
 ```
 noedict=1     strongest, zero cost - enable from the start
-freegate=1    one engine byte, verified by controlled comparison
+freegate=0    OFF BY DEFAULT - the least-validated mechanism. Only enable it
+              if you ACTUALLY hit ED_Alloc during a wipe, and then use = 1
+              (denylist mode), NEVER = 2.
 wipeclear=2   survived 5 consecutive wipes under measurement
 trap=1        log-only, fires when edicts are about to run out
 mapclear=1    OBSERVE ONLY, deletes nothing
@@ -427,7 +462,7 @@ and only then turn on `swap=2`.
 | switch | default | meaning |
 |---|---|---|
 | `noedict` | 1 | set `EFL_SERVER_ONLY` for classes in `noedict.txt` ⇒ no edict consumed |
-| `freegate` | 1 | drop the 1-second wait before a freed edict may be reused |
+| `freegate` | **0** | reuse a freed edict immediately, **except** classes in `freekeep.txt`. `0` off · `1` denylist · `2` unconditional (breaks item transfer). **Ships OFF** — least-validated mechanism |
 | `wipeclear` | 2 | clean up on a team wipe. `0` off · `1` observe · `2` clean |
 | `swap` | 2 | substitute classes per `swap.txt`. `0` off · `1` observe · `2` substitute |
 | `swapmax` | 0 | cap on substitutions. `0` = unlimited |

@@ -72,6 +72,25 @@ THREE MECHANISMS
    MEASURED: 5 consecutive wipes (ordinary map), 3 consecutive (c6m1_riverbank).
 
 2. freegate - allow a just-freed slot to be reused
+
+   !! THREE MODES from the 30 Aug 2026 build:
+        0 = off, the engine's 1-second gate stays intact
+        1 = DENYLIST (default) - hooks IVEngineServer::RemoveEdict (vtable slot
+            23); a class NOT listed in freekeep.txt gets freetime = 0.0 so
+            ED_Alloc's FIRST branch takes it at once, a listed class keeps its
+            1-second quarantine
+        2 = the unconditional byte patch (legacy, for comparison)
+
+   !! MODE 2 BREAKS HANDING ITEMS TO TEAMMATES. The engine only lets players
+      hand over weapon_pain_pills and weapon_adrenaline; plugins such as Gear
+      Transfer extend this by DESTROYING and RECREATING the item inside ONE
+      frame, so mode 2 hands back the very index just freed and the client
+      never sees a delete/create boundary -> "ghost weapon".
+      This bug IS VERIFIED, traced end to end by disassembly.
+
+   !! freegate is the LEAST-VALIDATED of the four mechanisms - it has NOT been
+      fully tested or signed off. It has never run for long on a busy server,
+      and the A/B measurement that justified it predates the current wipeclear.
    ED_Alloc REFUSES to reuse an edict for 1 SECOND after it is freed. A wipe
    deletes and recreates hundreds of entities in the SAME instant, so not one
    of them passes that gate => the server dies with ~999 free slots.
@@ -216,6 +235,10 @@ CONFIGURATION FILES  (left4dead2\addons\edictbudget\)
   mapkeep.txt    classes that must NOT be cleaned at a level transition (only
                  used when mapclear>=2). The opposite of wipekeep: at a
                  transition, deleting the wrong thing is PERMANENT LOSS.
+  freekeep.txt   classes whose edict must NOT be reused immediately (freegate=1
+                 only). Ships with the 9 item classes Gear Transfer can hand
+                 over, plus their 9 "_spawn" copies. If this file is EMPTY then
+                 EVERY class is reused at once and item transfer breaks.
 
 BUILD
   SOURCE_ENGINE MUST be 15 (LEFT4DEAD2) in Metamod's numbering.

@@ -12,19 +12,62 @@ wipeclear=2
 # Doi 1 byte trong engine.dll (jae -> jmp), tim bang QUET CHU KY nen tu dinh vi duoc.
 # Da do (doi chung): cung tinh huong num_edicts=2048 + ~999 slot trong,
 #   freegate=0 -> CHET  |  freegate=1 -> SONG.
-freegate=1
+# freegate: 0 tat | 1 CO DANH SACH (doc freekeep.txt) | 2 vo dieu kien (che do cu)
+#   Che do 2 tra lai chi so edict vua giai phong NGAY trong cung frame, lam hong
+#   viec chuyen vat pham cho dong doi (ghost weapon). Xem freekeep.txt.
+freegate=0
 # Da do: ch04_pripyat03 tu CHET o 2048 edict -> nap duoc voi num_edicts=1178.
 #        Nguoi dung xac nhan bang mat: khong mat decal, anh sang dung.
 noedict=1
 trap=1
 
-# Don entity luc chuyen man. CHUA CHUNG MINH DUOC LOI ICH.
-#   Da song o mapclearmax=100, nhung trong 100 cai xoa chi 9 cai thuc su
-#   duoc mang sang => loi ich khong dang ke.
-#   Da CHET CAM 2 lan khi xoa >1300 (khong ED_Alloc, khong dump).
-# Muon thu lai: dat mapclear=2 va mapclearmax=100, tang dan.
-mapclear=0
+# Don entity luc chuyen man.
+#
+# !! KHONG BAO GIO DAT mapclear=2 KEM mapclearcarry=1.
+#    Da thu 14/08: xoa 200 entity MANG SANG -> sap cam trong 12 giay.
+#    Luat dung, giai thich duoc ca ba lan chet:
+#      cap 100 -> 9 cai mang sang   -> SONG
+#      >1300   -> ~270 cai mang sang -> CHET
+#      carry=1 -> 200 cai mang sang -> CHET
+#    KHONG PHAI SO LUONG GIET. LA XOA CAI MANG SANG GIET.
+#    PrepareLevelChange lap danh sach chuyen man TRUOC khi plugin chay; xoa cai
+#    da nam trong danh sach => danh sach tro vao vung da giai phong => sap cam.
+#
+# De 1 = CHI QUAN SAT. Khong xoa gi, chi ghi log so entity mang sang moi lan
+# chuyen man. Can so lieu nay de theo doi rui ro cua `swap` (xem ben duoi).
+mapclear=1
+mapclearcarry=0
 mapclearmax=100
+
+# Doi lop entity thanh lop RE HON ngay luc tao. Bang doi o swap.txt.
+#   0 = tat | 1 = chi quan sat (dem, khong doi) | 2 = doi that
+#
+# DA DO, KHOP TUYET DOI tren may thu nghiem:
+#   the_hive_m3  song 1591 -> 1431   (80 den,  giam 160 = 80 x 2)
+#   the_hive_m4  song 1954 -> 1330   (312 den, giam 624 = 312 x 2)
+#   m4: cho tho tu 93 slot len 718 slot.
+#
+# !! RUI RO DA BIET, CHUA SUA:
+#    beam_spotlight GIU co FCAP_ACROSS_TRANSITION, con point_spotlight thi BO
+#    (CPointEntity::ObjectCaps @1002C090: call base ; and eax,~2 ; ret).
+#    => so entity mang sang luc chuyen man TANG.
+#    CChangeLevel::BuildChangeList co TRAN CUNG 512 (101FF248 push 0x200);
+#    vuot thi in "Too many entities across a transition!" roi bo luon danh sach.
+#    Uoc tinh: m4 739 -> 1051 ung vien, m3 1168 -> 1248. Ca hai da vuot 512 tu truoc.
+#    CHI anh huong luc CHUYEN MAN, khong anh huong luc choi giua map.
+#    => Doc dong MAPCLEAR trong edictbudget.log sau vai ngay. Neu thay
+#       "Too many entities" trong console thi dat swap=0 ngay.
+#
+# Mot lan bao loi chuc nang chua tai hien duoc: nguoi choi ket o the_hive.
+# Nhieu luot sau do deu binh thuong, ke ca m4 voi ca 312 den da doi.
+# Chua du bang chung quy ket cho swap. Chi tiet: tools\beam-spotlight-loi.md
+swap=2
+swapmax=0
+
+# Ghi so edict trong N frame dau sau khi nap map. 0 = tat.
+# Vi MOC CO SO ghi tai ServerActivate, luc do nhieu entity CHUA spawn xong:
+# point_spotlight tao con trong Activate()/Think(), tuc SAU thoi diem do.
+loadprobe=8
 
 # Ghi dinh ky so lieu thuc the vao console.log. So GIAY, 0 = tat.
 # CHI GHI LOG, khong dong vao entity nao.

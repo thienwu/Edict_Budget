@@ -121,7 +121,15 @@ Cost: `client.dll` hardcodes `HaloScale = 60.0`, so the halo is 6× larger.
 
 | item | value | tier |
 |---|---|---|
-| patch site | `engine.dll` RVA `0x1E022A` — `jae` → `jmp` (**one byte**) | 🟢 |
+| patch site (mode 2) | `engine.dll` RVA `0x1E022A` — `jae` → `jmp` (**one byte**) | 🟢 |
+| **`IVEngineServer` vtable** | `0x1037D9BC` | 🟠 |
+| **slot 22** `CreateEdict` | → `ED_Alloc` `0x101E0170` | 🟠 |
+| **slot 23** `RemoveEdict` | `0x10130B50` → `ED_Free` `0x101DFF60` — **the ONLY door** (1 `call rel32`, 0 data references) | 🟠 |
+| **slot 95** `AllowImmediateEdictReuse` | thunk `0x101311C0` → `0x101DFF10` — sets `freetime = 0.0` for **every currently-free edict** | 🟠 |
+| what `ED_Free` does | `or [edict],2` (`FL_EDICT_FREE`) · `freetime[i] = sv.GetTime()` · `serial++` | 🟠 |
+| `freetime` table | `engine + 0x6B3A58` — the plugin **derives it from the code** (`D9 1C B5 <imm32>` inside `ED_Free`), never hardcoded | 🟠 |
+| edict array | `[engine + 0x645774]` — derived from `A1 <imm32>` inside `ED_Free` | 🟠 |
+| clear the whole `freetime` table | `0x101DFEF0` — `memset(table, 0, 0x2000)`, runs at level load | 🟠 |
 | anchor signature | `D9 E8 D9 C9 DF F1 DD D8 73` (`fld1 ; fxch st(1) ; fcompi st(1) ; fstp st(0) ; jae`) | 🟠 |
 | "just freed" table | `sv + 0x104` (`sv + 0x180` exists but is **unused**) | 🟠 |
 | table clear size | constant `0x2000` hardcoded in the clearing function | 🟠 |
@@ -129,10 +137,15 @@ Cost: `client.dll` hardcodes `HaloScale = 60.0`, so the halo is 6× larger.
 The plugin does **not** use a hardcoded RVA — it scans for the signature. The RVA is
 recorded only for cross-checking.
 
-> ⚠️ **Not validated long-term.** There is an unproven suspicion that it causes system
-> congestion over long uptimes, and skews entity counts on servers with ≥ 4 players. The
-> package ships `freegate=1` because it passed a controlled A/B measurement; if your server
-> is busy and the tickrate looks wrong, **set it to 0 first**.
+> ⚠️ **`freegate` is the LEAST-VALIDATED of the four mechanisms — it has NOT been fully
+> tested or signed off.** It has never been exercised on a busy server over a long uptime,
+> and the original A/B measurement that justified it predates `wipeclear` in its current
+> form. The item-transfer bug of mode `2`, by contrast, **is verified** — traced end to end
+> through `RemoveEdict` → `ED_Free` → `ED_Alloc` by disassembly.
+>
+> There is also an unproven suspicion that it causes system congestion over long uptimes and
+> skews entity counts on servers with ≥ 4 players. The package ships **`freegate=0`** — if you enable it, use `1`
+> (denylist mode); if your server is busy and the tickrate looks wrong, **set it to 0 first**.
 
 ---
 

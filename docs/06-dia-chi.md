@@ -119,17 +119,30 @@ Giá phải trả: `client.dll` ghi cứng `HaloScale = 60.0` ⇒ quầng sáng 
 
 | thứ | giá trị | mức |
 |---|---|---|
-| điểm vá | `engine.dll` RVA `0x1E022A` — `jae` → `jmp` (**một byte**) | 🟢 |
+| điểm vá (chế độ 2) | `engine.dll` RVA `0x1E022A` — `jae` → `jmp` (**một byte**) | 🟢 |
+| **vtable `IVEngineServer`** | `0x1037D9BC` | 🟠 |
+| **slot 22** `CreateEdict` | → `ED_Alloc` `0x101E0170` | 🟠 |
+| **slot 23** `RemoveEdict` | `0x10130B50` → `ED_Free` `0x101DFF60` — **cửa DUY NHẤT** (1 `call rel32`, 0 tham chiếu dữ liệu) | 🟠 |
+| **slot 95** `AllowImmediateEdictReuse` | thunk `0x101311C0` → `0x101DFF10` — đặt `freetime = 0.0` cho **mọi edict đang trống** | 🟠 |
+| `ED_Free` làm gì | `or [edict],2` (`FL_EDICT_FREE`) · `freetime[i] = sv.GetTime()` · `serial++` | 🟠 |
+| bảng `freetime` | `engine + 0x6B3A58` — plugin **suy từ mã máy** (`D9 1C B5 <imm32>` trong `ED_Free`), không ghi cứng | 🟠 |
+| mảng edict | `[engine + 0x645774]` — suy từ `A1 <imm32>` trong `ED_Free` | 🟠 |
+| xoá cả bảng `freetime` | `0x101DFEF0` — `memset(table, 0, 0x2000)`, chạy lúc nạp màn | 🟠 |
 | chữ ký neo | `D9 E8 D9 C9 DF F1 DD D8 73` (`fld1 ; fxch st(1) ; fcompi st(1) ; fstp st(0) ; jae`) | 🟠 |
 | bảng "vừa giải phóng" | `sv + 0x104` (`sv + 0x180` có nhưng **không dùng**) | 🟠 |
 | kích thước xoá bảng | hằng `0x2000` ghi cứng trong hàm xoá | 🟠 |
 
 Plugin **không** dùng RVA cứng — nó quét chữ ký. RVA chỉ ghi để đối chiếu.
 
-> ⚠️ **Chưa nghiệm thu dài hạn.** Có nghi ngờ (chưa chứng minh) rằng chạy lâu thì gây
-> nghẽn hệ thống, và làm sai lệch số entity ở máy chủ ≥ 4 người chơi. Gói xuất bản để
-> `freegate=1` vì nó đã qua phép đo đối chứng; nếu máy chủ bạn đông người và thấy tickrate
-> lạ thì **đặt về 0 trước tiên**.
+> ⚠️ **`freegate` là cơ chế ÍT ĐƯỢC NGHIỆM THU NHẤT trong bốn cơ chế — CHƯA được kiểm
+> tra và nghiệm thu đầy đủ.** Nó chưa bao giờ chạy dài ngày trên máy chủ đông người, và phép đo
+> A/B từng dùng để biện minh cho nó có trước khi `wipeclear` có hình dạng như hiện nay.
+> Ngược lại, lỗi chuyển vật phẩm của chế độ `2` thì **đã xác minh được** — lần được từ đầu
+> đến cuối qua `RemoveEdict` → `ED_Free` → `ED_Alloc` bằng dịch ngược.
+>
+> Ngoài ra còn nghi ngờ (chưa chứng minh) rằng chạy lâu thì gây nghẽn hệ thống và làm sai
+> lệch số entity ở máy chủ ≥ 4 người chơi. Gói xuất bản để **`freegate=0`** — muốn bật thì dùng `1` (chế độ có danh
+> sách); máy chủ đông người thấy tickrate lạ thì **đặt về 0 trước tiên**.
 
 ---
 
