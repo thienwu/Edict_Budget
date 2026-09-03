@@ -338,6 +338,27 @@ What happens without the gate (log from Aug 7, wipeclear=2):
 => Only clean when a mission_lost is PENDING. A one-shot flag, not a time window.
 ```
 
+### 🛑 Warning: SourceMod plugins and `mission_lost`
+
+`wipeclear` destroys entities **earlier** than normal — `CleanupDeleteList()` runs inside the
+hook body, before the original `RestartRound`. The game preserve list holds only **38
+classes**, so most of the map entities are deleted at this step.
+
+Any plugin still holding a reference to an entity that was just deleted now holds a
+**dangling** reference ⇒ the server can **crash**. The most dangerous references are those
+that **do not check the serial** — raw pointers, or references held by the engine itself.
+
+**The fix belongs on the plugin side:** clear your own references on **`mission_lost`** — it
+fires a few frames **before** `RestartRound`, and that is the window to clean up. Cleaning up
+afterwards is too late.
+
+**Why the cleanup is not simply moved after `RestartRound`:** `RestartRound` creates the new
+entities while the old ones are still alive — the edict peak is *old + new*. `wipeclear`
+exists to free space **before** that peak. Moving it is a return to the exact `ED_Alloc`
+failure it was written to fix.
+
+If you cannot fix the plugin, set `wipeclear=1` (observe only) or `0`.
+
 ## `swap` — substitute an entity class for a CHEAPER one
 
 ```

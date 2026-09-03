@@ -35,6 +35,8 @@ map (⇒ removing it gains nothing further).
 
 ### The whole class space was re-swept
 
+> The full classification table: [08-phanloai-entity.en.md](08-phanloai-entity.en.md).
+
 - **557 classes** in `server.dll`, cross-referenced against **16 real maps** from three
   campaigns.
 - **40 classes** never previously judged: **all fail condition 1** (they have their own

@@ -1,0 +1,3344 @@
+[
+ {
+  "ten": "_firesmoke",
+  "dk1": "CAM",
+  "vt": "10601FF4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "_plasma",
+  "dk1": "CAM",
+  "vt": "106F7B34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_charge",
+  "dk1": "CAM",
+  "vt": "106A3F5C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_leap",
+  "dk1": "CAM",
+  "vt": "106A45FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_lunge",
+  "dk1": "CAM",
+  "vt": "106A4B54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_selfdestruct",
+  "dk1": "CAM",
+  "vt": "106A5044",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_spit",
+  "dk1": "CAM",
+  "vt": "106A542C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_throw",
+  "dk1": "CAM",
+  "vt": "106A590C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_tongue",
+  "dk1": "CAM",
+  "vt": "106A6C34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ability_vomit",
+  "dk1": "CAM",
+  "vt": "106A8204",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ai_changehintgroup",
+  "dk1": "UNGVIEN",
+  "vt": "1064CB54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ai_changetarget",
+  "dk1": "UNGVIEN",
+  "vt": "1064C81C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ai_sound",
+  "dk1": "UNGVIEN",
+  "vt": "10641A94",
+  "pripyat03": 0
+ },
+ {
+  "ten": "ambient_generic",
+  "dk1": "UNGVIEN",
+  "vt": "105D54A4",
+  "pripyat03": 34
+ },
+ {
+  "ten": "ambient_music",
+  "dk1": "UNGVIEN",
+  "vt": "10666294",
+  "pripyat03": 0
+ },
+ {
+  "ten": "beam",
+  "dk1": "CAM",
+  "vt": "105E138C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "beam_spotlight",
+  "dk1": "CAM",
+  "vt": "105E189C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "boomer",
+  "dk1": "CAM",
+  "vt": "106E1B44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "charger",
+  "dk1": "CAM",
+  "vt": "106E3CCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "client_path",
+  "dk1": "CAM",
+  "vt": "10674B04",
+  "pripyat03": 0
+ },
+ {
+  "ten": "color_correction",
+  "dk1": "CAM",
+  "vt": "105E7A44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "color_correction_volume",
+  "dk1": "CAM",
+  "vt": "105E7F4C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "commentary_auto",
+  "dk1": "UNGVIEN",
+  "vt": "105E8C7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "commentary_dummy",
+  "dk1": "CAM",
+  "vt": "106A96A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "commentary_zombie_spawner",
+  "dk1": "UNGVIEN",
+  "vt": "106A9D8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "cs_gamerules",
+  "dk1": "CAM",
+  "vt": "1065FA9C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "cs_ragdoll",
+  "dk1": "CAM",
+  "vt": "106617D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "cs_team_manager",
+  "dk1": "CAM",
+  "vt": "10663074",
+  "pripyat03": 0
+ },
+ {
+  "ten": "cycler_flex",
+  "dk1": "CAM",
+  "vt": "105DE8D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "dynamic_prop",
+  "dk1": "CAM",
+  "vt": "10636994",
+  "pripyat03": 0
+ },
+ {
+  "ten": "entity_blocker",
+  "dk1": "UNGVIEN",
+  "vt": "105F289C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "entityflame",
+  "dk1": "CAM",
+  "vt": "105F3504",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_airstrike_indoors",
+  "dk1": "CAM",
+  "vt": "105F050C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_airstrike_outdoors",
+  "dk1": "CAM",
+  "vt": "105F08C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_beam",
+  "dk1": "CAM",
+  "vt": "105F9BF4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_beverage",
+  "dk1": "UNGVIEN",
+  "vt": "105EEA74",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_blood",
+  "dk1": "UNGVIEN",
+  "vt": "105EE404",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_bubbles",
+  "dk1": "UNGVIEN",
+  "vt": "105ED3D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_credits",
+  "dk1": "UNGVIEN",
+  "vt": "10667494",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_debughistory",
+  "dk1": "UNGVIEN",
+  "vt": "105F489C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_detail_controller",
+  "dk1": "CAM",
+  "vt": "105F4D2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_dof_controller",
+  "dk1": "CAM",
+  "vt": "105F50EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_dustpuff",
+  "dk1": "UNGVIEN",
+  "vt": "106070FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_dusttrail",
+  "dk1": "CAM",
+  "vt": "106F8B34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_effectscript",
+  "dk1": "CAM",
+  "vt": "105F562C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_embers",
+  "dk1": "CAM",
+  "vt": "105F12C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_entity_dissolver",
+  "dk1": "CAM",
+  "vt": "105F2C44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_entity_igniter",
+  "dk1": "UNGVIEN",
+  "vt": "105F31C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_entity_maker",
+  "dk1": "UNGVIEN",
+  "vt": "105F5B4C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_explosion",
+  "dk1": "UNGVIEN",
+  "vt": "105FD96C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_fade",
+  "dk1": "UNGVIEN",
+  "vt": "105FA194",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_fire",
+  "dk1": "UNGVIEN",
+  "vt": "1060155C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_fire_trail",
+  "dk1": "CAM",
+  "vt": "106F818C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_firesensor",
+  "dk1": "UNGVIEN",
+  "vt": "10601234",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_firesource",
+  "dk1": "UNGVIEN",
+  "vt": "10600EFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_fog_controller",
+  "dk1": "CAM",
+  "vt": "10602C64",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_funnel",
+  "dk1": "UNGVIEN",
+  "vt": "105EE73C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_global",
+  "dk1": "UNGVIEN",
+  "vt": "1061627C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_glow",
+  "dk1": "CAM",
+  "vt": "10643FA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_gunfire",
+  "dk1": "UNGVIEN",
+  "vt": "105EFE8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_hudhint",
+  "dk1": "UNGVIEN",
+  "vt": "105FA634",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_instructor_hint",
+  "dk1": "UNGVIEN",
+  "vt": "105F62BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_laser",
+  "dk1": "CAM",
+  "vt": "105FA9D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_lightglow",
+  "dk1": "CAM",
+  "vt": "1061231C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_message",
+  "dk1": "UNGVIEN",
+  "vt": "105FAEE4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_microphone",
+  "dk1": "UNGVIEN",
+  "vt": "105FB7AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_movieexplosion",
+  "dk1": "CAM",
+  "vt": "106F7094",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_muzzleflash",
+  "dk1": "UNGVIEN",
+  "vt": "105EF81C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_outtro_stats",
+  "dk1": "UNGVIEN",
+  "vt": "105FB20C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_particle_performance_monitor",
+  "dk1": "CAM",
+  "vt": "1064483C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_particle_trail",
+  "dk1": "CAM",
+  "vt": "105F3C7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_particlefire",
+  "dk1": "CAM",
+  "vt": "106F742C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_particlelight",
+  "dk1": "UNGVIEN",
+  "vt": "1061E804",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_particlescript",
+  "dk1": "CAM",
+  "vt": "105F6CE4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_particlesmokegrenade",
+  "dk1": "CAM",
+  "vt": "106F777C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_physexplosion",
+  "dk1": "UNGVIEN",
+  "vt": "10629EDC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_physics_blocker",
+  "dk1": "CAM",
+  "vt": "105F44CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_physimpact",
+  "dk1": "UNGVIEN",
+  "vt": "10629144",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_physwire",
+  "dk1": "UNGVIEN",
+  "vt": "105EF4E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_player_blocker",
+  "dk1": "UNGVIEN",
+  "vt": "105F4154",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_player_surface_trigger",
+  "dk1": "UNGVIEN",
+  "vt": "105F713C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_projectedtexture",
+  "dk1": "CAM",
+  "vt": "105F76B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_quadraticbeam",
+  "dk1": "CAM",
+  "vt": "105F16DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_ragdoll_boogie",
+  "dk1": "UNGVIEN",
+  "vt": "1063BDF4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_rock_launcher",
+  "dk1": "UNGVIEN",
+  "vt": "106A5D0C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_rockettrail",
+  "dk1": "CAM",
+  "vt": "106F880C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_rotorshooter",
+  "dk1": "UNGVIEN",
+  "vt": "105F0C74",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_screeneffect",
+  "dk1": "CAM",
+  "vt": "105F7C2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_screenoverlay",
+  "dk1": "CAM",
+  "vt": "105F7FB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_shake",
+  "dk1": "UNGVIEN",
+  "vt": "105FBD6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_shooter",
+  "dk1": "UNGVIEN",
+  "vt": "105EDD7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_smokestack",
+  "dk1": "CAM",
+  "vt": "106F9534",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_smoketrail",
+  "dk1": "CAM",
+  "vt": "106F84C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_soundscape",
+  "dk1": "UNGVIEN",
+  "vt": "106427F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_soundscape_proxy",
+  "dk1": "UNGVIEN",
+  "vt": "10642EF4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_soundscape_triggerable",
+  "dk1": "UNGVIEN",
+  "vt": "10642BB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_spark",
+  "dk1": "UNGVIEN",
+  "vt": "105FC604",
+  "pripyat03": 9
+ },
+ {
+  "ten": "env_splash",
+  "dk1": "UNGVIEN",
+  "vt": "105EFB54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_sporeexplosion",
+  "dk1": "CAM",
+  "vt": "106F91EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_sporetrail",
+  "dk1": "CAM",
+  "vt": "106F8EC4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_sprite",
+  "dk1": "CAM",
+  "vt": "10643FA4",
+  "pripyat03": 40
+ },
+ {
+  "ten": "env_sprite_oriented",
+  "dk1": "CAM",
+  "vt": "106442CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_spritetrail",
+  "dk1": "CAM",
+  "vt": "106F9B6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_steam",
+  "dk1": "CAM",
+  "vt": "106F9F0C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_steamjet",
+  "dk1": "CAM",
+  "vt": "106F9F0C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_sun",
+  "dk1": "CAM",
+  "vt": "10645DCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_texturetoggle",
+  "dk1": "UNGVIEN",
+  "vt": "105F86F4",
+  "pripyat03": 8
+ },
+ {
+  "ten": "env_tilt",
+  "dk1": "UNGVIEN",
+  "vt": "105FC0BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_tonemap_controller",
+  "dk1": "CAM",
+  "vt": "105F910C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_tonemap_controller_ghost",
+  "dk1": "CAM",
+  "vt": "105F910C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_tonemap_controller_infected",
+  "dk1": "CAM",
+  "vt": "105F910C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_tracer",
+  "dk1": "UNGVIEN",
+  "vt": "105ED70C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_viewpunch",
+  "dk1": "UNGVIEN",
+  "vt": "105F01D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_weaponfire",
+  "dk1": "CAM",
+  "vt": "1067432C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_wind",
+  "dk1": "CAM",
+  "vt": "105F0F9C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "env_zoom",
+  "dk1": "UNGVIEN",
+  "vt": "105F9854",
+  "pripyat03": 0
+ },
+ {
+  "ten": "escape_route",
+  "dk1": "UNGVIEN",
+  "vt": "106747B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "event_queue_saveload_proxy",
+  "dk1": "UNGVIEN",
+  "vt": "105E5624",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_class",
+  "dk1": "UNGVIEN",
+  "vt": "105FEFCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_context",
+  "dk1": "UNGVIEN",
+  "vt": "105FEC9C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_infected_class",
+  "dk1": "UNGVIEN",
+  "vt": "105FF62C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_mass_greater",
+  "dk1": "UNGVIEN",
+  "vt": "105FF95C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_model",
+  "dk1": "UNGVIEN",
+  "vt": "105FE96C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_name",
+  "dk1": "UNGVIEN",
+  "vt": "105FE63C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_activator_team",
+  "dk1": "UNGVIEN",
+  "vt": "105FF2FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_base",
+  "dk1": "UNGVIEN",
+  "vt": "105FDFDC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_damage_type",
+  "dk1": "UNGVIEN",
+  "vt": "105FFC8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_enemy",
+  "dk1": "UNGVIEN",
+  "vt": "1060061C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_health",
+  "dk1": "UNGVIEN",
+  "vt": "106002EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_melee_damage",
+  "dk1": "UNGVIEN",
+  "vt": "105FFFBC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "filter_multi",
+  "dk1": "UNGVIEN",
+  "vt": "105FE30C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "finale_trigger",
+  "dk1": "CAM",
+  "vt": "1067514C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "fire_cracker_blast",
+  "dk1": "CAM",
+  "vt": "106AA964",
+  "pripyat03": 0
+ },
+ {
+  "ten": "fish",
+  "dk1": "CAM",
+  "vt": "106023CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "fog_volume",
+  "dk1": "UNGVIEN",
+  "vt": "10675ECC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "funCBaseFlex",
+  "dk1": "CAM",
+  "vt": "105DE194",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_areaportal",
+  "dk1": "UNGVIEN",
+  "vt": "106040A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_areaportalwindow",
+  "dk1": "CAM",
+  "vt": "10604784",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_block_charge",
+  "dk1": "CAM",
+  "vt": "10609E04",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_breakable",
+  "dk1": "CAM",
+  "vt": "10605324",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_breakable_surf",
+  "dk1": "CAM",
+  "vt": "10606794",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_brush",
+  "dk1": "CAM",
+  "vt": "10609E04",
+  "pripyat03": 215
+ },
+ {
+  "ten": "func_button",
+  "dk1": "CAM",
+  "vt": "105E3E6C",
+  "pripyat03": 13
+ },
+ {
+  "ten": "func_button_timed",
+  "dk1": "CAM",
+  "vt": "105E4B3C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_clip_vphysics",
+  "dk1": "UNGVIEN",
+  "vt": "105E2F04",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_conveyor",
+  "dk1": "CAM",
+  "vt": "105E3554",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_detail_blocker",
+  "dk1": "UNGVIEN",
+  "vt": "105EF184",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_door",
+  "dk1": "CAM",
+  "vt": "105EA974",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_door_rotating",
+  "dk1": "CAM",
+  "vt": "105EACFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_dustcloud",
+  "dk1": "CAM",
+  "vt": "106074AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_dustmotes",
+  "dk1": "CAM",
+  "vt": "106077D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_elevator",
+  "dk1": "CAM",
+  "vt": "106082BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_extinguisher",
+  "dk1": "CAM",
+  "vt": "106533CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_fish_pool",
+  "dk1": "UNGVIEN",
+  "vt": "106027B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_guntarget",
+  "dk1": "CAM",
+  "vt": "106102DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_illusionary",
+  "dk1": "UNGVIEN",
+  "vt": "105E2814",
+  "pripyat03": 8
+ },
+ {
+  "ten": "func_ladderendpoint",
+  "dk1": "UNGVIEN",
+  "vt": "10608ED4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_lod",
+  "dk1": "CAM",
+  "vt": "1060924C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_movelinear",
+  "dk1": "CAM",
+  "vt": "1060967C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_nav_attribute_region",
+  "dk1": "UNGVIEN",
+  "vt": "1068F6CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_nav_avoidance_obstacle",
+  "dk1": "UNGVIEN",
+  "vt": "106F01BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_nav_blocker",
+  "dk1": "UNGVIEN",
+  "vt": "106EFB14",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_nav_connection_blocker",
+  "dk1": "UNGVIEN",
+  "vt": "106EF7DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_occluder",
+  "dk1": "CAM",
+  "vt": "10609A8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_orator",
+  "dk1": "CAM",
+  "vt": "106759F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_physbox",
+  "dk1": "CAM",
+  "vt": "1062A61C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_physbox_multiplayer",
+  "dk1": "CAM",
+  "vt": "1063556C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_plat",
+  "dk1": "CAM",
+  "vt": "1064A7EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_platrot",
+  "dk1": "CAM",
+  "vt": "1064AF2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_playerghostinfected_clip",
+  "dk1": "CAM",
+  "vt": "1064D8EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_playerinfected_clip",
+  "dk1": "CAM",
+  "vt": "1064D5C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_precipitation",
+  "dk1": "CAM",
+  "vt": "105F1A3C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_precipitation_blocker",
+  "dk1": "CAM",
+  "vt": "105ECDC4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_proprrespawnzone",
+  "dk1": "UNGVIEN",
+  "vt": "105DA274",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_pushable",
+  "dk1": "CAM",
+  "vt": "1060571C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_ragdoll_fader",
+  "dk1": "CAM",
+  "vt": "1069E40C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_reflective_glass",
+  "dk1": "CAM",
+  "vt": "1060A12C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_rot_button",
+  "dk1": "CAM",
+  "vt": "105E44CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_rotating",
+  "dk1": "CAM",
+  "vt": "105E2B6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_simpleladder",
+  "dk1": "CAM",
+  "vt": "1060A4A4",
+  "pripyat03": 15
+ },
+ {
+  "ten": "func_smokevolume",
+  "dk1": "CAM",
+  "vt": "1060A934",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_tanktrain",
+  "dk1": "CAM",
+  "vt": "10646B7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_timescale",
+  "dk1": "UNGVIEN",
+  "vt": "1060AD54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_trackautochange",
+  "dk1": "CAM",
+  "vt": "1064B5AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_trackchange",
+  "dk1": "CAM",
+  "vt": "1064B26C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_tracktrain",
+  "dk1": "CAM",
+  "vt": "1064B8FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_train",
+  "dk1": "CAM",
+  "vt": "1064AB2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_traincontrols",
+  "dk1": "UNGVIEN",
+  "vt": "1064A4A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_useableladder",
+  "dk1": "CAM",
+  "vt": "106089BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_vehicleclip",
+  "dk1": "UNGVIEN",
+  "vt": "105E24CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_wall",
+  "dk1": "UNGVIEN",
+  "vt": "105E1E1C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_wall_toggle",
+  "dk1": "UNGVIEN",
+  "vt": "105E2194",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_water",
+  "dk1": "CAM",
+  "vt": "105EA974",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_water_analog",
+  "dk1": "CAM",
+  "vt": "1060967C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "func_weight_button",
+  "dk1": "UNGVIEN",
+  "vt": "1065D624",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_end",
+  "dk1": "UNGVIEN",
+  "vt": "10619FB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_gib_manager",
+  "dk1": "UNGVIEN",
+  "vt": "1063AC44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_player_equip",
+  "dk1": "UNGVIEN",
+  "vt": "1061A604",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_player_team",
+  "dk1": "UNGVIEN",
+  "vt": "1061A92C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_ragdoll_manager",
+  "dk1": "CAM",
+  "vt": "1063B8A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_scavenge_progress_display",
+  "dk1": "CAM",
+  "vt": "1068A8BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_score",
+  "dk1": "UNGVIEN",
+  "vt": "10619C8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_text",
+  "dk1": "UNGVIEN",
+  "vt": "1061A2DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_ui",
+  "dk1": "UNGVIEN",
+  "vt": "1060B3B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_weapon_manager",
+  "dk1": "UNGVIEN",
+  "vt": "1060F49C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "game_zone_player",
+  "dk1": "UNGVIEN",
+  "vt": "1061AC54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "gib",
+  "dk1": "CAM",
+  "vt": "1060FC94",
+  "pripyat03": 0
+ },
+ {
+  "ten": "gibshooter",
+  "dk1": "UNGVIEN",
+  "vt": "105EDA44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "grenade",
+  "dk1": "CAM",
+  "vt": "105DF07C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "grenade_launcher_projectile",
+  "dk1": "CAM",
+  "vt": "106C23C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "hammer_updateignorelist",
+  "dk1": "UNGVIEN",
+  "vt": "1065CA7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "handle_dummy",
+  "dk1": "UNGVIEN",
+  "vt": "10648B34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "handle_test",
+  "dk1": "CAM",
+  "vt": "10648E84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "holiday_gift",
+  "dk1": "CAM",
+  "vt": "1067636C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "hunter",
+  "dk1": "?",
+  "vt": "106E5854",
+  "pripyat03": 0
+ },
+ {
+  "ten": "infected",
+  "dk1": "?",
+  "vt": "105D5CD8",
+  "pripyat03": 0
+ },
+ {
+  "ten": "inferno",
+  "dk1": "CAM",
+  "vt": "106AA2D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_ambient_mob_end",
+  "dk1": "UNGVIEN",
+  "vt": "106DBA84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_ambient_mob_start",
+  "dk1": "UNGVIEN",
+  "vt": "106DBA84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_changelevel",
+  "dk1": "CAM",
+  "vt": "10666C2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_constraint_anchor",
+  "dk1": "UNGVIEN",
+  "vt": "10622374",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_director",
+  "dk1": "UNGVIEN",
+  "vt": "10667D1C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_elevator_floor",
+  "dk1": "UNGVIEN",
+  "vt": "10607CCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_game_event_proxy",
+  "dk1": "UNGVIEN",
+  "vt": "1065DEFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_gamemode",
+  "dk1": "UNGVIEN",
+  "vt": "1067759C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_goal_infected_chase",
+  "dk1": "UNGVIEN",
+  "vt": "10677E74",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_hang_lighting",
+  "dk1": "UNGVIEN",
+  "vt": "105D517C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_infected_zoo_maker",
+  "dk1": "UNGVIEN",
+  "vt": "10676F44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_infected_zoo_puppet",
+  "dk1": "CAM",
+  "vt": "10676914",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_intermission",
+  "dk1": "UNGVIEN",
+  "vt": "10610FAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_item_position",
+  "dk1": "UNGVIEN",
+  "vt": "106781CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_l4d1_survivor_spawn",
+  "dk1": "UNGVIEN",
+  "vt": "10677AB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_ladder",
+  "dk1": "CAM",
+  "vt": "1060A4A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_ladder_dismount",
+  "dk1": "CAM",
+  "vt": "1060862C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_landmark",
+  "dk1": "UNGVIEN",
+  "vt": "105D517C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_map_parameters",
+  "dk1": "UNGVIEN",
+  "vt": "106841A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_map_parameters_versus",
+  "dk1": "UNGVIEN",
+  "vt": "106844CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_null",
+  "dk1": "UNGVIEN",
+  "vt": "106455FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_overlay_accessor",
+  "dk1": "CAM",
+  "vt": "10610C2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_particle_system",
+  "dk1": "CAM",
+  "vt": "1061F04C",
+  "pripyat03": 42
+ },
+ {
+  "ten": "info_particle_target",
+  "dk1": "UNGVIEN",
+  "vt": "105E0F34",
+  "pripyat03": 18
+ },
+ {
+  "ten": "info_player_deathmatch",
+  "dk1": "UNGVIEN",
+  "vt": "10645944",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_player_logo",
+  "dk1": "UNGVIEN",
+  "vt": "105D517C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_player_start",
+  "dk1": "UNGVIEN",
+  "vt": "105D517C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_player_teamspawn",
+  "dk1": "UNGVIEN",
+  "vt": "1064769C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_projecteddecal",
+  "dk1": "UNGVIEN",
+  "vt": "1065E54C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_remarkable",
+  "dk1": "UNGVIEN",
+  "vt": "106787B4",
+  "pripyat03": 11
+ },
+ {
+  "ten": "info_survivor_position",
+  "dk1": "CAM",
+  "vt": "1068BEE4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_survivor_rescue",
+  "dk1": "?",
+  "vt": "1068C3C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_target",
+  "dk1": "UNGVIEN",
+  "vt": "105E0C0C",
+  "pripyat03": 21
+ },
+ {
+  "ten": "info_target_instructor_hint",
+  "dk1": "UNGVIEN",
+  "vt": "105F663C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_teleport_destination",
+  "dk1": "UNGVIEN",
+  "vt": "105D517C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_transitioning_player",
+  "dk1": "?",
+  "vt": "1069FF14",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_vehicle_groundspawn",
+  "dk1": "UNGVIEN",
+  "vt": "106479C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_view_parameters",
+  "dk1": "UNGVIEN",
+  "vt": "10663984",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_zombie_border",
+  "dk1": "UNGVIEN",
+  "vt": "106F04E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "info_zombie_spawn",
+  "dk1": "UNGVIEN",
+  "vt": "10678B8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "infodecal",
+  "dk1": "UNGVIEN",
+  "vt": "1065E224",
+  "pripyat03": 853
+ },
+ {
+  "ten": "insect_swarm",
+  "dk1": "CAM",
+  "vt": "106AA61C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "instanced_scripted_scene",
+  "dk1": "CAM",
+  "vt": "1063EBDC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "item_sodacan",
+  "dk1": "CAM",
+  "vt": "105EEDAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "jockey",
+  "dk1": "?",
+  "vt": "106E7504",
+  "pripyat03": 0
+ },
+ {
+  "ten": "keyframe_rope",
+  "dk1": "CAM",
+  "vt": "1063C37C",
+  "pripyat03": 95
+ },
+ {
+  "ten": "keyframe_track",
+  "dk1": "UNGVIEN",
+  "vt": "1061C2BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "light",
+  "dk1": "UNGVIEN",
+  "vt": "10612744",
+  "pripyat03": 19
+ },
+ {
+  "ten": "light_directional",
+  "dk1": "UNGVIEN",
+  "vt": "10612744",
+  "pripyat03": 0
+ },
+ {
+  "ten": "light_dynamic",
+  "dk1": "CAM",
+  "vt": "105EC504",
+  "pripyat03": 0
+ },
+ {
+  "ten": "light_environment",
+  "dk1": "UNGVIEN",
+  "vt": "10612A6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "light_glspot",
+  "dk1": "UNGVIEN",
+  "vt": "10612744",
+  "pripyat03": 0
+ },
+ {
+  "ten": "light_spot",
+  "dk1": "UNGVIEN",
+  "vt": "10612744",
+  "pripyat03": 7
+ },
+ {
+  "ten": "logic_active_autosave",
+  "dk1": "UNGVIEN",
+  "vt": "10616F1C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_auto",
+  "dk1": "UNGVIEN",
+  "vt": "10613874",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_autosave",
+  "dk1": "UNGVIEN",
+  "vt": "10614DFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_branch",
+  "dk1": "UNGVIEN",
+  "vt": "106176C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_branch_listener",
+  "dk1": "UNGVIEN",
+  "vt": "106179EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_case",
+  "dk1": "UNGVIEN",
+  "vt": "106168CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_choreographed_scene",
+  "dk1": "CAM",
+  "vt": "1063DCA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_collision_pair",
+  "dk1": "UNGVIEN",
+  "vt": "10615124",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_compare",
+  "dk1": "UNGVIEN",
+  "vt": "10616BF4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_director_query",
+  "dk1": "UNGVIEN",
+  "vt": "106682DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_game_event",
+  "dk1": "UNGVIEN",
+  "vt": "1061544C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_lineto",
+  "dk1": "UNGVIEN",
+  "vt": "10615904",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_measure_movement",
+  "dk1": "UNGVIEN",
+  "vt": "10612FD4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_multicompare",
+  "dk1": "UNGVIEN",
+  "vt": "10614484",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_navigation",
+  "dk1": "UNGVIEN",
+  "vt": "10613504",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_proximity",
+  "dk1": "UNGVIEN",
+  "vt": "105D517C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_relay",
+  "dk1": "UNGVIEN",
+  "vt": "106195E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_scene_list_manager",
+  "dk1": "UNGVIEN",
+  "vt": "1063D5CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_script",
+  "dk1": "UNGVIEN",
+  "vt": "1061415C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_timer",
+  "dk1": "UNGVIEN",
+  "vt": "106147AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "logic_versus_random",
+  "dk1": "UNGVIEN",
+  "vt": "1061739C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "material_modify_control",
+  "dk1": "CAM",
+  "vt": "1061B344",
+  "pripyat03": 0
+ },
+ {
+  "ten": "math_colorblend",
+  "dk1": "UNGVIEN",
+  "vt": "10615F54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "math_counter",
+  "dk1": "UNGVIEN",
+  "vt": "106165A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "math_remap",
+  "dk1": "UNGVIEN",
+  "vt": "10615C2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "molotov_projectile",
+  "dk1": "CAM",
+  "vt": "106C85EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "momentary_door",
+  "dk1": "CAM",
+  "vt": "1060967C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "momentary_rot_button",
+  "dk1": "CAM",
+  "vt": "105E47FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "move_keyframed",
+  "dk1": "UNGVIEN",
+  "vt": "1061C5E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "move_rope",
+  "dk1": "CAM",
+  "vt": "1063C37C",
+  "pripyat03": 96
+ },
+ {
+  "ten": "multisource",
+  "dk1": "UNGVIEN",
+  "vt": "10614AD4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "path_corner",
+  "dk1": "UNGVIEN",
+  "vt": "1062003C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "path_corner_crash",
+  "dk1": "UNGVIEN",
+  "vt": "10620364",
+  "pripyat03": 0
+ },
+ {
+  "ten": "path_track",
+  "dk1": "UNGVIEN",
+  "vt": "10620784",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_ballsocket",
+  "dk1": "UNGVIEN",
+  "vt": "10622EFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_bone_follower",
+  "dk1": "CAM",
+  "vt": "10625084",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_constraint",
+  "dk1": "UNGVIEN",
+  "vt": "1062356C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_constraintsystem",
+  "dk1": "UNGVIEN",
+  "vt": "10622724",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_convert",
+  "dk1": "UNGVIEN",
+  "vt": "1062A224",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_hinge",
+  "dk1": "UNGVIEN",
+  "vt": "10622BCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_keepupright",
+  "dk1": "UNGVIEN",
+  "vt": "10620FB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_lengthconstraint",
+  "dk1": "UNGVIEN",
+  "vt": "10623BCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_magnet",
+  "dk1": "CAM",
+  "vt": "1062A94C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_motor",
+  "dk1": "UNGVIEN",
+  "vt": "1062132C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_pulleyconstraint",
+  "dk1": "UNGVIEN",
+  "vt": "1062389C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_ragdollconstraint",
+  "dk1": "UNGVIEN",
+  "vt": "10623EFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_ragdollmagnet",
+  "dk1": "UNGVIEN",
+  "vt": "105EA03C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_slideconstraint",
+  "dk1": "UNGVIEN",
+  "vt": "1062323C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_spring",
+  "dk1": "UNGVIEN",
+  "vt": "106289D4",
+  "pripyat03": 8
+ },
+ {
+  "ten": "phys_thruster",
+  "dk1": "UNGVIEN",
+  "vt": "106216A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "phys_torque",
+  "dk1": "UNGVIEN",
+  "vt": "106219D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "physics_cannister",
+  "dk1": "CAM",
+  "vt": "106254EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "physics_entity_solver",
+  "dk1": "UNGVIEN",
+  "vt": "10626634",
+  "pripyat03": 0
+ },
+ {
+  "ten": "physics_npc_solver",
+  "dk1": "UNGVIEN",
+  "vt": "106262EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "physics_prop",
+  "dk1": "CAM",
+  "vt": "10634744",
+  "pripyat03": 0
+ },
+ {
+  "ten": "physics_prop_ragdoll",
+  "dk1": "CAM",
+  "vt": "10626A94",
+  "pripyat03": 0
+ },
+ {
+  "ten": "pipe_bomb_projectile",
+  "dk1": "CAM",
+  "vt": "106CAC0C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "player",
+  "dk1": "?",
+  "vt": "106957C8",
+  "pripyat03": 0
+ },
+ {
+  "ten": "player_loadsaved",
+  "dk1": "UNGVIEN",
+  "vt": "1062C5BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "player_manager",
+  "dk1": "CAM",
+  "vt": "1062EC54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "player_pickup",
+  "dk1": "UNGVIEN",
+  "vt": "10686ED4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "player_speedmod",
+  "dk1": "UNGVIEN",
+  "vt": "1062C8E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "player_weaponstrip",
+  "dk1": "UNGVIEN",
+  "vt": "1062C294",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_anglesensor",
+  "dk1": "UNGVIEN",
+  "vt": "1063212C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_bonusmaps_accessor",
+  "dk1": "UNGVIEN",
+  "vt": "1062F6E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_broadcastclientcommand",
+  "dk1": "UNGVIEN",
+  "vt": "105E6734",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_clientcommand",
+  "dk1": "UNGVIEN",
+  "vt": "105E60E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_commentary_node",
+  "dk1": "CAM",
+  "vt": "105E88D4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_commentary_viewpoint",
+  "dk1": "CAM",
+  "vt": "105E84DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_deathfall_camera",
+  "dk1": "UNGVIEN",
+  "vt": "10667864",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_devshot_camera",
+  "dk1": "UNGVIEN",
+  "vt": "1062FA8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_enable_motion_fixup",
+  "dk1": "UNGVIEN",
+  "vt": "10634EA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_entity_finder",
+  "dk1": "UNGVIEN",
+  "vt": "1062FFB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_gamestats_counter",
+  "dk1": "UNGVIEN",
+  "vt": "1060EB14",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_hurt",
+  "dk1": "UNGVIEN",
+  "vt": "106328DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_message",
+  "dk1": "UNGVIEN",
+  "vt": "1061B8AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_nav_attribute_region",
+  "dk1": "UNGVIEN",
+  "vt": "1068F6CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_playermoveconstraint",
+  "dk1": "UNGVIEN",
+  "vt": "1063039C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_posecontroller",
+  "dk1": "CAM",
+  "vt": "1063089C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_prop_use_target",
+  "dk1": "CAM",
+  "vt": "106BC43C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_proximity_sensor",
+  "dk1": "UNGVIEN",
+  "vt": "10632454",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_push",
+  "dk1": "UNGVIEN",
+  "vt": "10629B44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_script_template",
+  "dk1": "UNGVIEN",
+  "vt": "106318BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_script_use_target",
+  "dk1": "CAM",
+  "vt": "10688124",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_servercommand",
+  "dk1": "UNGVIEN",
+  "vt": "105E640C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_spotlight",
+  "dk1": "UNGVIEN",
+  "vt": "10630E64",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_surroundtest",
+  "dk1": "UNGVIEN",
+  "vt": "10663D14",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_teleport",
+  "dk1": "UNGVIEN",
+  "vt": "10632CA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_template",
+  "dk1": "UNGVIEN",
+  "vt": "106314DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_viewcontrol",
+  "dk1": "UNGVIEN",
+  "vt": "1064DD4C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_viewcontrol_multiplayer",
+  "dk1": "UNGVIEN",
+  "vt": "106A0884",
+  "pripyat03": 0
+ },
+ {
+  "ten": "point_viewcontrol_survivor",
+  "dk1": "UNGVIEN",
+  "vt": "106A052C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "postprocess_controller",
+  "dk1": "CAM",
+  "vt": "10633154",
+  "pripyat03": 0
+ },
+ {
+  "ten": "predicted_viewmodel",
+  "dk1": "CAM",
+  "vt": "1069F3BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_car_alarm",
+  "dk1": "CAM",
+  "vt": "106373E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_car_glass",
+  "dk1": "CAM",
+  "vt": "1063787C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_door_rotating",
+  "dk1": "CAM",
+  "vt": "10638D8C",
+  "pripyat03": 7
+ },
+ {
+  "ten": "prop_door_rotating_checkpoint",
+  "dk1": "CAM",
+  "vt": "10639774",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_dynamic",
+  "dk1": "CAM",
+  "vt": "10636994",
+  "pripyat03": 98
+ },
+ {
+  "ten": "prop_dynamic_ornament",
+  "dk1": "CAM",
+  "vt": "10637D14",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_dynamic_override",
+  "dk1": "CAM",
+  "vt": "10636994",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_fuel_barrel",
+  "dk1": "CAM",
+  "vt": "10688974",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_fuel_barrel_piece",
+  "dk1": "CAM",
+  "vt": "10688E34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_health_cabinet",
+  "dk1": "CAM",
+  "vt": "1068965C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_minigun",
+  "dk1": "CAM",
+  "vt": "106C8D8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_minigun_l4d1",
+  "dk1": "CAM",
+  "vt": "106C76F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_mounted_machine_gun",
+  "dk1": "CAM",
+  "vt": "106C8D8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_physics",
+  "dk1": "CAM",
+  "vt": "10634744",
+  "pripyat03": 70
+ },
+ {
+  "ten": "prop_physics2",
+  "dk1": "CAM",
+  "vt": "10633E6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_physics_multiplayer",
+  "dk1": "CAM",
+  "vt": "10634744",
+  "pripyat03": 134
+ },
+ {
+  "ten": "prop_physics_override",
+  "dk1": "CAM",
+  "vt": "10634744",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_physics_respawnable",
+  "dk1": "CAM",
+  "vt": "10636F34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_ragdoll",
+  "dk1": "CAM",
+  "vt": "10626A94",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_ragdoll_attached",
+  "dk1": "CAM",
+  "vt": "10626FF4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_sphere",
+  "dk1": "CAM",
+  "vt": "106381B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_vehicle",
+  "dk1": "CAM",
+  "vt": "1065546C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_vehicle_driveable",
+  "dk1": "CAM",
+  "vt": "10655914",
+  "pripyat03": 0
+ },
+ {
+  "ten": "prop_wall_breakable",
+  "dk1": "CAM",
+  "vt": "1063927C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "raggib",
+  "dk1": "CAM",
+  "vt": "1060F8C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "scene_manager",
+  "dk1": "UNGVIEN",
+  "vt": "1063D8F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_clip_vphysics",
+  "dk1": "UNGVIEN",
+  "vt": "105E322C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_func_button",
+  "dk1": "CAM",
+  "vt": "105E419C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_nav_attribute_region",
+  "dk1": "UNGVIEN",
+  "vt": "1068FA04",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_nav_blocker",
+  "dk1": "UNGVIEN",
+  "vt": "106EFE7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_trigger_hurt",
+  "dk1": "CAM",
+  "vt": "10653784",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_trigger_multiple",
+  "dk1": "CAM",
+  "vt": "1064F22C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_trigger_once",
+  "dk1": "CAM",
+  "vt": "10653AD4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "script_trigger_push",
+  "dk1": "CAM",
+  "vt": "10654174",
+  "pripyat03": 0
+ },
+ {
+  "ten": "scripted_item_drop",
+  "dk1": "CAM",
+  "vt": "10611934",
+  "pripyat03": 0
+ },
+ {
+  "ten": "scripted_scene",
+  "dk1": "CAM",
+  "vt": "1063DCA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "shadow_control",
+  "dk1": "CAM",
+  "vt": "1063FBBC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "simple_physics_brush",
+  "dk1": "UNGVIEN",
+  "vt": "10628DCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "simple_physics_prop",
+  "dk1": "CAM",
+  "vt": "1062946C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "sky_camera",
+  "dk1": "UNGVIEN",
+  "vt": "1064016C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "smoker",
+  "dk1": "?",
+  "vt": "106E90F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "sound_mix_layer",
+  "dk1": "CAM",
+  "vt": "1068BB6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "soundent",
+  "dk1": "UNGVIEN",
+  "vt": "10641624",
+  "pripyat03": 0
+ },
+ {
+  "ten": "spark_shower",
+  "dk1": "UNGVIEN",
+  "vt": "105FD634",
+  "pripyat03": 0
+ },
+ {
+  "ten": "spitter",
+  "dk1": "?",
+  "vt": "106EAE0C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "spitter_projectile",
+  "dk1": "CAM",
+  "vt": "106D3C4C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "spotlight_end",
+  "dk1": "CAM",
+  "vt": "10643B54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "spraycan",
+  "dk1": "UNGVIEN",
+  "vt": "1062BC44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "survivor_bot",
+  "dk1": "CAM",
+  "vt": "106B0E3C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "survivor_death_model",
+  "dk1": "CAM",
+  "vt": "10695914",
+  "pripyat03": 0
+ },
+ {
+  "ten": "tank",
+  "dk1": "CAM",
+  "vt": "106ECAB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "tank_rock",
+  "dk1": "CAM",
+  "vt": "106A610C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "tanktrain_ai",
+  "dk1": "UNGVIEN",
+  "vt": "106464EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "tanktrain_aitarget",
+  "dk1": "UNGVIEN",
+  "vt": "10646854",
+  "pripyat03": 0
+ },
+ {
+  "ten": "target_cdaudio",
+  "dk1": "UNGVIEN",
+  "vt": "105E98DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "target_changegravity",
+  "dk1": "UNGVIEN",
+  "vt": "105E9C04",
+  "pripyat03": 0
+ },
+ {
+  "ten": "te_tester",
+  "dk1": "UNGVIEN",
+  "vt": "106F6D5C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "team_manager",
+  "dk1": "CAM",
+  "vt": "10647014",
+  "pripyat03": 0
+ },
+ {
+  "ten": "terror_gamerules",
+  "dk1": "CAM",
+  "vt": "1068E43C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "terror_player_manager",
+  "dk1": "CAM",
+  "vt": "1069D1FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "test_effect",
+  "dk1": "UNGVIEN",
+  "vt": "105EE0CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "test_proxytoggle",
+  "dk1": "CAM",
+  "vt": "106492C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "test_traceline",
+  "dk1": "CAM",
+  "vt": "1064994C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger",
+  "dk1": "CAM",
+  "vt": "1064E424",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_active_weapon_detect",
+  "dk1": "CAM",
+  "vt": "1065208C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_auto_crouch",
+  "dk1": "CAM",
+  "vt": "106519EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_autosave",
+  "dk1": "CAM",
+  "vt": "106502BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_brush",
+  "dk1": "UNGVIEN",
+  "vt": "1061BC84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_callback",
+  "dk1": "CAM",
+  "vt": "10651D3C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_cdaudio",
+  "dk1": "CAM",
+  "vt": "1065095C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_changelevel",
+  "dk1": "CAM",
+  "vt": "10666C2C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_escape",
+  "dk1": "CAM",
+  "vt": "1064EB8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_finale",
+  "dk1": "CAM",
+  "vt": "1067514C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_fog",
+  "dk1": "CAM",
+  "vt": "1060323C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_gravity",
+  "dk1": "CAM",
+  "vt": "1065060C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_hurt",
+  "dk1": "CAM",
+  "vt": "106523DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_hurt_ghost",
+  "dk1": "CAM",
+  "vt": "1065272C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_impact",
+  "dk1": "CAM",
+  "vt": "10650FFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_look",
+  "dk1": "CAM",
+  "vt": "10653E24",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_multiple",
+  "dk1": "CAM",
+  "vt": "1064E774",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_once",
+  "dk1": "CAM",
+  "vt": "1064F57C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_playermovement",
+  "dk1": "CAM",
+  "vt": "1065134C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_proximity",
+  "dk1": "CAM",
+  "vt": "10650CAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_push",
+  "dk1": "CAM",
+  "vt": "1064F8CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_remove",
+  "dk1": "CAM",
+  "vt": "1064EEDC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_serverragdoll",
+  "dk1": "CAM",
+  "vt": "1065169C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_soundscape",
+  "dk1": "CAM",
+  "vt": "10643254",
+  "pripyat03": 6
+ },
+ {
+  "ten": "trigger_teleport",
+  "dk1": "CAM",
+  "vt": "1064FC1C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_togglesave",
+  "dk1": "CAM",
+  "vt": "1064FF6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_tonemap",
+  "dk1": "CAM",
+  "vt": "105F8DBC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_transition",
+  "dk1": "UNGVIEN",
+  "vt": "1064CF6C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_upgrade_laser_sight",
+  "dk1": "CAM",
+  "vt": "106A1AAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_vphysics_motion",
+  "dk1": "UNGVIEN",
+  "vt": "1064D29C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "trigger_wind",
+  "dk1": "UNGVIEN",
+  "vt": "1064E0FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "upgrade_ammo_explosive",
+  "dk1": "CAM",
+  "vt": "106A11F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "upgrade_ammo_incendiary",
+  "dk1": "CAM",
+  "vt": "106A0DAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "upgrade_laser_sight",
+  "dk1": "CAM",
+  "vt": "106A163C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "upgrade_spawn",
+  "dk1": "UNGVIEN",
+  "vt": "10679E34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "vgui_screen",
+  "dk1": "CAM",
+  "vt": "10656BAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "vgui_screen_team",
+  "dk1": "CAM",
+  "vt": "10656BAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "vgui_slideshow_display",
+  "dk1": "CAM",
+  "vt": "10640784",
+  "pripyat03": 0
+ },
+ {
+  "ten": "viewmodel",
+  "dk1": "CAM",
+  "vt": "105E0754",
+  "pripyat03": 0
+ },
+ {
+  "ten": "vomit_particle",
+  "dk1": "UNGVIEN",
+  "vt": "106A8624",
+  "pripyat03": 0
+ },
+ {
+  "ten": "vomitjar_projectile",
+  "dk1": "CAM",
+  "vt": "106D7CAC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "vote_controller",
+  "dk1": "CAM",
+  "vt": "1065725C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "water_lod_control",
+  "dk1": "CAM",
+  "vt": "1065C6A4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "waterbullet",
+  "dk1": "CAM",
+  "vt": "1065C25C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_adrenaline",
+  "dk1": "CAM",
+  "vt": "106C3ABC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_adrenaline_spawn",
+  "dk1": "CAM",
+  "vt": "10680C34",
+  "pripyat03": 6
+ },
+ {
+  "ten": "weapon_ammo_spawn",
+  "dk1": "CAM",
+  "vt": "10682CF4",
+  "pripyat03": 17
+ },
+ {
+  "ten": "weapon_autoshotgun",
+  "dk1": "CAM",
+  "vt": "106BA7BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_autoshotgun_spawn",
+  "dk1": "CAM",
+  "vt": "1067B1F4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_basecsgrenade",
+  "dk1": "CAM",
+  "vt": "1066413C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_boomer_claw",
+  "dk1": "CAM",
+  "vt": "106BB974",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_chainsaw",
+  "dk1": "CAM",
+  "vt": "106BC7FC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_chainsaw_spawn",
+  "dk1": "CAM",
+  "vt": "106820AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_charger_claw",
+  "dk1": "CAM",
+  "vt": "106BD264",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_cola_bottles",
+  "dk1": "CAM",
+  "vt": "106BF1B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_cs_base",
+  "dk1": "CAM",
+  "vt": "106652B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_csbase_gun",
+  "dk1": "CAM",
+  "vt": "106659C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_defibrillator",
+  "dk1": "CAM",
+  "vt": "106C44BC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_defibrillator_spawn",
+  "dk1": "CAM",
+  "vt": "1068104C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_fireworkcrate",
+  "dk1": "CAM",
+  "vt": "106BF9C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_first_aid_kit",
+  "dk1": "CAM",
+  "vt": "106C01C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_first_aid_kit_spawn",
+  "dk1": "CAM",
+  "vt": "10680404",
+  "pripyat03": 10
+ },
+ {
+  "ten": "weapon_gascan",
+  "dk1": "CAM",
+  "vt": "106C0A84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_gascan_spawn",
+  "dk1": "CAM",
+  "vt": "10681464",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_gnome",
+  "dk1": "CAM",
+  "vt": "106C135C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_grenade_launcher",
+  "dk1": "CAM",
+  "vt": "106C1AB4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_grenade_launcher_spawn",
+  "dk1": "CAM",
+  "vt": "106824C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_hegrenade_spawn",
+  "dk1": "CAM",
+  "vt": "1067FFBC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_hunter_claw",
+  "dk1": "CAM",
+  "vt": "106C2BCC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_hunting_rifle",
+  "dk1": "CAM",
+  "vt": "106D2C7C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_hunting_rifle_spawn",
+  "dk1": "CAM",
+  "vt": "1067BA24",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_item_spawn",
+  "dk1": "UNGVIEN",
+  "vt": "10679B0C",
+  "pripyat03": 24
+ },
+ {
+  "ten": "weapon_jockey_claw",
+  "dk1": "CAM",
+  "vt": "106C6A34",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_melee",
+  "dk1": "CAM",
+  "vt": "106D611C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_melee_spawn",
+  "dk1": "CAM",
+  "vt": "1067A18C",
+  "pripyat03": 8
+ },
+ {
+  "ten": "weapon_molotov",
+  "dk1": "CAM",
+  "vt": "106C7D8C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_molotov_spawn",
+  "dk1": "CAM",
+  "vt": "1067F78C",
+  "pripyat03": 5
+ },
+ {
+  "ten": "weapon_oxygentank",
+  "dk1": "CAM",
+  "vt": "106C9354",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pain_pills",
+  "dk1": "CAM",
+  "vt": "106C9B14",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pain_pills_spawn",
+  "dk1": "CAM",
+  "vt": "1068081C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pipe_bomb",
+  "dk1": "CAM",
+  "vt": "106CA374",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pipe_bomb_spawn",
+  "dk1": "CAM",
+  "vt": "1067F374",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pistol",
+  "dk1": "CAM",
+  "vt": "106CB2EC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pistol_magnum",
+  "dk1": "CAM",
+  "vt": "106CBA84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pistol_magnum_spawn",
+  "dk1": "CAM",
+  "vt": "1067CE9C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pistol_spawn",
+  "dk1": "CAM",
+  "vt": "1067ADDC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_propanetank",
+  "dk1": "CAM",
+  "vt": "106CC21C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pumpshotgun",
+  "dk1": "CAM",
+  "vt": "106CC994",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_pumpshotgun_spawn",
+  "dk1": "CAM",
+  "vt": "1067D6CC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle",
+  "dk1": "CAM",
+  "vt": "106BA00C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_ak47",
+  "dk1": "CAM",
+  "vt": "106CD12C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_ak47_spawn",
+  "dk1": "CAM",
+  "vt": "1067C254",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_desert",
+  "dk1": "CAM",
+  "vt": "106CD8C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_desert_spawn",
+  "dk1": "CAM",
+  "vt": "1067BE3C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_m60",
+  "dk1": "CAM",
+  "vt": "106CE074",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_m60_spawn",
+  "dk1": "CAM",
+  "vt": "106828DC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_sg552",
+  "dk1": "CAM",
+  "vt": "106CE804",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_sg552_spawn",
+  "dk1": "CAM",
+  "vt": "1067E72C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_rifle_spawn",
+  "dk1": "CAM",
+  "vt": "1067B60C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_scavenge_item_spawn",
+  "dk1": "CAM",
+  "vt": "1067A5AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_shotgun_chrome",
+  "dk1": "CAM",
+  "vt": "106CEFA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_shotgun_chrome_spawn",
+  "dk1": "CAM",
+  "vt": "1067DEFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_shotgun_spas",
+  "dk1": "CAM",
+  "vt": "106CF754",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_shotgun_spas_spawn",
+  "dk1": "CAM",
+  "vt": "1067CA84",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smg",
+  "dk1": "CAM",
+  "vt": "106D4284",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smg_mp5",
+  "dk1": "CAM",
+  "vt": "106CFECC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smg_mp5_spawn",
+  "dk1": "CAM",
+  "vt": "1067E314",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smg_silenced",
+  "dk1": "CAM",
+  "vt": "106D0664",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smg_silenced_spawn",
+  "dk1": "CAM",
+  "vt": "1067DAE4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smg_spawn",
+  "dk1": "CAM",
+  "vt": "1067D2B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_smoker_claw",
+  "dk1": "CAM",
+  "vt": "106D0DFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_sniper_awp",
+  "dk1": "CAM",
+  "vt": "106D15AC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_sniper_awp_spawn",
+  "dk1": "CAM",
+  "vt": "1067EB44",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_sniper_military",
+  "dk1": "CAM",
+  "vt": "106D1D4C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_sniper_military_spawn",
+  "dk1": "CAM",
+  "vt": "1067C66C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_sniper_scout",
+  "dk1": "CAM",
+  "vt": "106D24E4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_sniper_scout_spawn",
+  "dk1": "CAM",
+  "vt": "1067EF5C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_spawn",
+  "dk1": "CAM",
+  "vt": "1067A9C4",
+  "pripyat03": 11
+ },
+ {
+  "ten": "weapon_spitter_claw",
+  "dk1": "CAM",
+  "vt": "106D341C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_tank_claw",
+  "dk1": "CAM",
+  "vt": "106D4AEC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_upgradepack_explosive",
+  "dk1": "CAM",
+  "vt": "106C53B4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_upgradepack_explosive_spawn",
+  "dk1": "CAM",
+  "vt": "10681C94",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_upgradepack_incendiary",
+  "dk1": "CAM",
+  "vt": "106C5B54",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_upgradepack_incendiary_spawn",
+  "dk1": "CAM",
+  "vt": "1068187C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_vomitjar",
+  "dk1": "CAM",
+  "vt": "106C62C4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "weapon_vomitjar_spawn",
+  "dk1": "CAM",
+  "vt": "1067FBA4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "window_pane",
+  "dk1": "CAM",
+  "vt": "1060626C",
+  "pripyat03": 0
+ },
+ {
+  "ten": "witch",
+  "dk1": "CAM",
+  "vt": "106DEEE4",
+  "pripyat03": 0
+ },
+ {
+  "ten": "world_items",
+  "dk1": "CAM",
+  "vt": "10611CFC",
+  "pripyat03": 0
+ },
+ {
+  "ten": "worldspawn",
+  "dk1": "CAM",
+  "vt": "1065DB7C",
+  "pripyat03": 0
+ }
+]

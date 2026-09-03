@@ -33,6 +33,8 @@ gì thêm).
 
 ### Quét lại toàn bộ không gian lớp
 
+> Bảng phân loại đầy đủ: [08-phanloai-entity.md](08-phanloai-entity.md).
+
 - **557 lớp** của `server.dll`, đối chiếu **16 map** thật của ba chiến dịch.
 - **40 lớp** chưa từng phán quyết: **tất cả trượt ĐK1** (có SendTable riêng).
 - Sau khi sửa lỗi giải vtable (22/08), **137 lớp** mới trở nên phân giải được — quét lại:

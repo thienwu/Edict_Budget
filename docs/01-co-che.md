@@ -318,6 +318,25 @@ entity** của map ngay tại đó, và slot trống **sau** `RestartRound` vẫ
 
 ⇒ **Chỉ dọn khi CÓ `mission_lost` đang chờ.** Cờ một-lần, không cửa sổ giờ.
 
+### 🛑 Cảnh báo: plugin SourceMod và `mission_lost`
+
+`wipeclear` huỷ entity **sớm hơn** bình thường — `CleanupDeleteList()` chạy ngay trong thân
+hook, trước `RestartRound` gốc. Preserve list của game chỉ có **38 lớp**, nên phần lớn entity
+của map bị xoá ở bước này.
+
+Plugin nào còn giữ tham chiếu tới một entity vừa bị xoá sẽ cầm tham chiếu **treo** ⇒ server
+có thể **sập**. Nguy hiểm nhất là những tham chiếu **không kiểm serial** — con trỏ thô, hoặc
+thứ do chính engine giữ.
+
+**Cách chữa nằm ở phía plugin:** dọn tham chiếu của chính mình trên **`mission_lost`** — nó
+bắn **trước** `RestartRound` vài frame, đó là cửa sổ để dọn. Dọn sau là muộn.
+
+**Vì sao không dời việc dọn ra sau `RestartRound`:** `RestartRound` tạo entity mới trong khi
+entity cũ vẫn sống — đỉnh edict là *cũ + mới*. `wipeclear` tồn tại để giải phóng chỗ **trước**
+đỉnh đó. Dời đi là quay lại đúng lỗi `ED_Alloc` mà nó sinh ra để chữa.
+
+Không sửa được plugin thì đặt `wipeclear=1` (chỉ quan sát) hoặc `0`.
+
 ### `wipekeep.txt` — danh sách giữ bổ sung
 
 Preserve list của game (`0x7ACE40`) là thứ **game dùng**. Nhưng có những lớp game sẵn sàng

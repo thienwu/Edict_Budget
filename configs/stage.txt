@@ -1,0 +1,48 @@
+1
+# ===========================================================================
+#  stage.txt - CONG TAT TONG cua ca plugin
+# ===========================================================================
+#
+#  Dong DAU TIEN phai la mot so:
+#
+#     0  = NAM IM HOAN TOAN.  Plugin van duoc Metamod nap va van ghi log,
+#          nhung KHONG moc mot vtable nao, KHONG va mot byte nao, khong doc
+#          them file cau hinh nao. Dung lam MOC DOI CHIEU khi chan doan.
+#
+#     1  = HOAT DONG (mac dinh).  Doc patches.txt roi bat cac co che theo do.
+#
+#  Gia tri khac 0/1 hoac file khong ton tai => plugin dung mac dinh 1.
+#  Doc bang fscanf("%d") nen moi thu sau con so o dong dau bi bo qua -
+#  chinh vi vay khoi chu thich nay nam duoi va van an toan.
+#
+#  Sua file nay chi can KHOI DONG LAI SERVER, khong build lai.
+#
+# ---------------------------------------------------------------------------
+#  DUNG NO KHI NAO
+# ---------------------------------------------------------------------------
+#
+#  Khi nghi plugin gay ra mot su co nhung chua chac: dat 0, khoi dong lai.
+#  Neu su co VAN CON => khong phai plugin, di tim cho khac (addon, map, plugin
+#  SourceMod khac). Neu su co BIEN MAT => thu hep tiep bang tung cong tac
+#  trong patches.txt.
+#
+#  Day la cach thu re nhat va sach nhat vi no chi doi MOT bien.
+#  Tat tung cong tac trong patches.txt van con lai phan khung cua plugin;
+#  stage=0 thi khong con gi ca.
+#
+#  Bai hoc that cua du an: da co it nhat hai lan trieu chung bi quy oan cho
+#  plugin ma hoa ra do addon map moi them - mot lan Special Infected hien model
+#  ERROR, mot lan hong vong spawn vu khi. Ca hai lan, stage=0 la phep thu dung
+#  ra phai lam DAU TIEN.
+#
+# ---------------------------------------------------------------------------
+#  GO BO HAN
+# ---------------------------------------------------------------------------
+#
+#  stage=0 chi lam plugin nam im, no VAN duoc nap. Muon go han:
+#     xoa  left4dead2\addons\metamod\edictbudget.vdf
+#     roi khoi dong lai.
+#
+#  Moi thay doi cua plugin deu CHI ton tai trong bo nho tien trinh - khong ghi
+#  vao file game, khong sua BSP, khong de lai dau vet nao sau khi tat.
+# ===========================================================================

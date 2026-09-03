@@ -20,33 +20,47 @@
 #
 # Luat khop: dong ket thuc '_' = khop TIEN TO. Con lai = khop CHINH XAC.
 #
-# ========================= VI SAO CAN FILE NAY ======================
-# Engine L4D2 CHI cho chuyen tay hai thu: weapon_pain_pills va
-# weapon_adrenaline. Bay loai con lai la do plugin (vi du Gear Transfer) MO RONG
-# ra, va cach duy nhat de lam duoc la HUY roi TAO LAI vat pham:
+# ================ NGUYEN TAC CHON: THAM CHIEU VAT QUA FRAME ================
 #
-#     RemoveEdict(ent);                  // -> ED_Free, freetime = GetTime()
-#     ent = CreateAndEquip(client, ...); // -> ED_Alloc, CUNG MOT FRAME
+# Da xac minh: CServerGameDLL::GameFrame @0x100EF4B0 goi CleanupDeleteList
+# HAI LAN moi frame -
+#   100EF55B  DAU frame  -> moi UTIL_Remove hoan tu frame TRUOC duoc ED_Free
+#   100EF58F  ... Director tick, think, spawn -> CreateEntityByName -> ED_Alloc
+#   100EF5CD  CUOI frame
+# => "giai phong roi cap phat trong cung mot frame" la chuyen xay ra o MOI FRAME.
+#    Cong 1 giay cua ED_Alloc chinh la thu giu cho chi so edict khong doi chu
+#    giua hai snapshot.
 #
-# Neu chi so edict duoc tra lai NGAY thi client khong bao gio thay ranh gioi
-# xoa/tao - no chi thay thuc the o chi so N dot ngot doi thuoc tinh. Ket qua:
-# "ghost weapon", vat pham dinh duoi chan bot, hoac chuyen do that bai.
+# Nen tieu chi dua mot lop vao day KHONG phai "no quan trong", ma la:
 #
-# Changelog cua chinh Gear Transfer da ghi hai trieu chung nay:
-#   v2.16 (06-09-2021) "fixed ... creating a ghost weapon attached between players legs"
-#   v2.19 (19-10-2021) "fixed 'Invalid edict' error when creating items to give"
+#   *** CO AI GIU THAM CHIEU TOI NO VAT QUA RANH GIOI FRAME KHONG? ***
 #
-# Giu cach ly 1 giay = ED_Alloc buoc phai cap mot chi so KHAC => het loi.
+# Ba loai tham chieu nguy hiem (khong duoc kiem serial, hoac engine giu rieng):
+#   1. engine->SetView(clientEdict, viewEdict)   - engine giu edict_t*, KHONG
+#      phai handle co serial. Nguon: point_viewcontrol_survivor.
+#   2. SetParent  - quan he cha-con giu qua nhieu frame.
+#      Nguon: info_survivor_position.
+#   3. con tro tho CBaseEntity* hoac chi-so-khong-serial ma plugin/addon giu lai.
 #
-# ==================== KHONG SO GIAM HIEU QUA LUC WIPE ================
-# Luc wipe, `wipeclear` goi CleanupDeleteList() roi AllowImmediateEdictReuse()
-# (IVEngineServer slot 95). Ham do dat freetime = 0.0 cho MOI edict dang trong -
-# ke ca nhung cai vua bi giu cach ly o day. Nen danh sach nay chi co tac dung
-# LUC CHOI THUONG, khong lam hep bien do o dot bung.
+# Neu khong chac mot lop co thuoc ba loai tren khong thi CU DE TRONG DANH SACH.
+# Gia phai tra cho moi lop them vao chi la vai edict bi giu cach ly 1 giay.
 
-# --- Chin lop vat pham Gear Transfer chuyen duoc ---
-# (weapon_pain_pills va weapon_adrenaline la hai cai engine von ho tro san;
-#  bay cai con lai la phan plugin mo rong)
+# ===========================================================================
+#  NHOM 0 - VAT PHAM CHUYEN TAY  *** DAY LA NHOM DUY NHAT DUOC BAT ***
+#
+#  Day la ca DUY NHAT da CHUNG MINH DUOC bang quan sat that + dich nguoc:
+#  engine L4D2 chi cho chuyen tay pain_pills / adrenaline; plugin nhu Gear
+#  Transfer mo rong ra bay loai khac bang cach HUY roi TAO LAI trong CUNG MOT
+#  FRAME:
+#        RemoveEdict(item);  item = CreateAndEquip(target, type);
+#  Hai dong lien nhau => ED_Free roi ED_Alloc cung frame => neu tra lai dung
+#  chi so cu thi client khong thay ranh gioi xoa/tao => "ghost weapon".
+#  Changelog cua chinh plugin do ghi dung hai trieu chung (v2.16 ghost weapon,
+#  v2.19 "Invalid edict").
+#
+#  Chin lop vat pham + chin ban "_spawn" cua chung (duong bot nhat do o dong
+#  2337 cua plugin cung huy-roi-tao-lai).
+# ===========================================================================
 weapon_adrenaline
 weapon_pain_pills
 weapon_molotov
@@ -57,7 +71,6 @@ weapon_upgradepack_explosive
 weapon_upgradepack_incendiary
 weapon_defibrillator
 
-# --- Ban sao "_spawn" tren map: plugin cung xoa/tao chung o duong bot nhat do ---
 weapon_adrenaline_spawn
 weapon_pain_pills_spawn
 weapon_molotov_spawn
@@ -68,14 +81,85 @@ weapon_upgradepack_explosive_spawn
 weapon_upgradepack_incendiary_spawn
 weapon_defibrillator_spawn
 
-# --- BAO THU HON (khuyen nghi neu chay nhieu plugin doi vu khi) ---
-# Mot dong duy nhat duoi day trum TOAN BO ho weapon_ - ke ca sung, ke ca cac
-# lop _spawn o tren. Bo dau # neu muon dung, va co the xoa cac dong tren.
+# ===========================================================================
+#  MOI NHOM DUOI DAY DEU TAT MAC DINH
+#  Ly do: den gio CHUA quan sat duoc van de nao ngoai chuyen vat pham. Chung
+#  duoc liet ke vi ly le ky thuat (tham chieu vat qua frame), khong phai vi da
+#  gap loi that. Bat khi va chi khi may chu ban gap trieu chung cu the.
+# ===========================================================================
+
+# ===========================================================================
+#  NHOM 1 - THUC THE BI THAM CHIEU VAT QUA FRAME  (DE TRONG - CO CHU DICH)
+#
+#  Crash report thuc te 01/09/2026 cho thay ba lop nay tung bi tham chieu treo:
+#      point_viewcontrol_survivor      <- engine->SetView giu edict_t* THO
+#      point_viewcontrol_multiplayer
+#      info_survivor_position          <- SetParent giu qua nhieu frame
+#
+#  Ca ba KHONG nam trong preserve list 38 muc cua game (0x107ACE40) - da tu
+#  dump va kiem: co 'point_viewcontrol' khop CHINH XAC, KHONG co ban
+#  '_survivor'/'_multiplayer'. Plugin dung strcmp nen chung bi xoa that.
+#
+#  !! NHUNG DAY KHONG PHAI VIEC CUA FILE NAY. !!
+#  Tham chieu treo la LOI PHIA PLUGIN SOURCEMOD, khong phai loi edict. Giu
+#  cach ly 1 giay chi che lap trieu chung, khong chua goc. Ban giao san CO Y
+#  de trong - xem canh bao trong CAI-DAT.txt muc "wipeclear va mission_lost".
+#
+#  Chi bo dau # duoi day khi ban BIET RO may chu minh co plugin chua sua va
+#  can mot bang dan tam thoi.
+# ===========================================================================
+#point_viewcontrol_survivor
+#point_viewcontrol_multiplayer
+#info_survivor_position
+
+# ===========================================================================
+#  NHOM 2 - NGUOI CHOI VA BOT   (TAT - vi la KHONG LAM GI)
+#  ED_Free VON DA bo qua edict <= maxclients (0x101DFFA0: cmp esi,eax ; jle),
+#  nen hai dong nay khong co tac dung gi. De day cho ro, khong bat.
+# ===========================================================================
+#player
+#survivor_bot
+
+# ===========================================================================
+#  NHOM 3 - TIEN TO TRUM CA HO VU KHI   (TAT)
+#
+#  Dong 'weapon_' duoi day trum TOAN BO ho - ke ca sung. Da tung duoc bat khi
+#  chan doan rang no lam hong vong spawn vu khi, NHUNG chan doan do da BI RUT:
+#  nguyen nhan that la mot addon map bi loi san, khong phai plugin.
+#
+#  Nen mac dinh TAT. 18 lop tuong minh o tren da du cho ca DA CHUNG MINH DUOC
+#  (chuyen vat pham). Chi bat dong nay neu may chu ban co plugin khac cung
+#  huy-roi-tao-lai vu khi trong cung mot frame.
+# ===========================================================================
 #weapon_
+
+# ===========================================================================
+#  NHOM 4 - HO LON THUONG BI PLUGIN/ENGINE GIU THAM CHIEU
+#  logic_/trigger_/func_ hay bi tro toi bang targetname va bang I/O vat qua
+#  nhieu frame. env_/prop_ hay bi plugin giu con tro tho.
+#  Bo dau # neu may chu ban chay nhieu addon/plugin can thiep entity.
+#  Gia: moi lop giu cach ly 1 giay - luc choi thuong khong co ap luc edict
+#  (dinh do duoc 1375/2048, 0 lan ED_ALLOC trong 105 phien) nen gan nhu mien phi.
+# ===========================================================================
+#env_
+#prop_
+#logic_
+#trigger_
+#func_
+
+# ===========================================================================
+#  NHOM 5 - HE CHON DIEM A/B CUA DIRECTOR   (TAT - chan doan da bi RUT)
+#  CDirectorItemManager: nhanh REVISIT @0x10283C40 goi 0x1027BA70 (UTIL_Remove
+#  17 lop weapon_*_spawn roi TU GOI CleanupDeleteList tai 0x1027BB76 => ED_Free
+#  ngay), roi ~0x7A byte sau la hai CreateEntityByName => ED_Alloc cung frame.
+#  Ho weapon_ o tren da trum phan nay roi; hai dong duoi cho day du.
+#  !! CHUA XAC DINH dieu kien de nhanh REVISIT chay (can keyvalue
+#     'revisit_source' + ban ghi tu 0x1027CD50).
+# ===========================================================================
+#info_item_position
+#info_remarkable
 
 # --- Cac lop khac tung thay plugin huy-roi-tao-lai trong cung mot frame ---
 # Bo dau # neu may chu ban co plugin dong vao chung.
-#prop_physics
-#prop_dynamic
 #infected
 #witch

@@ -34,7 +34,7 @@ Three fronts are closed, with evidence:
 The largest remaining visible quantity — `phys_bone_follower` ≈ **587 edicts** — is
 **permanently off limits**, and Valve's own documentation states why.
 
-📖 The two most useful files if you want to **reuse** or **re-check** this work:
+📖 The three most useful files if you want to **reuse** or **re-check** this work:
 
 - 🔑 [**docs/06-dia-chi.en.md**](docs/06-dia-chi.en.md) — **every verified
   reverse-engineered address** per feature: RVAs, vtable slot numbers, string anchors, the
@@ -42,6 +42,10 @@ The largest remaining visible quantity — `phys_bone_follower` ≈ **587 edicts
   Valve update.
 - 🛑 [**docs/07-het-huong.en.md**](docs/07-het-huong.en.md) — every direction searched,
   measured, and rejected, plus **what is still uncertain**.
+- 📊 [**docs/08-phanloai-entity.en.md**](docs/08-phanloai-entity.en.md) — the **screening
+  data** `noedict` and `swap` actually use: all 557 classnames in `server.dll`, the six
+  conditions stated in full with the classes that fail each one, and **which maps the plugin
+  helps**. Start here if you want to add a class to `noedict.txt`.
 
 ---
 
@@ -310,6 +314,16 @@ Controlled comparison - same situation, num_edicts=2048, ~999 free slots:
   freegate=0 -> DIES immediately
   freegate=1 -> keeps running, num_edicts=2048 with 946 slots reused
 ```
+
+> 🛑 **Warning for anyone running SourceMod plugins.** `wipeclear` destroys entities
+> **earlier** than normal. The game's preserve list holds only **38 classes**, so most of a
+> map's entities are removed at this point.
+>
+> A plugin still holding a reference to one of them ends up with a **dangling** reference,
+> and the server can **crash**. Release your plugin's references on the **`mission_lost`**
+> event — it fires **before** `RestartRound`.
+>
+> If the plugin cannot be fixed, set `wipeclear=1` (observe only) or `0`.
 
 ### 3. `noedict` — stop non-networked entities from taking an edict
 

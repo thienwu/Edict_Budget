@@ -31,13 +31,17 @@ Ba mặt trận đã đóng, có bằng chứng:
 Cái lớn nhất còn nhìn thấy được — `phys_bone_follower` ≈ **587 edict** — **cấm vĩnh viễn**,
 và chính tài liệu Valve chứng thực lý do.
 
-📖 Hai tài liệu quan trọng nhất nếu bạn muốn **dùng lại** hoặc **kiểm lại** công trình này:
+📖 Ba tài liệu quan trọng nhất nếu bạn muốn **dùng lại** hoặc **kiểm lại** công trình này:
 
 - 🔑 [**docs/06-dia-chi.md**](docs/06-dia-chi.md) — **toàn bộ địa chỉ dịch ngược đã xác
   minh** cho từng tính năng: RVA, số hiệu vtable slot, chuỗi neo, phiên bản game và md5
   của nhị phân tham chiếu, cùng **cách suy lại tất cả** sau khi Valve cập nhật.
 - 🛑 [**docs/07-het-huong.md**](docs/07-het-huong.md) — mọi hướng đã tìm, đã đo, đã bác bỏ,
   và **những gì còn chưa chắc chắn**.
+- 📊 [**docs/08-phanloai-entity.md**](docs/08-phanloai-entity.md) — **dữ liệu sàng lọc**
+  mà `noedict` và `swap` thực sự dùng: cả 557 classname của `server.dll`, sáu điều kiện
+  phát biểu đầy đủ kèm lớp trượt từng điều kiện, và **bản đồ nào plugin giúp được**.
+  Ai muốn thêm lớp vào `noedict.txt` thì bắt đầu từ đây.
 
 ---
 
@@ -197,6 +201,16 @@ Do duoc tren c6m1_riverbank:
 ```
 
 > ⚠️ Tập giữ phải **tối thiểu**. Đã thử thêm tiền tố `weapon_` (giữ ~190 entity vũ khí) và kết quả là **crash sớm hơn hẳn**: 2041 sống/7 trống, thay vì 1042 sống/1006 trống. Ở wipe, entity bị xoá **được dựng lại** từ entity lump — giữ thêm chỉ làm hẹp biên độ.
+
+> 🛑 **Cảnh báo cho ai chạy plugin SourceMod.** `wipeclear` huỷ entity **sớm hơn** bình
+> thường. Preserve list của game chỉ có **38 lớp**, nên phần lớn entity của map bị xoá ở
+> bước này.
+>
+> Plugin nào còn giữ tham chiếu tới một entity vừa bị xoá sẽ cầm tham chiếu **treo**, và
+> server có thể **sập**. Hãy dọn tham chiếu của plugin mình trên sự kiện **`mission_lost`**
+> — nó bắn **trước** `RestartRound`.
+>
+> Không sửa được plugin thì đặt `wipeclear=1` (chỉ quan sát) hoặc `0`.
 
 ### 2. `freegate` — cho phép tái dùng slot vừa giải phóng
 

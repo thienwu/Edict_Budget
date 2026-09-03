@@ -18,6 +18,7 @@ Mọi kết luận đều kèm **địa chỉ hàm** và **đoạn lệnh** đ�
 | **Đo đạc** — log, kiểm kê, bẫy, `heartbeat`, `loadprobe` | [05-do-dac.md](05-do-dac.md) | [05-do-dac.en.md](05-do-dac.en.md) |
 | 🔑 **Địa chỉ dịch ngược đã xác minh** — bảng tra cho từng tính năng | [06-dia-chi.md](06-dia-chi.md) | [06-dia-chi.en.md](06-dia-chi.en.md) |
 | 🛑 **Hết hướng** — vì sao không còn gì để cắt nữa | [07-het-huong.md](07-het-huong.md) | [07-het-huong.en.md](07-het-huong.en.md) |
+| 📊 **Phân loại 557 entity** — dữ liệu quyết định của `noedict`, điểm xuất phát của `swap` | [08-phanloai-entity.md](08-phanloai-entity.md) | [08-phanloai-entity.en.md](08-phanloai-entity.en.md) |
 
 ## Ghi chú
 
@@ -50,6 +51,11 @@ quy tắc *"xoá ít đi"* mà ai cũng nghĩ ra đầu tiên là **quy tắc sa
 không ai suy lại rồi bật lại.
 
 **`04-nonetkill`** và **`04-cef`** là những hướng đã bác bỏ, giữ lại vì cùng lý do đó.
+
+**`08-phanloai-entity`** là **dữ liệu**, không phải lý lẽ: cả 557 classname của `server.dll`
+chia làm 229 ứng viên / 320 cấm / 8 không đọc được, kèm địa chỉ vtable và số đếm thật. Ai
+muốn thêm lớp vào `noedict.txt` hay tìm cặp cho `swap` thì bắt đầu từ đây. Bản máy đọc ở
+`data/phanloai_entity_l4d2.json`.
 
 **`07-het-huong`** là kết luận: mọi hướng đã tìm, đã đo, đã bác bỏ — và **những gì còn chưa
 chắc chắn** về ba lớp mới thêm gần đây.

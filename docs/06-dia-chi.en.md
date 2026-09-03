@@ -64,6 +64,10 @@ Mechanism: set **bit 9 of `m_iEFlags`** (`EFL_SERVER_ONLY`) **before**
 the body for the instruction that stores the vtable pointer. If `Create` is only a wrapper,
 follow its `call rel32` and scan the callee.
 
+> 📊 **The full list of all 557 classes** with vtables and the condition-1 verdict:
+> [08-phanloai-entity.en.md](08-phanloai-entity.en.md) — 229 candidates / 320 forbidden /
+> 8 unreadable.
+
 > ⚠️ **Patching is by VTABLE, not by CLASSNAME.** **20 groups** of classnames share a
 > vtable. Enabling one name can drag in the whole group. Known example:
 > `info_teleport_destination` shares a vtable with `info_player_start` and `info_landmark`.

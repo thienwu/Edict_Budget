@@ -63,6 +63,9 @@ Cơ chế: bật **bit 9 của `m_iEFlags`** (`EFL_SERVER_ONLY`) **trước khi*
 quét thân hàm tìm lệnh ghi con trỏ vtable. Nếu `Create` chỉ là vỏ bọc gọi hàm khác thì
 đi theo `call rel32` rồi quét tiếp.
 
+> 📊 **Danh sách đầy đủ 557 lớp** kèm vtable và phán quyết điều kiện 1:
+> [08-phanloai-entity.md](08-phanloai-entity.md) — 229 ứng viên / 320 cấm / 8 không đọc được.
+
 > ⚠️ **Vá theo VTABLE, không theo CLASSNAME.** Có **20 nhóm** classname dùng chung một
 > vtable. Bật một tên có thể kéo theo cả nhóm. Ví dụ đã biết:
 > `info_teleport_destination` dùng chung vtable với `info_player_start` và `info_landmark`.
