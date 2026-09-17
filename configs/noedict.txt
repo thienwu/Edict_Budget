@@ -78,8 +78,9 @@ func_areaportal
 #      DK6, chieu handle an toan, nhung day la cho duy nhat chua chac chan.
 info_zombie_spawn
 #
-# --- func_nav_blocker : 64 cai / 17 map --- DA THAM XONG, CHUA CHAY LAN NAO ---
-#   DE TAT. Bo dau # o dong cuoi khoi nay de bat, va PHAI test rieng mot minh.
+# --- func_nav_blocker : 64 cai / 17 map --- DA THAM XONG (6/6 tren giay) ---
+#   BAT theo quyet dinh cua nguoi van hanh. CHUA co phep do rieng tren may chu
+#   that nhu 7 lop tren. Muon tat: them dau # vao dong cuoi khoi nay.
 #   DK6: Spawn 0x1048C80E: push 0x20 (EF_NODRAW) ; call AddEffects.
 #        0/64 co parentname => handle cha = -1 => je 0x10056A84 = DONTSEND.
 #        (CO EF_NODRAW MA CO CHA thi SE duoc gui - phai theo trang thai cua cha.
@@ -94,4 +95,53 @@ info_zombie_spawn
 #        chi so). Duong tinh gia - dung ket luan la truy cap edict.
 #   NHIN CAI GI: zombie/bot co di vao vung le ra bi chan khong. Khong co trieu
 #        chung hinh anh - phai quan sat HANH VI AI.
-#func_nav_blocker
+func_nav_blocker
+#
+# ===========================================================================
+#  info_remarkable - DA CHAY THAT tren may chu chinh (mot minh no), DAT.
+# ===========================================================================
+#
+# La gi: diem vo hinh dat canh mot vat trong ban do; survivor nhin thay thi
+#   thot cau nhan xet / nhac huong di ("xuong cau thang!", "loi nay!").
+#   Keyvalue contextsubject -> tieu chi Subject cua response rules.
+#
+# --- info_remarkable : 63 cai / 17 map (CHI chernobyl: ch02 19, ch05 16,
+#     ch03 15, ch04 11, ch01 2). Ban do goc Valve: 67 cai / 50 BSP
+#     (c5m3_cemetery 8, c4m1/c4m4/c4m5 5). the hive / anemoia / toyz4: 0.
+#
+#   Sau tang, doc thang ma may server.dll, cung thuoc voi 7 lop tren:
+#   DK1: vtable[9] tra ServerClass CBaseEntity => khong SendTable rieng.
+#        vtable 106787B4 RIENG, khong dung chung voi lop nao.
+#   DK4: ctor push 0 -> 0x10065020 => chua server-only (co cho de cat).
+#   DK6: slot 21 mac dinh 0x10056A40; 0/63 co model => DONTSEND. client.dll
+#        chua 0 lan chuoi "info_remarkable"/"TLK_REMARK"/"contextsubject":
+#        client KHONG CO lop nay, chua bao gio nhan no.
+#   DK2: Spawn 0x1029B9A0 chi AddToTail vao CUtlLinkedList toan cuc
+#        0x10840198 (con tro this) + [this+0x42C]=0. Khong SetSolid, 0/63
+#        co parentname.
+#   DK5: khong ai SetOwnerEntity / giu EHANDLE co mang toi no. 0/63 la target
+#        cua keyvalue/output nao (54 co targetname nhung khong ai dung).
+#        Khong SendTable nao co prop tro toi no.
+#   DK3: bo tieu thu duy nhat = talker survivor 0x1034A0A0: duyet list con
+#        tro, khoang cach theo toa do, FInViewCone/FVisible theo toa do
+#        (0x100469D0: EyePosition/WorldSpaceCenter/origin, KHONG doc edict,
+#        KHONG partition), roi player->Speak("TLK_REMARK"). Khong EmitSound,
+#        khong entindex, khong goi engine voi chinh no.
+#   VONG DOI: sau khi nhan xet chi `inc [this+0x42C]` (0x1034A26A), KHONG
+#        UTIL_Remove => song suot man (kieu thuong truc nhu path_track).
+#
+#   Giong lop nao da chay that: info_zombie_spawn (cung khuon "diem giu vi
+#   tri + du lieu, he thong server duyet danh sach con tro roi tac dong len
+#   player"); ho so con it duong hon: khong sinh entity, khong goi engine.
+#   Lop Valve da cho server-only cung khuon: info_zombie_border.
+#
+#   DA KIEM TREN ch02_pripyat01 (19 cai) - cai da nhin:
+#     - survivor (nguoi + bot) con nhac huong di khi di ngang cac diem:
+#       "xuong cau thang" (WorldC1M1DownStairs), "vao can ho"
+#       (WorldC6M1_InApts), "nhay xuong" (WorldC6M2_JumpDown), "len day"
+#       (WorldC6M1_UpHere), "qua nha nay" (C3M3ThroughThisHouse), tu do
+#       (WorldFootLocker x6)...
+#     - ent_text / ent_dump se KHONG thay no (khong edict) - binh thuong.
+#   MAT GI NEU SAI: survivor ngung nhan xet. Khong crash, khong mat hinh.
+#   GO: xoa dong duoi, khoi dong lai server.
+info_remarkable
