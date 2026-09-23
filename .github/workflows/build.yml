@@ -25,7 +25,10 @@ jobs:
         run: git clone --depth 1 -b l4d2 https://github.com/alliedmodders/hl2sdk.git hl2sdk-l4d2
 
       - name: Clone Metamod:Source
-        run: git clone --depth 1 --branch 1.12-dev https://github.com/alliedmodders/metamod-source.git metamod-source
+        run: |
+          git clone --depth 100 https://github.com/alliedmodders/metamod-source.git metamod-source
+          cd metamod-source
+          git checkout $(git log --oneline --grep="1225\|1.12.0" -n 1 --format=%H) || git checkout 1.12-dev
 
       - name: Setup MSVC (x86)
         uses: ilammy/msvc-dev-cmd@v1
@@ -37,7 +40,7 @@ jobs:
         run: |
           set HL2SDK=%GITHUB_WORKSPACE%\hl2sdk-l4d2
           set MMSOURCE=%GITHUB_WORKSPACE%\metamod-source
-          set INCLUDES=/I "%HL2SDK%\public" /I "%HL2SDK%\public\engine" /I "%HL2SDK%\public\tier0" /I "%HL2SDK%\public\tier1" /I "%HL2SDK%\public\vstdlib" /I "%HL2SDK%\public\mathlib" /I "%HL2SDK%\public\game\server" /I "%MMSOURCE%\core" /I "%MMSOURCE%\core\sourcehook"
+          set INCLUDES=/I "%HL2SDK%\public" /I "%HL2SDK%\public\engine" /I "%HL2SDK%\public\tier0" /I "%HL2SDK%\public\tier1" /I "%HL2SDK%\public\vstdlib" /I "%HL2SDK%\public\mathlib" /I "%HL2SDK%\public\game\server" /I "%MMSOURCE%\core" /I "%MMSOURCE%\core\sourcehook" /I "%MMSOURCE%\samples\sample_mm"
           set DEFINES=/D "WIN32" /D "_WINDOWS" /D "COMPILER_MSVC" /D "COMPILER_MSVC32" /D "SE_LEFT4DEAD2=16" /D "SOURCE_ENGINE=16"
           cl.exe /MT /O2 /Zi /LD /EHsc %DEFINES% %INCLUDES% sample_mm.cpp "%HL2SDK%\lib\public\tier0.lib" "%HL2SDK%\lib\public\tier1.lib" "%HL2SDK%\lib\public\vstdlib.lib" /link /OUT:edictbudget_mm.dll /DEBUG /OPT:REF /OPT:ICF /MAP
 
