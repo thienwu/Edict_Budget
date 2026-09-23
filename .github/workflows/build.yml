@@ -29,107 +29,36 @@ jobs:
 
       - name: Create engine_wrappers.h
         working-directory: Edict_Budget\src
-        shell: pwsh
         run: |
-          @'
-/**
- * vim: set ts=4 sw=4 tw=99 noet :
- * ======================================================
- * Metamod:Source Sample Plugin
- * Written by AlliedModders LLC.
- * ======================================================
- *
- * This software is provided 'as-is', without any express or implied warranty.
- * In no event will the authors be held liable for any damages arising from 
- * the use of this software.
- *
- * This sample plugin is public domain.
- */
-
-#ifndef _INCLUDE_SOURCE_ENGINE_WRAPPERS_
-#define _INCLUDE_SOURCE_ENGINE_WRAPPERS_
-
-#include <eiface.h>
-
-extern IVEngineServer *engine;
-extern CGlobalVars *gpGlobals;
-
-#if SOURCE_ENGINE == SE_EPISODEONE && defined METAMOD_PLAPI_VERSION
-#error "Metamod:Source 1.6 API is not supported on the old engine."
-#endif
-
-#define ENGINE_CALL(func) SH_CALL(engine, &IVEngineServer::func)
-
-/**
- * Wrap some API calls for legacy MM:S.
- */
-#if !defined METAMOD_PLAPI_VERSION
-#define GetEngineFactory engineFactory
-#define GetServerFactory serverFactory
-#define MM_Format snprintf
-#define	GetCGlobals	pGlobals
-#else
-#define MM_Format g_SMAPI->Format
-#endif
-
-#if SOURCE_ENGINE <= SE_DARKMESSIAH
-/**
- * Wrap the CCommand class so our code looks the same on all engines.
- */
-class CCommand
-{
-public:
-	const char *ArgS()
-	{
-		return engine->Cmd_Args();
-	}
-	int ArgC()
-	{
-		return engine->Cmd_Argc();
-	}
-
-	const char *Arg(int index)
-	{
-		return engine->Cmd_Argv(index);
-	}
-};
-
-#define CVAR_INTERFACE_VERSION VENGINE_CVAR_INTERFACE_VERSION
-#endif
-
-/**
- * Left 4 Dead engine removed these from IVEngineServer.
- */
-#if SOURCE_ENGINE >= SE_LEFT4DEAD
-
-inline int IndexOfEdict(const edict_t *pEdict)
-{
-	return (int)(pEdict - gpGlobals->pEdicts);
-}
-inline edict_t *PEntityOfEntIndex(int iEntIndex)
-{
-	if (iEntIndex >= 0 && iEntIndex < gpGlobals->maxEntities)
-	{
-		return (edict_t *)(gpGlobals->pEdicts + iEntIndex);
-	}
-	return NULL;
-}
-
-#else
-
-inline int IndexOfEdict(const edict_t *pEdict)
-{
-	return engine->IndexOfEdict(pEdict);
-}
-inline edict_t *PEntityOfEntIndex(int iEntIndex)
-{
-	return engine->PEntityOfEntIndex(iEntIndex);
-}
-
-#endif
-
-#endif //_INCLUDE_SOURCE_ENGINE_WRAPPERS_
-'@ | Set-Content -Path engine_wrappers.h -Encoding ASCII
+          echo #ifndef _INCLUDE_SOURCE_ENGINE_WRAPPERS_ > engine_wrappers.h
+          echo #define _INCLUDE_SOURCE_ENGINE_WRAPPERS_ >> engine_wrappers.h
+          echo #include ^<eiface.h^> >> engine_wrappers.h
+          echo extern IVEngineServer *engine; >> engine_wrappers.h
+          echo extern CGlobalVars *gpGlobals; >> engine_wrappers.h
+          echo #if SOURCE_ENGINE == SE_EPISODEONE ^&^& defined METAMOD_PLAPI_VERSION >> engine_wrappers.h
+          echo #error "Metamod:Source 1.6 API is not supported on the old engine." >> engine_wrappers.h
+          echo #endif >> engine_wrappers.h
+          echo #define ENGINE_CALL(func) SH_CALL(engine, ^&IVEngineServer::func) >> engine_wrappers.h
+          echo #if !defined METAMOD_PLAPI_VERSION >> engine_wrappers.h
+          echo #define GetEngineFactory engineFactory >> engine_wrappers.h
+          echo #define GetServerFactory serverFactory >> engine_wrappers.h
+          echo #define MM_Format snprintf >> engine_wrappers.h
+          echo #define GetCGlobals pGlobals >> engine_wrappers.h
+          echo #else >> engine_wrappers.h
+          echo #define MM_Format g_SMAPI-^>Format >> engine_wrappers.h
+          echo #endif >> engine_wrappers.h
+          echo #if SOURCE_ENGINE ^<= SE_DARKMESSIAH >> engine_wrappers.h
+          echo class CCommand { public: const char *ArgS() { return engine-^>Cmd_Args(); } int ArgC() { return engine-^>Cmd_Argc(); } const char *Arg(int index) { return engine-^>Cmd_Argv(index); } }; >> engine_wrappers.h
+          echo #define CVAR_INTERFACE_VERSION VENGINE_CVAR_INTERFACE_VERSION >> engine_wrappers.h
+          echo #endif >> engine_wrappers.h
+          echo #if SOURCE_ENGINE ^>= SE_LEFT4DEAD >> engine_wrappers.h
+          echo inline int IndexOfEdict(const edict_t *pEdict) { return (int)(pEdict - gpGlobals-^>pEdicts); } >> engine_wrappers.h
+          echo inline edict_t *PEntityOfEntIndex(int iEntIndex) { if (iEntIndex ^>= 0 ^&^& iEntIndex ^< gpGlobals-^>maxEntities) return (edict_t *)(gpGlobals-^>pEdicts + iEntIndex); return NULL; } >> engine_wrappers.h
+          echo #else >> engine_wrappers.h
+          echo inline int IndexOfEdict(const edict_t *pEdict) { return engine-^>IndexOfEdict(pEdict); } >> engine_wrappers.h
+          echo inline edict_t *PEntityOfEntIndex(int iEntIndex) { return engine-^>PEntityOfEntIndex(iEntIndex); } >> engine_wrappers.h
+          echo #endif >> engine_wrappers.h
+          echo #endif >> engine_wrappers.h
 
       - name: Setup MSVC (x86)
         uses: ilammy/msvc-dev-cmd@v1
