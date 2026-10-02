@@ -1,5 +1,7 @@
 # Dữ liệu phân loại lớp
 
+*Tiếng Việt · [English](07-du-lieu.en.md)*
+
 File `data/phanloai_entity_l4d2.json`: toàn bộ 557 tên lớp đăng ký trong `server.dll`.
 
 | trường | nghĩa |

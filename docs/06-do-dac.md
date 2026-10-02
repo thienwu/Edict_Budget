@@ -1,5 +1,7 @@
 # Đo đạc
 
+*Tiếng Việt · [English](06-do-dac.en.md)*
+
 Các phần dưới đây chỉ ghi số liệu, không xoá hay đổi entity nào.
 
 ---

@@ -1,5 +1,7 @@
 # edictbudget
 
+*Tiếng Việt · [English](README.en.md)*
+
 Plugin Metamod:Source cho **máy chủ Left 4 Dead 2 (dedicated, Windows)**. Mục đích: giảm số
 edict mà map tiêu tốn, để máy chủ ít gặp lỗi:
 
@@ -9,7 +11,6 @@ ED_Alloc: no free edicts
 
 Không cần SourceMod. Không nâng giới hạn edict của engine.
 
-*Bản tiếng Anh ([README.en.md](README.en.md), `docs/*.en.md`) là bản cũ, chưa cập nhật theo bản này.*
 
 ---
 

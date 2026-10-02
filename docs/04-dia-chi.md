@@ -1,5 +1,7 @@
 # Địa chỉ
 
+*Tiếng Việt · [English](04-dia-chi.en.md)*
+
 Các địa chỉ plugin dùng, để kiểm lại hoặc suy lại khi game cập nhật.
 
 ---

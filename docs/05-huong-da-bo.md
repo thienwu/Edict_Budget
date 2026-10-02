@@ -1,5 +1,7 @@
 # Hướng đã bỏ
 
+*Tiếng Việt · [English](05-huong-da-bo.en.md)*
+
 Các công tắc dưới đây vẫn còn trong mã để đối chiếu. Trong `patches.txt` chúng phải là `0`.
 
 ---

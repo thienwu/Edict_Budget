@@ -1,5 +1,7 @@
 # Lỗi đã biết
 
+*Tiếng Việt · [English](03-loi-da-biet.en.md)*
+
 ---
 
 ## 1. Plugin SourceMod tạo entity của lớp đã cắt mạng nhận số âm

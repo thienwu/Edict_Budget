@@ -1,5 +1,7 @@
 # Các cơ chế
 
+*Tiếng Việt · [English](01-co-che.en.md)*
+
 Địa chỉ trong bài tính theo ImageBase `0x10000000`. Bảng đầy đủ: [04-dia-chi.md](04-dia-chi.md).
 
 ---

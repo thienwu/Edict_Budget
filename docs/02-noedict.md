@@ -1,5 +1,7 @@
 # noedict
 
+*Tiếng Việt · [English](02-noedict.en.md)*
+
 Không cấp edict cho những lớp entity không cần gửi về client.
 
 ---
