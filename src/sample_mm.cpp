@@ -1820,9 +1820,44 @@ static void __fastcall Hook_PostCtor(void* thisptr, void* edx, const char* cls) 
 
 // Quet mot ham tim  mov dword ptr [reg], imm32  (= luu con tro vtable).
 // Tra NULL neu khong thay, HOAC thay nhieu hon mot (khong chac chan -> bo).
+// !! VA 26/09/2026 - CONG DUNG O `ret`/`int3`. TRUOC DO QUET LAN SANG HAM KE TIEP.
+//
+//    Ban cu quet 80 byte PHANG, khong dung o cuoi ham. Voi lop nao co Create la
+//    thunk ngan thi no doc sang ham LIEN SAU va nhat vtable cua LOP KHAC.
+//
+//    Ca cu the da do duoc - upgrade_spawn:
+//        Create 0x1029EDB0 dai DUNG 0x16 byte, ket thuc `ret 4` @0x1029EDC5,
+//        roi 8 byte int3 dem, roi 0x1029EDD0 la ctor cua weapon_melee_spawn:
+//            1029EDF3  mov dword ptr [esi], 0x1067A18C   <- vtable weapon_melee_spawn
+//        Offset 0x43 < 80 nen ban cu BAT duoc no. Va vi chi bat duoc DUNG MOT,
+//        luat "nhieu hon mot thi tu choi" KHONG kich hoat => tra ve vtable SAI.
+//
+//    Da xac minh tren MAY CHU THAT 26/09 15:15 - cong DK1 bat duoc va tu choi:
+//        'upgrade_spawn' CO SENDTABLE RIENG (ServerClass=0x6E1B0BF0,
+//         can 0x6E1478A8) - TRUOT DIEU KIEN 1, TU CHOI
+//        base luc chay = 0x5D970000 => 0x6E1B0BF0 - base = 0x10840BF0
+//        0x10840BF0 chinh la ServerClass cua weapon_melee_spawn (vtable
+//        0x1067A18C, slot9 0x1029CA90), KHONG phai cua upgrade_spawn (vtable
+//        0x10679E34, slot9 0x10050CF0 -> 0x107D78A8 = DT_BaseEntity).
+//    => DK1 da cuu, nhung no chi cuu vi lop bi nham CO SendTable rieng. Neu lop
+//       nam ke ben KHONG co SendTable rieng thi se va nham ma khong ai biet.
+//
+//    Sau khi va: quet dung o `ret 4` nen khong thay gi -> tra NULL -> nhanh du
+//    phong E8 chay, va ham con 0x1029E860 CO `mov [esi], 0x10679E34` = dung
+//    vtable upgrade_spawn. Tuc ban va vua bit duoc lo vua GIAI DUNG them lop.
 static void** ScanForVtableStore(uint8_t* base, uint8_t* fn) {
     void** found = NULL;
     for (int i = 0; i < 80; i++) {
+        // Dung khi gap HAI 0xCC LIEN TIEP = dem int3 giua hai ham.
+        // !! KHONG duoc dung o 0xC3/0xC2/0xCC don le: ba byte do xuat hien BEN
+        //    TRONG lenh khac (gia tri tuc thoi, ModRM, displacement) nen se dung
+        //    som. Da do tren ca 557 lop:
+        //        khong cong nao : 485 dung / 21 sai-vtable / 9 lop dang chay OK
+        //        C3|C2|CC don le: 451 dung / 17 sai / *** path_track, info_landmark,
+        //                         info_player_start va 43 lop khac BI HONG ***
+        //        2x 0xCC        : 498 dung /  7 sai / 9 lop dang chay OK
+        //    Hai 0xCC lien tiep gan nhu khong bao gio nam trong mot lenh that.
+        if (fn[i] == 0xCC && fn[i+1] == 0xCC) break;
         if (fn[i] != 0xC7) continue;
         uint8_t modrm = fn[i+1];
         if (modrm > 0x07 || modrm == 0x04 || modrm == 0x05) continue;   // bo SIB/disp32
@@ -2896,7 +2931,7 @@ void SamplePlugin::AllPluginsLoaded() {}
 bool SamplePlugin::Pause(char *error, size_t maxlen) { return true; }
 bool SamplePlugin::Unpause(char *error, size_t maxlen) { return true; }
 const char *SamplePlugin::GetLicense() { return "GPLv3"; }
-const char *SamplePlugin::GetVersion() { return "2.0"; }
+const char *SamplePlugin::GetVersion() { return "2.0.1"; }
 const char *SamplePlugin::GetDate() { return __DATE__; }
 const char *SamplePlugin::GetLogTag() { return "EDICTBUDGET"; }
 // Toan bo ma nguon nay do Claude (Anthropic) viet. Xem khoi TAC GIA o dau file.
