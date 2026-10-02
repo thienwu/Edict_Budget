@@ -1,14 +1,64 @@
-# wipekeep.txt - lop GIU THEM khi wipeclear don (ngoai preserve list cua game)
+# wipekeep.txt - lop KHONG bi wipeclear don SOM
 #
 # ===========================================================================
-# DE TRONG. Day la cau hinh dung.
+#  WIPECLEAR LAM GI
 # ===========================================================================
-# wipeclear chi doi THOI DIEM don, khong doi TAP bi don - dung y het CleanUpMap.
+#  Khi ca doi thua (patches.txt: wipeclear=2), ngay dau RestartRound - TRUOC vong
+#  hoi sinh nguoi choi - plugin xoa moi entity KHONG nam trong:
+#     - preserve list cua game (38 lop: worldspawn, player, terror_gamerules...)
+#     - file nay
+#  roi tra edict ngay. Muc dich: co cho trong truoc khi vong hoi sinh can toi.
+#  Sau do game chay tiep binh thuong: CleanUpMap dung lai map tu entity lump.
 #
-# Da thu them tien to "weapon_" (giu ~190 entity vu khi):
-#   ket qua CRASH SOM HON HAN - 2041 song/7 trong, thay vi 1042 song/1006 trong.
-#   Ly do: o WIPE, entity bi xoa se DUOC DUNG LAI tu entity lump.
-#          Giu them chi lam HEP BIEN DO, khong duoc gi.
+# ===========================================================================
+#  LOP GHI TRONG FILE NAY
+# ===========================================================================
+#  KHONG bi xoa som. No van bi CleanUpMap cua game xoa sau do, DUNG THOI DIEM
+#  nhu khi khong co plugin, roi duoc dung lai tu lump nhu moi entity khac.
+#  => Ghi mot lop vao day = lop do quay ve hanh vi goc cua game luc thua.
 #
-# ?? DUNG NHAM VOI mapkeep.txt: o CHUYEN MAN thi nguoc lai - xoa nham la
-#    MAT VINH VIEN do nguoi choi, nen o do phai giu TOI DA.
+# ===========================================================================
+#  KHI NAO CAN GHI
+# ===========================================================================
+#  Plugin SourceMod giu tham chieu toi entity (luu chi so/handle vao bien, mang,
+#  timer...) roi dung lai sau khi doi thua. wipeclear xoa entity do SOM HON game
+#  -> plugin cam tham chieu treo -> loi hoac sap ngay sau lan thua.
+#
+#    Sua duoc plugin   : don tham chieu o su kien mission_lost (ban TRUOC
+#                        RestartRound). Khong can ghi gi vao day.
+#    KHONG sua duoc    : ghi lop entity ma plugin do giu vao day.
+#    Van loi           : dat wipeclear=1 (chi ghi log) hoac 0 trong patches.txt.
+#
+# ===========================================================================
+#  CACH TIM LOP CAN GHI
+# ===========================================================================
+#  - File .sp cua plugin: tim CreateEntityByName("...") va cho luu entity vao
+#    bien toan cuc / mang / timer. (File .smx da nen, tim chuoi se khong thay.)
+#  - Loi SourceMod trong console/log ngay sau lan thua: ten plugin + dong loi.
+#  - edictbudget.log moi lan thua co dong:
+#      WIPECLEAR #n DA DON: slot trong A -> B ... | go X, giu Y (trong do Z do wipekeep.txt)
+#    Z = so entity duoc giu nho file nay.
+#
+# ===========================================================================
+#  CU PHAP
+# ===========================================================================
+#    weapon_gascan      khop DUNG ten lop
+#    weapon_            dong KET THUC bang '_' = khop moi lop bat dau bang tien to do
+#    # ...              ghi chu, bo qua
+#  - Moi dong mot ten. Ten chi gom a-z A-Z 0-9 _ (dong sai bi bo, co ghi log).
+#  - Toi da 128 lop; tu lop thu 129 tro di bi bo qua.
+#  - File doc MOT LAN khi plugin nap -> sua xong phai khoi dong lai may chu.
+#
+# ===========================================================================
+#  CAI GIA
+# ===========================================================================
+#  Entity giu lai van chiem edict trong luc vong hoi sinh chay -> bot cho trong
+#  luc thua. Ghi mot lop la giu MOI entity cua lop do, ke ca entity cua ban do.
+#  Da do: giu ca ho "weapon_" (~190 entity) -> may chu chet SOM hon
+#         (2041 song / 7 trong, so voi 1042 song / 1006 trong khi khong giu).
+#  => Chi ghi DUNG lop plugin can. Tranh lop dong (prop_dynamic, ca ho weapon_...).
+#
+#  DUNG NHAM voi mapkeep.txt: o chuyen man thi nguoc lai - xoa nham la mat vinh
+#  vien do nguoi choi, nen o do phai giu toi da.
+#
+# Mac dinh: de trong (khong giu them lop nao).

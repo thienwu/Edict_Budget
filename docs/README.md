@@ -1,61 +1,18 @@
-# docs/
+# Tài liệu
 
-Ghi chép chi tiết tách ra từ `src/sample_mm.cpp`, để mã nguồn chỉ giữ chú thích ngắn kèm
-con trỏ tới đây.
+| file | nội dung |
+|---|---|
+| [01-co-che.md](01-co-che.md) | các cơ chế: `noedict`, `swap`, `wipeclear` + `wipekeep.txt`, `freegate`, `mapclear` |
+| [02-noedict.md](02-noedict.md) | `noedict` chi tiết: điều kiện, cách thêm và kiểm một lớp, plugin SourceMod |
+| [03-loi-da-biet.md](03-loi-da-biet.md) | lỗi đã biết, lớp không được thêm, lỗi đã sửa |
+| [04-dia-chi.md](04-dia-chi.md) | địa chỉ trong `server.dll` / `engine.dll`, cách suy lại khi game cập nhật |
+| [05-huong-da-bo.md](05-huong-da-bo.md) | hướng đã bỏ: nâng trần 4096, `nonetkill`, `mapclear=2`, họ `phys`, `env_sprite` |
+| [06-do-dac.md](06-do-dac.md) | log, `loadprobe`, `heartbeat`, `trap`, plugin đo `ent_test` |
+| [07-du-lieu.md](07-du-lieu.md) | file dữ liệu 557 lớp |
 
-Mọi kết luận đều kèm **địa chỉ hàm** và **đoạn lệnh** để kiểm lại được trên bản
-`server.dll` / `engine.dll` của chính bạn. Cái gì không xác minh được thì ghi thẳng là
-**KHÔNG XÁC ĐỊNH**, không đoán.
+Bản tiếng Anh (`*.en.md`) là bản cũ, chưa cập nhật theo các tài liệu ở đây.
 
-| chủ đề | Tiếng Việt | English |
-|---|---|---|
-| **Tổng quan** — nhiệm vụ, giới hạn, số liệu đo trên 3 chiến dịch, file cấu hình, build | [00-tong-quan.md](00-tong-quan.md) | [00-tong-quan.en.md](00-tong-quan.en.md) |
-| **Bốn cơ chế đang chạy** — `noedict`, `freegate`, `wipeclear`, `swap` | [01-co-che.md](01-co-che.md) | [01-co-che.en.md](01-co-che.en.md) |
-| **`mapclear`** — và vì sao không bao giờ được xoá cái mang sang màn | [02-mapclear.md](02-mapclear.md) | [02-mapclear.en.md](02-mapclear.en.md) |
-| **Hướng 4096** — toàn bộ nhóm công tắc, **đã tắt** | [03-huong-4096.md](03-huong-4096.md) | [03-huong-4096.en.md](03-huong-4096.en.md) |
-| **`nonetkill`** — đổi tên classname trong lump, **đã loại bỏ** | [04-nonetkill.md](04-nonetkill.md) | [04-nonetkill.en.md](04-nonetkill.en.md) |
-| **CEF** — đã gỡ khỏi kế hoạch | [04-cef.md](04-cef.md) | [04-cef.en.md](04-cef.en.md) |
-| **Đo đạc** — log, kiểm kê, bẫy, `heartbeat`, `loadprobe` | [05-do-dac.md](05-do-dac.md) | [05-do-dac.en.md](05-do-dac.en.md) |
-| 🔑 **Địa chỉ dịch ngược đã xác minh** — bảng tra cho từng tính năng | [06-dia-chi.md](06-dia-chi.md) | [06-dia-chi.en.md](06-dia-chi.en.md) |
-| 🛑 **Hết hướng** — vì sao không còn gì để cắt nữa | [07-het-huong.md](07-het-huong.md) | [07-het-huong.en.md](07-het-huong.en.md) |
-| 📊 **Phân loại 557 entity** — dữ liệu quyết định của `noedict`, điểm xuất phát của `swap` | [08-phanloai-entity.md](08-phanloai-entity.md) | [08-phanloai-entity.en.md](08-phanloai-entity.en.md) |
+Đọc theo thứ tự: README ở thư mục gốc → `01` → `02` (nếu định thêm lớp vào `noedict.txt`) → `03`.
 
-## Ghi chú
-
-**Bản tiếng Việt là bản gốc** và được giữ cập nhật nhất. Chỗ nào bản dịch nói khác bản tiếng
-Việt thì tin bản tiếng Việt.
-
-**Địa chỉ và mã máy giữ nguyên trong khối `code`** — bảng ASCII và đoạn lệnh assembly chỉ
-thẳng hàng ở font đơn cách, và giữ nguyên văn nghĩa là tài liệu không trôi khỏi thứ mà mã
-nguồn thực sự nói.
-
-*(Trước bản 23/08/2026 các tài liệu này viết tiếng Việt **không dấu** để khớp với chú thích
-trong mã nguồn. Nay đã chuyển sang **có dấu** cho dễ đọc; nội dung kỹ thuật giữ nguyên.)*
-
-## Thứ tự đọc
-
-Bắt đầu từ **`00-tong-quan`** — nó chứa tuyên bố nhiệm vụ, cái giới hạn cứng mà không bản vá
-nào gỡ được, và các con số đã đo.
-
-Rồi **`01-co-che`** để biết plugin thực sự làm gì.
-
-**`06-dia-chi`** là thứ đáng đọc nhất nếu bạn muốn **dùng lại** hoặc **kiểm lại** công trình
-này: toàn bộ RVA, số hiệu vtable slot, chuỗi neo, và cách suy lại tất cả sau khi Valve cập
-nhật game.
-
-**`02-mapclear`** đáng đọc **ngay cả khi bạn không bao giờ bật `mapclear`**, vì nó chứa bài
-học đắt nhất của dự án: **xoá một entity mang sang màn ở chuyển màn thì máy chủ sập**, và
-quy tắc *"xoá ít đi"* mà ai cũng nghĩ ra đầu tiên là **quy tắc sai**.
-
-**`03-huong-4096`** là lịch sử: nhóm công tắc đó đã tắt và phải giữ tắt. Nó được ghi lại để
-không ai suy lại rồi bật lại.
-
-**`04-nonetkill`** và **`04-cef`** là những hướng đã bác bỏ, giữ lại vì cùng lý do đó.
-
-**`08-phanloai-entity`** là **dữ liệu**, không phải lý lẽ: cả 557 classname của `server.dll`
-chia làm 229 ứng viên / 320 cấm / 8 không đọc được, kèm địa chỉ vtable và số đếm thật. Ai
-muốn thêm lớp vào `noedict.txt` hay tìm cặp cho `swap` thì bắt đầu từ đây. Bản máy đọc ở
-`data/phanloai_entity_l4d2.json`.
-
-**`07-het-huong`** là kết luận: mọi hướng đã tìm, đã đo, đã bác bỏ — và **những gì còn chưa
-chắc chắn** về ba lớp mới thêm gần đây.
+Địa chỉ ghi trong tài liệu tính theo ImageBase `0x10000000` của bản game ở `04-dia-chi.md`.
+Kết luận lấy từ dịch ngược đều kèm địa chỉ để kiểm lại; chỗ nào chưa xác minh thì ghi là chưa.
