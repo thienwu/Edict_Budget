@@ -1767,7 +1767,10 @@ static void RemoveMapClear() {
 typedef void (__fastcall *PostCtor_t)(void*, void*, const char*);
 static PostCtor_t g_OrigPostCtor = NULL;
 
-#define NOEDICT_MAX 32
+// 02/10/2026: 32 -> 1024. Ban cu dung vong doc o dong thu 32 ma KHONG bao gi het,
+// nen bai thu "dua moi lop chua server-only vao noedict" (511 lop) se chi thu
+// 32 lop dau va bo phan con lai IM LANG. Gio vuot tran thi co canh bao (xem duoi).
+#define NOEDICT_MAX 1024
 static char  g_NoEdictList[NOEDICT_MAX][40];
 static int   g_NoEdictCount = 0;
 static void* g_PatchedVt[NOEDICT_MAX];      // vtable da sua, de go khi unload
@@ -1784,7 +1787,8 @@ static void LoadNoEdictList() {
         return;
     }
     char line[256];
-    while (fgets(line, sizeof(line), f) && g_NoEdictCount < NOEDICT_MAX) {
+    int bo_vuot_tran = 0, bo_ten_dai = 0;
+    while (fgets(line, sizeof(line), f)) {
         size_t L = strlen(line);
         if (L > 0 && line[L-1] != '\n') { int c; while ((c=fgetc(f)) != EOF && c != '\n') {} }
         char* p = line;
@@ -1797,12 +1801,23 @@ static void LoadNoEdictList() {
         for (const char* q = p; *q; q++)
             if (!((*q>='a'&&*q<='z')||(*q>='A'&&*q<='Z')||(*q>='0'&&*q<='9')||*q=='_')) { ok=false; break; }
         if (!ok) continue;
+        // Hai cho truoc day CAT IM LANG - gio dem va bao.
+        if (g_NoEdictCount >= NOEDICT_MAX) { bo_vuot_tran++; continue; }
+        if (strlen(p) >= sizeof(g_NoEdictList[0])) {
+            EL_LOG("[EdictBudget] NOEDICT: '%s' dai %d ky tu >= %d - BO QUA (khong cat ten)",
+                   p, (int)strlen(p), (int)sizeof(g_NoEdictList[0]));
+            bo_ten_dai++; continue;
+        }
         strncpy(g_NoEdictList[g_NoEdictCount], p, sizeof(g_NoEdictList[0])-1);
         g_NoEdictList[g_NoEdictCount][sizeof(g_NoEdictList[0])-1] = 0;
         g_NoEdictCount++;
     }
     fclose(f);
-    EL_LOG("[EdictBudget] NOEDICT: %d lop trong danh sach", g_NoEdictCount);
+    if (bo_vuot_tran)
+        EL_LOG("[EdictBudget] NOEDICT: CANH BAO - %d lop VUOT TRAN NOEDICT_MAX=%d, KHONG duoc nap",
+               bo_vuot_tran, NOEDICT_MAX);
+    EL_LOG("[EdictBudget] NOEDICT: %d lop trong danh sach (bo vi vuot tran %d, vi ten dai %d)",
+           g_NoEdictCount, bo_vuot_tran, bo_ten_dai);
     for (int i = 0; i < g_NoEdictCount; i++)
         EL_LOG("[EdictBudget] NOEDICT:   [%d] '%s'", i, g_NoEdictList[i]);
 }
@@ -1845,8 +1860,25 @@ static void __fastcall Hook_PostCtor(void* thisptr, void* edx, const char* cls) 
 //    Sau khi va: quet dung o `ret 4` nen khong thay gi -> tra NULL -> nhanh du
 //    phong E8 chay, va ham con 0x1029E860 CO `mov [esi], 0x10679E34` = dung
 //    vtable upgrade_spawn. Tuc ban va vua bit duoc lo vua GIAI DUNG them lop.
+// !! VA 02/10/2026 - CHAN BIEN TREN. srcds_crash_2026_10_2T4_14_18C0: AV doc 0x72F54760
+//    tai ScanForVtableStore+0x10, lop logic_choreographed_scene. Nhanh du phong coi MOI
+//    byte 0xE8 la `call rel32`, ke ca 0xE8 nam TRONG rel32 cua call truoc (Create+0x0C,
+//    giua `call operator new` o +0x09), roi chi kiem `target >= base` -> con tro rac
+//    vuot het server.dll. Mo phong tung byte tren 557 lop (tools/mophong_resolve_vtable.py):
+//    9 lop lam sap - beam_spotlight func_breakable logic_choreographed_scene
+//    logic_scene_list_manager scene_manager scripted_scene sky_camera
+//    weapon_basecsgrenade weapon_hunter_claw. Sau khi va: 0 sap, DUNG 505->533,
+//    SAI van 8, 0 lop tu dung thanh sai, 20 lop dang chay giai GIONG HET.
+static uint8_t* g_SrvBase = NULL;
+static size_t   g_SrvSize = 0;
+static bool TrongSrv(const void* p, size_t n) {
+    uintptr_t a = (uintptr_t)p, b = (uintptr_t)g_SrvBase;
+    return g_SrvBase && a >= b && a + n >= a && a + n <= b + g_SrvSize;
+}
+
 static void** ScanForVtableStore(uint8_t* base, uint8_t* fn) {
     void** found = NULL;
+    if (!TrongSrv(fn, 80 + 6)) return NULL;
     for (int i = 0; i < 80; i++) {
         // Dung khi gap HAI 0xCC LIEN TIEP = dem int3 giua hai ham.
         // !! KHONG duoc dung o 0xC3/0xC2/0xCC don le: ba byte do xuat hien BEN
@@ -1863,6 +1895,8 @@ static void** ScanForVtableStore(uint8_t* base, uint8_t* fn) {
         if (modrm > 0x07 || modrm == 0x04 || modrm == 0x05) continue;   // bo SIB/disp32
         unsigned int imm = *(unsigned int*)(fn + i + 2);
         if (imm < (unsigned int)(uintptr_t)base) continue;
+        // vtable phai nam GON trong server.dll - InstallNoEdict se doc vt[9] va vt[29].
+        if (!TrongSrv((void*)(uintptr_t)imm, 30 * sizeof(void*))) continue;
         if (found) return NULL;
         found = (void**)(uintptr_t)imm;
     }
@@ -1885,9 +1919,9 @@ static void** ResolveClassVtable(uint8_t* base, const char* cls) {
     if (!fac) return NULL;
 
     void** fvt = *(void***)fac;
-    if (!fvt) return NULL;
+    if (!fvt || !TrongSrv(fvt, sizeof(void*))) return NULL;
     uint8_t* create = (uint8_t*)fvt[0];                     // slot 0 = Create
-    if (!create) return NULL;
+    if (!create || !TrongSrv(create, 0x30 + 5)) return NULL;
 
     // Quet ~80 byte dau tim  C7 /r imm32  voi modrm dang [reg] khong displacement
     void** found = ScanForVtableStore(base, create);
@@ -1945,9 +1979,11 @@ static void** ResolveClassVtable(uint8_t* base, const char* cls) {
         if (create[i] == 0xE8) {                              // call rel32
             int32_t rel = *(int32_t*)(create + i + 1);
             uint8_t* target = create + i + 5 + rel;
-            if (target >= base) {
+            if (TrongSrv(target, 80 + 6)) {                   // CHAN CA HAI DAU (02/10)
                 void** viaCall = ScanForVtableStore(base, target);
                 if (viaCall) return viaCall;                  // thay thi lay, khong thi THU TIEP
+                i += 4;                                       // nhay qua rel32 cua call THAT
+                continue;
             }
         }
         if (create[i] == 0xC3 || create[i] == 0xC2) break;     // gap ret truoc -> thoi
@@ -1975,6 +2011,10 @@ static bool InstallNoEdict() {
         return false;
     }
     g_OrigPostCtor = (PostCtor_t)pPostCtor;
+    g_SrvBase = base;
+    g_SrvSize = mi.SizeOfImage;
+    EL_LOG("[EdictBudget] NOEDICT: server.dll base=%p size=0x%X (chan bien cho bo giai vtable)",
+           (void*)base, (unsigned)mi.SizeOfImage);
 
     for (int i = 0; i < g_NoEdictCount; i++) {
         const char* cls = g_NoEdictList[i];
@@ -2931,7 +2971,7 @@ void SamplePlugin::AllPluginsLoaded() {}
 bool SamplePlugin::Pause(char *error, size_t maxlen) { return true; }
 bool SamplePlugin::Unpause(char *error, size_t maxlen) { return true; }
 const char *SamplePlugin::GetLicense() { return "GPLv3"; }
-const char *SamplePlugin::GetVersion() { return "2.0.1"; }
+const char *SamplePlugin::GetVersion() { return "2.0.2"; }
 const char *SamplePlugin::GetDate() { return __DATE__; }
 const char *SamplePlugin::GetLogTag() { return "EDICTBUDGET"; }
 // Toan bo ma nguon nay do Claude (Anthropic) viet. Xem khoi TAC GIA o dau file.
