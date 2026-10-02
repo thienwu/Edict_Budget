@@ -20,19 +20,158 @@
 #  6. Khong duoc GUI xuong client
 #     (co model + EF_NODRAW van an toan; "co model" mot minh KHONG phai tieu chi)
 # ========================================================================
+#
+# ===================== QUY UOC TRANG THAI (02/10/2026) =====================
+#  DA KIEM CHUNG - BAT : da chay that tren may chu, da phat hanh tren GitHub.
+#  DA TEST - BAT       : lop moi (tu 26/09) da test tren may chu that, chua phat hanh.
+#  MOI - MAC DINH TAT  : qua 6 dieu kien bang doc may nhung thong tin con MO HO,
+#                        chua du de test. Moi lan CHI BAT MOT lop.
+#  BIET LOI - TAT      : da xac minh loi trong binary (xem LUU Y cua khoi do).
+#  BAN DO DE KIEM CHUNG: moi khoi liet ke ban do co lop do va so cai, de nguoi sau
+#    tu nap ban do do va so `song` khi bat/tat. So trong [l:/h:/s:] la ban ghi de
+#    lump entity trong update/maps/*_?_0.lmp (thu muc 'update' dung DAU SearchPaths),
+#    chi ghi khi KHAC .bsp. Chua xac minh engine chon file nao cho che do nao
+#    (rat co the l=coop, h=versus, s=survival).
+#  noedict VA THEO VTABLE: bat mot lop la cat MOI classname dung chung vtable do
+#    - khoi nao co lop KEO THEO thi lop do cung bi cat, phai kiem ca no.
+# ==========================================================================
 
 # --- Da do duoc tren may chu that ---
 # infodecal: StaticDecal() dung chi so BE MAT bi dan, khong phai chi so cua no.
 #            853 cai tren ch04_pripyat03 - lop dong nhat, 42% toan bo edict.
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu v2.0.0) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     infodecal
+#       chien dich (41 map, 972 cai): c8m4_interior 150, c11m2_offices 112,
+#         c8m2_subway 85, c3m3_shantytown 80, c14m1_junkyard 77, c8m5_rooftop 56,
+#         c11m3_garage 52, c11m1_greenhouse 37, c10m4_mainstreet 24, c10m5_houseboat 24,
+#         c10m3_ranchhouse 23, c10m2_drainage 20, c12m1_hilltop 20,
+#         c12m2_traintunnel 18, c12m5_cornfield 17, c1m1_hotel 14, c11m4_terminal 13,
+#         c2m3_coaster 13, c13m1_alpinecreek 10, c3m1_plankcountry 10,
+#         c13m3_memorialbridge 8, c14m2_lighthouse 8, c1m3_mall 8, c4m1_milltown_a 8,
+#         c4m4_milltown_b 8, c4m5_milltown_escape 8, c5m4_quarter 8, c6m1_riverbank 8,
+#         c13m4_cutthroatcreek 7, c1m4_atrium 7, c3m2_swamp 7, c12m4_barn 5,
+#         c4m2_sugarmill_a 4, c4m3_sugarmill_b 4, c5m1_waterfront_sndscape 4,
+#         c8m1_apartment 4, c13m2_southpinestream 3, c5m5_bridge 3, c10m1_caves 2,
+#         c12m3_bridge 2, c5m3_cemetery 1
+#       map thu nghiem/dev cua Valve (4 map): styleguide_swamp01 113,
+#         styleguide_swamp_cheapwater01 113, tutorial_standards 4,
+#         tutorial_standards_vs 4
+#       custom/workshop (22 map): ch02_pripyat01 991, ch04_pripyat03 856,
+#         ch03_pripyat02 823, ch01_jupiter 257, ch05_pripyat04 234, anemoia_kitty 130,
+#         the_hive_m1 121, the_hive_m3 84, the_hive_m5 64, tropic_04 54, the_hive_m4 53,
+#         tropic_01 50, tropic_03 44, the_hive_m2 35, c1918_red_square_c1 24,
+#         c1918_red_square_c4 14, tropic_02 12, c1918_red_square_c2 4,
+#         c1918_red_square_c3 3, toyz4_v7 2, anemoia_party 1, anemoia_arcade 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 infodecal
 
 # light / light_spot: LightStyle(style, pattern) khong kem chi so entity nao.
 #   KHONG them light_dynamic - lop do CO SendTable rieng (DT_DynamicLight).
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu v2.0.0) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     light
+#       chien dich (58 map, 1575 cai): c6m2_bedlam 189, c2m2_fairgrounds 165,
+#         c2m3_coaster 154, c1m1_hotel 95, c10m4_mainstreet 58, c2m4_barns 57,
+#         c14m1_junkyard 52, c6m1_riverbank 50, c3m4_plantation 35, c2m1_highway 34,
+#         c10m3_ranchhouse 33, c6m3_port 32, c10m2_drainage 30, c7m1_docks 29,
+#         c8m3_sewers 28, c8m4_interior 28, c13m4_cutthroatcreek 27,
+#         c13m2_southpinestream 25, c8m2_subway 25, c3m1_plankcountry 24,
+#         c14m2_lighthouse 22, c7m3_port 22, c11m2_offices 18, c3m3_shantytown 18,
+#         c12m3_bridge 17, c7m2_barge 17, c8m1_apartment 17, c4m4_milltown_b 16,
+#         c11m3_garage 15, c1m2_streets 15, c4m1_milltown_a 15, c4m3_sugarmill_b 15,
+#         c8m5_rooftop 15, c12m4_barn 14, c9m1_alleys 13, c9m2_lots 13, c10m1_caves 12,
+#         c4m5_milltown_escape 12, c12m5_cornfield 11, c4m2_sugarmill_a 11,
+#         c10m5_houseboat 10, c13m1_alpinecreek 9, c13m3_memorialbridge 8,
+#         c2m5_concert 8, c5m1_waterfront_sndscape 7, c11m4_terminal 6,
+#         c12m2_traintunnel 6, c5m4_quarter 6, c5m5_bridge 6, c11m1_greenhouse 5,
+#         c3m2_swamp 5, c11m5_runway 4, c5m2_park 4, c5m3_cemetery 4, c1m3_mall 3,
+#         c12m1_hilltop 2, c1m4_atrium 2, c5m1_waterfront 2
+#       map thu nghiem/dev cua Valve (7 map): zoo_carnivalgames 11,
+#         tutorial_standards 9, tutorial_standards_vs 9, styleguide_swamp01 2,
+#         styleguide_swamp_cheapwater01 2, zoo_jukebox 2, credits 1
+#       custom/workshop (26 map): anemoia_kitty 1083, anemoia_arcade 416,
+#         anemoia_reality 395, anemoia_party 338, the_hive_m4 303, the_hive_m5 302,
+#         c1918_red_square_c4 275, the_hive_m2 241, the_hive_m3 222,
+#         c1918_red_square_c2 196, anemoia_poolrooms2 176, anemoia_poolrooms 161,
+#         ch04_pripyat03 153, c1918_red_square_c3 143, ch02_pripyat01 141,
+#         c1918_red_square_c1 131, the_hive_m1 131, c1918_red_square_c5 93, toyz4_v7 58,
+#         ch05_pripyat04 57, ch01_jupiter 57, ch03_pripyat02 45, tropic_04 13,
+#         tropic_02 12, tropic_03 7, tropic_01 5
+#     light_spot  (KEO THEO - cung vtable)
+#       chien dich (58 map, 2186 cai): c2m3_coaster 102, c8m2_subway 94, c6m2_bedlam 86,
+#         c6m1_riverbank 74, c11m2_offices 73, c8m3_sewers 70, c1m1_hotel 69,
+#         c2m1_highway 69, c7m1_docks 68, c7m2_barge 65, c5m4_quarter 64,
+#         c8m4_interior 61, c10m4_mainstreet 60, c10m3_ranchhouse 59, c9m1_alleys 58,
+#         c11m3_garage 51, c10m5_houseboat 50, c11m4_terminal 50, c12m2_traintunnel 48,
+#         c6m3_port 48, c9m2_lots 47, c8m1_apartment 45, c2m5_concert 42, c1m3_mall 41,
+#         c12m4_barn 39, c14m1_junkyard 39, c3m4_plantation 36, c8m5_rooftop 36,
+#         c2m2_fairgrounds 35, c7m3_port 35, c3m3_shantytown 33, c1m2_streets 30,
+#         c11m1_greenhouse 29, c10m1_caves 27, c3m1_plankcountry 26, c12m3_bridge 25,
+#         c12m5_cornfield 25, c5m3_cemetery 25, c10m2_drainage 24, c14m2_lighthouse 21,
+#         c5m1_waterfront_sndscape 21, c4m3_sugarmill_b 18, c13m2_southpinestream 16,
+#         c2m4_barns 16, c13m1_alpinecreek 13, c4m2_sugarmill_a 13, c4m4_milltown_b 13,
+#         c5m2_park 13, c12m1_hilltop 11, c13m4_cutthroatcreek 11, c4m1_milltown_a 11,
+#         c5m1_waterfront 11, c1m4_atrium 10, c3m2_swamp 7, c4m5_milltown_escape 7,
+#         c5m5_bridge 7, c11m5_runway 5, c13m3_memorialbridge 4
+#       map thu nghiem/dev cua Valve (6 map): curling_stadium 70, tutorial_standards 17,
+#         tutorial_standards_vs 17, styleguide_semiurban_01 12, zoo_carnivalgames 7,
+#         zoo_jukebox 2
+#       custom/workshop (24 map): the_hive_m5 344, anemoia_kitty 170,
+#         anemoia_poolrooms 143, the_hive_m3 137, anemoia_poolrooms2 135,
+#         c1918_red_square_c4 109, c1918_red_square_c1 95, anemoia_reality 93,
+#         the_hive_m2 93, the_hive_m4 84, c1918_red_square_c2 67,
+#         c1918_red_square_c5 63, the_hive_m1 42, ch04_pripyat03 30, anemoia_party 28,
+#         tropic_04 26, c1918_red_square_c3 20, anemoia_arcade 16, tropic_03 12,
+#         tropic_02 12, ch05_pripyat04 10, tropic_01 7, toyz4_v7 3, ch01_jupiter 2
+#     light_directional  (KEO THEO - cung vtable)
+#       chien dich (55 map, 55 cai): c10m1_caves 1, c10m2_drainage 1,
+#         c10m3_ranchhouse 1, c10m4_mainstreet 1, c10m5_houseboat 1, c11m1_greenhouse 1,
+#         c11m2_offices 1, c11m3_garage 1, c11m4_terminal 1, c11m5_runway 1,
+#         c12m1_hilltop 1, c12m2_traintunnel 1, c12m3_bridge 1, c12m4_barn 1,
+#         c12m5_cornfield 1, c13m1_alpinecreek 1, c13m2_southpinestream 1,
+#         c13m3_memorialbridge 1, c13m4_cutthroatcreek 1, c14m1_junkyard 1,
+#         c14m2_lighthouse 1, c1m1_hotel 1, c1m2_streets 1, c1m3_mall 1, c1m4_atrium 1,
+#         c2m1_highway 1, c2m2_fairgrounds 1, c2m3_coaster 1, c2m4_barns 1,
+#         c2m5_concert 1, c3m1_plankcountry 1, c3m2_swamp 1, c3m3_shantytown 1,
+#         c3m4_plantation 1, c4m1_milltown_a 1, c4m2_sugarmill_a 1, c4m3_sugarmill_b 1,
+#         c4m4_milltown_b 1, c4m5_milltown_escape 1, c5m1_waterfront 1,
+#         c5m1_waterfront_sndscape 1, c5m2_park 1, c5m3_cemetery 1, c5m4_quarter 1,
+#         c5m5_bridge 1, c6m1_riverbank 1, c6m2_bedlam 1, c6m3_port 1, c8m1_apartment 1,
+#         c8m2_subway 1, c8m3_sewers 1, c8m4_interior 1, c8m5_rooftop 1, c9m1_alleys 1,
+#         c9m2_lots 1
+#       map thu nghiem/dev cua Valve (15 map): motionprimingtest 1,
+#         motionprimingtest_rev 1, navigationtest_a 1, styleguide_semiurban_01 1,
+#         styleguide_swamp01 1, styleguide_swamp_cheapwater01 1, styleguide_urban_01 1,
+#         test_box2 1, test_mall 1, tutorial_standards 1, tutorial_standards_vs 1,
+#         zoo_carnivalgames 1, zoo_infected2 1, zoo_swamp_foliage_01 1,
+#         zoo_urban_foliage_01 1
+#       custom/workshop (12 map): ch05_pripyat04 3, ch03_pripyat02 3, ch04_pripyat03 2,
+#         ch02_pripyat01 2, ch01_jupiter 1, anemoia_reality 1, anemoia_poolrooms2 1,
+#         anemoia_poolrooms 1, anemoia_party 1, anemoia_kitty 1, anemoia_arcade 1,
+#         the_hive_m5 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 light
 light_spot
 
 # path_track: SetSolid(SOLID_NONE), khong model, khong ai tro toi qua SendProp.
 #   25 cai tren the_hive_m4.
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu v2.0.0) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     path_track
+#       chien dich (21 map, 59 cai): c1m1_hotel 14, c8m1_apartment 8, c12m3_bridge 5,
+#         c1m4_atrium 4, c2m2_fairgrounds 4, c7m1_docks 3, c8m2_subway 3,
+#         c11m2_offices 2, c13m1_alpinecreek 2, c3m1_plankcountry 2, c5m4_quarter 2,
+#         c10m5_houseboat 1, c1m2_streets 1, c3m4_plantation 1, c5m5_bridge 1,
+#         c6m1_riverbank 1, c6m3_port 1, c7m3_port 1, c8m3_sewers 1, c8m4_interior 1,
+#         c9m2_lots 1
+#       map thu nghiem/dev cua Valve (3 map): tutorial_standards 4,
+#         tutorial_standards_vs 4, zoo_carnivalgames 4
+#       custom/workshop (14 map): toyz4_v7 473, c1918_red_square_c2 183,
+#         anemoia_kitty 61, anemoia_party 32, the_hive_m2 27, the_hive_m4 25,
+#         c1918_red_square_c4 12, ch02_pripyat01 6, the_hive_m5 3, the_hive_m1 3,
+#         anemoia_poolrooms2 2, anemoia_poolrooms 2, tropic_03 2, ch03_pripyat02 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 path_track
 
 # ===========================================================================
@@ -59,6 +198,30 @@ path_track
 #   0/179 co keyvalue "model", 0/179 co "parentname"
 #   NGHIEM THU 21/08 14:24 tren may chu chinh: "slot29 -> thunk (OK)",
 #   nap 2 map, song qua 2 lan wipe, 0 dong ED_ALLOC.
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu v2.0.0) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     func_areaportal
+#       chien dich (50 map, 1008 cai): c8m4_interior 121, c5m4_quarter 75,
+#         c8m3_sewers 67, c1m1_hotel 58, c3m4_plantation 54, c8m2_subway 52,
+#         c6m2_bedlam 46, c11m4_terminal 40, c5m1_waterfront 32, c8m1_apartment 28,
+#         c10m4_mainstreet 25, c2m4_barns 25, c11m3_garage 24, c12m2_traintunnel 24,
+#         c5m1_waterfront_sndscape 23, c2m2_fairgrounds 22, c1m4_atrium 20,
+#         c10m2_drainage 19, c1m3_mall 19, c10m3_ranchhouse 17, c4m2_sugarmill_a 17,
+#         c4m3_sugarmill_b 17, c5m2_park 15, c14m2_lighthouse 14, c2m3_coaster 14,
+#         c2m5_concert 14, c11m1_greenhouse 12, c11m2_offices 11, c2m1_highway 11,
+#         c5m3_cemetery 10, c12m4_barn 9, c8m5_rooftop 9, c9m2_lots 9, c9m1_alleys 8,
+#         c6m3_port 7, c7m3_port 6, c12m1_hilltop 5, c10m1_caves 4, c12m5_cornfield 4,
+#         c12m3_bridge 3, c5m5_bridge 3, c10m5_houseboat 2, c11m5_runway 2,
+#         c13m1_alpinecreek 2, c13m4_cutthroatcreek 2, c3m1_plankcountry 2,
+#         c7m2_barge 2, c13m3_memorialbridge 1, c1m2_streets 1, c7m1_docks 1
+#       map thu nghiem/dev cua Valve (3 map): tutorial_standards 3,
+#         tutorial_standards_vs 3, zoo_carnivalgames 1
+#       custom/workshop (18 map): anemoia_party 42, the_hive_m2 41, the_hive_m5 38,
+#         anemoia_arcade 18, the_hive_m3 17, c1918_red_square_c5 13, anemoia_kitty 11,
+#         c1918_red_square_c4 9, tropic_01 9, c1918_red_square_c1 7, the_hive_m4 7,
+#         c1918_red_square_c2 6, c1918_red_square_c3 5, tropic_02 4, tropic_03 3,
+#         anemoia_poolrooms2 2, anemoia_poolrooms 2, ch05_pripyat04 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 func_areaportal
 #
 # --- info_zombie_spawn : 86 cai / 17 map --- DA CHAY THAT TU 22/08 23:46 ---
@@ -76,15 +239,39 @@ func_areaportal
 #   !! 1/86 co parentname: the_hive_m4, alexi_5000_hunter_spawner gan vao
 #      alexi_5000_body (diem sinh hunter theo kich ban). Khong doi phan quyet
 #      DK6, chieu handle an toan, nhung day la cho duy nhat chua chac chan.
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu v2.0.0) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     info_zombie_spawn
+#       chien dich (13 map, 238 cai): c11m4_terminal 58, c12m3_bridge 34,
+#         c1m4_atrium 34, c7m3_port 28, c1m1_hotel 26, c12m4_barn 20,
+#         c13m1_alpinecreek 12, c7m1_docks 12, c4m2_sugarmill_a 8,
+#         c13m2_southpinestream 2, c6m2_bedlam 2, c10m3_ranchhouse 1, c6m1_riverbank 1
+#       custom/workshop (9 map): the_hive_m1 38, the_hive_m3 36, tropic_04 10,
+#         tropic_02 10, ch05_pripyat04 5, ch04_pripyat03 3, ch03_pripyat02 3,
+#         tropic_03 2, the_hive_m4 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 info_zombie_spawn
 #
 # --- func_nav_blocker : 64 cai / 17 map --- DA THAM XONG (6/6 tren giay) ---
 #   BAT theo quyet dinh cua nguoi van hanh. CHUA co phep do rieng tren may chu
 #   that nhu 7 lop tren. Muon tat: them dau # vao dong cuoi khoi nay.
 #   DK6: Spawn 0x1048C80E: push 0x20 (EF_NODRAW) ; call AddEffects.
-#        0/64 co parentname => handle cha = -1 => je 0x10056A84 = DONTSEND.
-#        (CO EF_NODRAW MA CO CHA thi SE duoc gui - phai theo trang thai cua cha.
-#         Hien khong map nao gan cha, nhung MAP MOI co the pha dieu do.)
+#        !! SUA 27/09/2026 - LY LE CU GHI SAI VE, du ket luan van dung.
+#        Da doc het CBaseEntity::UpdateTransmitState 0x10056A40 (181 byte),
+#        khop ban goc source-sdk-2013 baseentity.cpp:3991:
+#            if (IsEffectActive(EF_NODRAW) && !m_hMoveChild.Get())
+#                 return SetTransmitState(FL_EDICT_DONTSEND);
+#        Nhanh do kiem m_hMoveChild [+0x178] = CO CON KHONG, KHONG PHAI co cha.
+#        Ban cu do "0/64 co parentname" = do NHAM CHIEU. Phep do DUNG la:
+#        co entity nao lay func_nav_blocker LAM CHA khong.
+#        Do lai tren 99 BSP / 8 thu muc: 538 cai, 0 cai bi dung lam cha. DAT.
+#
+#        !! VA DAY LA CHO MONG NHAT TRONG 12 LOP: 538/538 DEU CO model
+#        brush "*NN" => GetModelIndex() != 0 => nhanh thu hai
+#        (!GetModelIndex() -> DONTSEND) KHONG cuu duoc no.
+#        DK6 cua rieng lop nay dua HOAN TOAN vao EF_NODRAW + khong co con.
+#        MAP MOI gan mot entity lam CON cua func_nav_blocker se lam no
+#        DUOC GUI tro lai - luc do phai xem lai.
 #   DK2: day la brush entity that nen tang nay quan trong nhat. Spawn goi
 #        SetSolid(SOLID_NONE) 0x100940D0 + AddSolidFlags(FSOLID_NOT_SOLID)
 #        0x10093D80 => von da khong dac. Bo tieu thu @0x1048BD58 duyet CHINH
@@ -93,8 +280,32 @@ info_zombie_spawn
 #   CANH BAO doc ma: lop nay doc [esi+0x28] 6 lan nhung esi la CAU TRUC LUOI
 #        NAV chu khong phai this ([esi+0x24] = co o, [esi+0x28] = so o de kep
 #        chi so). Duong tinh gia - dung ket luan la truy cap edict.
-#   NHIN CAI GI: zombie/bot co di vao vung le ra bi chan khong. Khong co trieu
-#        chung hinh anh - phai quan sat HANH VI AI.
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu commit 13570c6,
+#     17/09/2026) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     func_nav_blocker
+#       chien dich (48 map, 474 cai): c12m3_bridge 49[h:51 l:51], c5m3_cemetery 44,
+#         c5m5_bridge 38, c2m4_barns 24, c7m1_docks 22, c3m3_shantytown 19[h:0],
+#         c2m2_fairgrounds 18, c9m1_alleys 18, c1m2_streets 17, c7m3_port 16,
+#         c1m3_mall 15, c3m4_plantation 14, c14m2_lighthouse 12, c14m1_junkyard 11,
+#         c3m1_plankcountry 11, c6m1_riverbank 11, c2m1_highway 10, c5m2_park 10,
+#         c1m1_hotel 9, c5m4_quarter 9[l:8], c11m4_terminal 8, c5m1_waterfront 8[h:6],
+#         c6m3_port 8[h:5], c12m5_cornfield 7, c2m5_concert 7, c1m4_atrium 5,
+#         c2m3_coaster 5, c6m2_bedlam 5, c4m1_milltown_a 4, c4m2_sugarmill_a 4,
+#         c4m3_sugarmill_b 4, c10m3_ranchhouse 3[h:2], c11m5_runway 3, c7m2_barge 3,
+#         c8m3_sewers 3, c10m2_drainage 2, c10m4_mainstreet 2, c11m3_garage 2,
+#         c4m5_milltown_escape 2, c5m1_waterfront_sndscape 2, c10m5_houseboat 1,
+#         c11m2_offices 1, c13m1_alpinecreek 1, c13m2_southpinestream 1, c3m2_swamp 1,
+#         c4m4_milltown_b 1, c8m1_apartment 1, c9m2_lots 1
+#       map thu nghiem/dev cua Valve (2 map): tutorial_standards 1,
+#         tutorial_standards_vs 1
+#       custom/workshop (20 map): the_hive_m4 24, c1918_red_square_c4 13, the_hive_m5 9,
+#         the_hive_m2 8, the_hive_m3 6, ch05_pripyat04 5, the_hive_m1 5,
+#         c1918_red_square_c1 4, c1918_red_square_c2 3, c1918_red_square_c5 2,
+#         ch04_pripyat03 2, tropic_04 2, c1918_red_square_c3 1, ch03_pripyat02 1,
+#         ch02_pripyat01 1, ch01_jupiter 1, anemoia_reality 1, anemoia_party 1,
+#         tropic_03 1, tropic_02 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 func_nav_blocker
 #
 # ===========================================================================
@@ -144,4 +355,926 @@ func_nav_blocker
 #     - ent_text / ent_dump se KHONG thay no (khong edict) - binh thuong.
 #   MAT GI NEU SAI: survivor ngung nhan xet. Khong crash, khong mat hinh.
 #   GO: xoa dong duoi, khoi dong lai server.
+#   == TRANG THAI: DA KIEM CHUNG tren may chu that - BAT (co tren GitHub tu commit 13570c6,
+#     17/09/2026) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     info_remarkable
+#       chien dich (24 map, 87 cai): c6m1_riverbank 16[h:10 s:10],
+#         c13m1_alpinecreek 8[l:0], c5m3_cemetery 8, c13m2_southpinestream 7[l:1],
+#         c6m2_bedlam 6, c4m1_milltown_a 5, c4m4_milltown_b 5, c4m5_milltown_escape 5,
+#         c7m2_barge 5, c2m1_highway 3, c5m4_quarter 3, c13m3_memorialbridge 2[h:1 l:1],
+#         c1m2_streets 2, c3m2_swamp 2, c11m1_greenhouse 1, c11m2_offices 1,
+#         c11m3_garage 1, c12m4_barn 1, c14m1_junkyard 1, c5m1_waterfront 1[h:0],
+#         c8m1_apartment 1, c8m2_subway 1, c9m1_alleys 1, c9m2_lots 1
+#       custom/workshop (12 map): ch02_pripyat01 19, ch05_pripyat04 16,
+#         ch03_pripyat02 15, ch04_pripyat03 11, c1918_red_square_c4 10,
+#         c1918_red_square_c1 8, tropic_03 7, c1918_red_square_c3 6,
+#         c1918_red_square_c2 5, c1918_red_square_c5 4, ch01_jupiter 2, tropic_01 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
 info_remarkable
+# ---------------------------------------------------------------------------
+# logic_auto  (them 26/09/2026)  -- 583 thuc the / 91 trong 99 ban do
+#
+#   LA GI: thuc the logic thuan, ban dau ra NGAY SAU KHI NAP BAN DO roi tu xoa.
+#        Khong model, khong va cham, khong ten. Client khong bao gio nhan.
+#
+#   VI SAO CAT DUOC - ba nguon khop nhau:
+#
+#   WEB (VDC /wiki/Logic_auto) - chinh Valve canh bao lop nay phi edict:
+#        "This entity COUNTS AS AN EDICT, not a logical entity as one would
+#         expect, and therefore it can contribute to the networked entity
+#         limit. If this is an issue, use logic_relay and its OnSpawn output."
+#        "Remove on fire : [1] - Whether the logic_auto is deleted after
+#         firing. DELAYED OUTPUTS WILL STILL WORK, however."
+#
+#   SDK (hl2sdk-l4d2/game/server/logicauto.cpp) - co du ma:
+#        const int SF_AUTO_FIREONCE = 0x01;
+#        void CLogicAuto::Think(void) {
+#            ...  m_OnMapSpawn.FireOutput(NULL, this);  ...
+#            if (m_spawnflags & SF_AUTO_FIREONCE) UTIL_Remove(this);
+#        }
+#        int ObjectCaps(void) { return BaseClass::ObjectCaps()
+#                                      & ~FCAP_ACROSS_TRANSITION; }
+#        => TU LOAI khoi danh sach mang sang man: khong dinh mapclear/chuyen man.
+#
+#   BINARY (server.dll may chu) - khop SDK TUNG NHANH, Think = 0x101112B0:
+#        101112E8  push esi ; push 0        ; FireOutput(NULL, this)
+#        101113B6  test byte [esi+0x134],1  ; m_spawnflags & SF_AUTO_FIREONCE
+#        101113C0  call 0x102071E0          ; UTIL_Remove(this)
+#
+#   BAY CUA:
+#     DK1  slot9 GetServerClass = 0x10050CF0 -> 0x107D78A8 (DT_BaseEntity). DAT
+#     DK2  Spawn slot24 = 0x1005A000: khong SetSolid, khong SetModel.      DAT
+#     DK3  dau ra ban voi pCaller=this, NHUNG do duoc 0/583 dau ra tro toi
+#          !caller hoac !activator tren toan kho ban do.                   DAT
+#     DK4  so_kiem.json = 0 (chua server-only).                            DAT
+#     DK5  0/583 co targetname => khong ai goi ten duoc; 0 lan bi dung lam
+#          lightingorigin; 0 tham chieu.                                   DAT
+#     DK6  slot21 mac dinh 0x10056A40; 0/583 co model => GetModelIndex()==0
+#          => nhanh 0x10056A84 push 0x10 = FL_EDICT_DONTSEND.              DAT
+#     CUA7 chuoi "logic_auto" chi co DUNG 1 tham chieu trong toan bo .text
+#          (0x10588DF8 = dang ky factory). Khong CreateEntityByName, khong
+#          FindEntityByClassname nao tim no.                               DAT
+#     CUA8 ma CO chay that: 539/583 co dau ra OnMapSpawn.                   DAT
+#
+#   GIAI VTABLE (tools/thu_resolve_vtable.py - mo phong ResolveClassVtable
+#   ngoai game de chan loi "bo qua am tham" cua §0-BOQUA):
+#        Create 0x10111560 -> vtable 0x10613874, qua call +0x17. DUNG.
+#        (cung khuon voi info_zombie_spawn - lop tung bi bo qua am tham 6 phien)
+#
+#   DO DUOC tren 99 ban do: 583 thuc the / 91 ban do . 583/583 spawnflags=1
+#        . 0 targetname . 0 parentname . 0 model . 0 bi tro toi
+#        Dau ra: OnMapSpawn 539, OnMultiNewRound 48, OnMultiNewMap 36,
+#                OnDemoMapSpawn 9.
+#
+#   VONG DOI: song ~0.2 giay roi UTIL_Remove. NHUNG 0.2 giay do chinh la
+#        DINH NGAN SACH luc nap ban do - dung luc de cham tran nhat.
+#        Giong khuon light_directional, nhung light_directional chi 86 cai
+#        con day la 583 cai tren gan nhu moi ban do.
+#
+#   MAT GI NEU SAI: dau ra luc nap ban do khong ban => trinh tu mo man hong.
+#        Day la lop co PHAM VI RONG NHAT tung them (91/99 ban do). Neu thay
+#        bat thuong luc nap map, XOA DONG DUOI TRUOC TIEN.
+#   GO: xoa dong duoi, khoi dong lai server. Ban sao luu:
+#        noedict.txt.bak_truoc_logicauto_20260926
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 26/09/2026, chua phat hanh tren
+#     GitHub) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     logic_auto
+#       chien dich (58 map, 541 cai): c6m1_riverbank 36[h:35], c9m1_alleys 36,
+#         c5m5_bridge 27, c5m4_quarter 26[h:25], c7m2_barge 26, c4m1_milltown_a 23,
+#         c1m2_streets 22[h:20], c4m4_milltown_b 22, c4m5_milltown_escape 22,
+#         c5m3_cemetery 21[h:20], c9m2_lots 19, c11m3_garage 18, c10m4_mainstreet 15,
+#         c1m3_mall 14[l:13], c2m1_highway 12, c10m1_caves 11, c6m3_port 11[h:10],
+#         c5m1_waterfront 10[h:4], c3m1_plankcountry 9, c4m3_sugarmill_b 9,
+#         c5m1_waterfront_sndscape 9, c10m3_ranchhouse 8[h:6], c3m3_shantytown 8[h:7],
+#         c7m3_port 8, c13m3_memorialbridge 7[h:5], c1m4_atrium 7, c12m4_barn 6,
+#         c13m2_southpinestream 6, c1m1_hotel 6, c2m2_fairgrounds 6, c5m2_park 6,
+#         c8m3_sewers 5[h:6], c12m3_bridge 5, c4m2_sugarmill_a 5, c6m2_bedlam 5,
+#         c11m1_greenhouse 4, c2m3_coaster 4, c2m4_barns 4, c3m2_swamp 4,
+#         c8m1_apartment 4, c11m2_offices 3, c12m1_hilltop 3, c12m5_cornfield 3[h:2],
+#         c7m1_docks 3, c8m2_subway 3, c10m2_drainage 2, c10m5_houseboat 2,
+#         c12m2_traintunnel 2[h:1], c2m5_concert 2[l:1], c3m4_plantation 2,
+#         c8m5_rooftop 2, c11m4_terminal 1, c11m5_runway 1, c13m1_alpinecreek 1,
+#         c13m4_cutthroatcreek 1, c14m1_junkyard 1, c14m2_lighthouse 1, c8m4_interior 1
+#       map thu nghiem/dev cua Valve (15 map): tutorial_standards 3,
+#         tutorial_standards_vs 3, motionprimingtest 1, motionprimingtest_rev 1,
+#         navigationtest_a 1, styleguide_semiurban_01 1, styleguide_swamp01 1,
+#         styleguide_swamp_cheapwater01 1, styleguide_urban_01 1, test_box2 1,
+#         test_mall 1, zoo_carnivalgames 1, zoo_infected2 1, zoo_swamp_foliage_01 1,
+#         zoo_urban_foliage_01 1
+#       custom/workshop (24 map): tropic_03 17, tropic_01 10, anemoia_reality 4,
+#         tropic_04 4, c1918_red_square_c1 2, ch04_pripyat03 2, ch01_jupiter 2,
+#         tropic_02 2, c1918_red_square_c5 1, c1918_red_square_c4 1,
+#         c1918_red_square_c3 1, c1918_red_square_c2 1, ch05_pripyat04 1,
+#         ch03_pripyat02 1, ch02_pripyat01 1, anemoia_poolrooms2 1, anemoia_poolrooms 1,
+#         anemoia_party 1, anemoia_kitty 1, anemoia_arcade 1, the_hive_m3 1,
+#         the_hive_m2 1, the_hive_m4 1, the_hive_m1 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+logic_auto
+# ---------------------------------------------------------------------------
+# upgrade_spawn  (them 26/09/2026)  -- 537 thuc the: 56 tuy chinh / 481 goc
+#
+#   LA GI: bo SINH VAT PHAM NANG CAP. No KHONG phai vat pham. Luc nap ban do
+#        no chon NGAU NHIEN mot trong ba loai duoc bat bang keyvalue, tao ra
+#        vat pham do, roi TU HUY NGAY. Ban than no khong song qua frame dau.
+#
+#        upgrade_laser_sight                  (ong ngam laser)
+#        weapon_upgradepack_incendiary_spawn  (dan chay)
+#        weapon_upgradepack_explosive_spawn   (dan no)
+#
+#        => VAT PHAM CON van ton tai va van ton edict VINH VIEN. Cat lop nay
+#           chi thu hoi edict cua CHA, ma cha chi song trong khoanh khac nap
+#           ban do. Loi = 56 edict o DINH NGAN SACH, khong phai 56 edict
+#           thuong truc.
+#
+#   BA NGUON:
+#
+#   WEB (VDC /wiki/Upgrade_spawn):
+#        CUpgradeSpawner -> CPointEntity -> CBaseEntity
+#        "Similarly to info_null, this entity is REMOVED IMMEDIATELY AS IT
+#         SPAWNS, with the difference that in this case it first spawns a
+#         randomly chosen weapon upgrade entity based on how its keyvalues
+#         were set up."
+#        "...sending the Kill input to this entity WON'T WORK because this
+#         entity is, upon spawning, immediately converted to one of the
+#         specific weapon upgrade entities that were picked and TARGETNAME
+#         ISN'T TRANSFERRED."
+#
+#   SDK: KHONG CO. grep ca hl2sdk-l4d2 lan hl2sdk-sdk2013 = 0 file. Lop rieng
+#        cua L4D2, giong ca info_hang_lighting. Ghi "khong co nguon", KHONG
+#        duoc suy tu lop tuong tu trong SDK 2013.
+#
+#   BINARY - doc CA BA module, khong chi server.dll:
+#        server.dll  upgrade_spawn    @0x10683420  1 xref (0x10596498 factory)
+#                    CUpgradeSpawner  @0x1067928C  1 xref (0x102A1280 datadesc)
+#        engine.dll  KHONG CO chuoi nao trong ca ho
+#        client.dll  KHONG CO upgrade_spawn lan CUpgradeSpawner
+#                    NHUNG CO ten cac lop CON (0x105A56C0, 0x105A56E4)
+#        => Client biet lop CON, KHONG BIET lop CHA. No khong co ten de goi.
+#           Day la bang chung DK6 doc lap, khong suy tu UpdateTransmitState.
+#
+#   Spawn = 0x102A12E0, toan bo loi goi:
+#        102A148D/102A14D0  CalcAbsolutePosition   ; doc vi tri cua CHINH NO
+#        102A1509           RandomInt (vstdlib)    ; chon ngau nhien
+#        102A1528           CreateEntityByName     ; tao VAT PHAM CON
+#        102A156C..159C     SetAbsOrigin/SetAbsAngles  ; dat vi tri cho CON
+#        102A15B7           test byte [edi+0x134],1    ; spawnflags & 1
+#        102A15D5           DispatchSpawn
+#        102A1543 / 102A1677  UTIL_Remove(this)    ; TU HUY (2 nhanh)
+#
+#   TAM CUA:
+#     DK1  slot9 = 0x10050CF0 -> 0x107D78A8 (DT_BaseEntity).              DAT
+#     DK2  Spawn KHONG goi SetSolid / AddSolidFlags / AddEffects /
+#          SetModel nao.                                                  DAT
+#     DK3  quet ca 0x3A0 byte cua Spawn: 0 mau ENTINDEX noi dong
+#          (mau: mov r,[reg+0x28] ; sub r,[gpGlobals+0x58] ; sar r,4).
+#          Bo do da kiem chung: no BAT DUOC mau nay trong
+#          ambient_music::InputPlaySound 0x10251EBE.                      DAT
+#     DK4  so_kiem.json = 0 (chua server-only).                           DAT
+#     DK5  KHONG SetOwnerEntity, KHONG SetParent, KHONG ghi [+0x39C],
+#          KHONG luu EHANDLE. Tao con -> dat toa do -> tu xoa, khong giu
+#          lien he. (Day dung cua da giet commentary_zombie_spawner.)     DAT
+#     DK6  slot21 mac dinh 0x10056A40 + 0/537 co model.
+#          Cong client.dll o tren.                                        DAT
+#     CUA7 chuoi classname 1 xref duy nhat = dang ky factory.             DAT
+#     CUA8 ma CO chay - day la duong DUY NHAT sinh vat pham nang cap.     DAT
+#
+#   DATADESC (0x102A1280 -> 0x107AA5F4): DUNG 3 truong, ca ba la keyfield:
+#        m_bLaserSight            <- laser_sight
+#        m_bUpgradePackIncendiary <- upgradepack_incendiary
+#        m_bUpgradePackExplosive  <- upgradepack_explosive
+#        KHONG mot con tro .text nao => lop KHONG CO input/output handler.
+#        => 51 targetname tren ban do la VO HIEU ngay tu dau. Ba nguon doc
+#           lap cung noi dieu nay (VDC / datadesc / quet nhanh thanh cong
+#           khong chep m_iName sang con).
+#
+#   !! GIAI VTABLE - PHAI CO BAN VA 26/09 !!
+#        Create 0x1029EDB0 chi dai 0x16 byte. Ban ScanForVtableStore CU quet
+#        80 byte phang nen doc lan sang ham 0x1029EDD0 (ctor cua
+#        weapon_melee_spawn) va tra ve vtable 0x1067A18C = SAI LOP.
+#        Do duoc tren may chu 26/09 15:15 - cong DK1 bat duoc va tu choi:
+#          "upgrade_spawn CO SENDTABLE RIENG (ServerClass=0x6E1B0BF0...)"
+#          0x6E1B0BF0 - base 0x5D970000 = 0x10840BF0 = ServerClass cua
+#          weapon_melee_spawn, KHONG phai cua upgrade_spawn.
+#        Sau ban va (dung o 2x 0xCC), nhanh du phong E8 tim ham con
+#        0x1029E860 co `mov [esi], 0x10679E34` = DUNG vtable.
+#        => TRONG LOG, vtable cua no phai tan cung 79E34. Neu thay 7A18C
+#           hoac dong "CO SENDTABLE RIENG" thi DLL chua co ban va.
+#
+#   DO DUOC - de TEST DAN, chon ban do nho truoc:
+#        BAN DO CUA BAN (56 cai / 8 ban do):
+#          the_hive_m2 17 . the_hive_m5 13 . the_hive_m3 9 . the_hive_m4 8
+#          ch03_pripyat02 3 . the_hive_m1 3 . ch04_pripyat03 2
+#          anemoia_kitty 1      <-- NHO NHAT, thu dau tien o day
+#        To hop tren ban do cua ban: chay+no 42 . laser+chay+no 9
+#          . laser+chay 4 . chi laser 1
+#        BAN DO GOC (481 cai / 46 ban do):
+#          c2m3_coaster 48 . c2m2_fairgrounds 34 . c9m1_alleys 33
+#          . c9m2_lots 30 . c12m2_traintunnel 22
+#        Khoa: 0 model . 0 parentname . 51 targetname (vo hieu)
+#        537/537 co du ca ba khoa laser_sight + upgradepack_incendiary
+#              + upgradepack_explosive
+#
+#   MAT GI NEU SAI: vat pham nang cap khong sinh ra. Khong crash, khong mat
+#        hinh, nhung anh huong TRUC TIEP den loi choi.
+#   GO: xoa dong duoi, khoi dong lai server.
+#       Ban sao luu DLL: bin/edictbudget_mm.dll.bak_truoc_vtguard
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 26/09/2026, chua phat hanh tren
+#     GitHub) ==
+#   LUU Y: 1 ban do custom (the_hive_m2) co weapon_ammo_spawn lay no lam cha; no tu
+#     UTIL_Remove trong Spawn() nen quan he cha von da dut.
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     upgrade_spawn
+#       chien dich (46 map, 497 cai): c2m3_coaster 48, c2m2_fairgrounds 34,
+#         c9m1_alleys 33, c9m2_lots 30[h:31], c12m2_traintunnel 22,
+#         c11m2_offices 19[h:20], c11m3_garage 17[h:18], c1m2_streets 17[h:18],
+#         c5m4_quarter 18, c6m2_bedlam 14, c6m3_port 14, c11m1_greenhouse 13,
+#         c11m4_terminal 12, c3m1_plankcountry 11, c4m1_milltown_a 11,
+#         c4m4_milltown_b 11, c4m5_milltown_escape 11, c6m1_riverbank 11, c7m2_barge 10,
+#         c1m4_atrium 9, c3m3_shantytown 9[h:8], c7m3_port 9[h:7], c10m4_mainstreet 8,
+#         c2m1_highway 8, c3m2_swamp 8, c7m1_docks 8[h:7], c12m1_hilltop 7,
+#         c12m5_cornfield 6[h:7], c8m2_subway 7, c8m3_sewers 7, c14m2_lighthouse 6,
+#         c5m3_cemetery 6, c10m2_drainage 4[h:5], c10m5_houseboat 4[h:5],
+#         c14m1_junkyard 5, c10m1_caves 4, c8m4_interior 4, c4m2_sugarmill_a 3,
+#         c4m3_sugarmill_b 3[h:2], c11m5_runway 1[h:2], c13m3_memorialbridge 2,
+#         c10m3_ranchhouse 1, c13m2_southpinestream 1, c13m4_cutthroatcreek 0[h:1],
+#         c2m5_concert 1, c5m1_waterfront 1[h:0]
+#       custom/workshop (14 map): the_hive_m2 17, the_hive_m5 13, the_hive_m3 9,
+#         the_hive_m4 8, tropic_04 4, tropic_03 4, ch03_pripyat02 3, the_hive_m1 3,
+#         c1918_red_square_c4 2, ch04_pripyat03 2, tropic_02 2, c1918_red_square_c3 1,
+#         c1918_red_square_c2 1, anemoia_kitty 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+upgrade_spawn
+# ---------------------------------------------------------------------------
+# logic_script  (them 27/09/2026)  -- 38 thuc the / 16 ban do
+#
+#   LA GI: thuc the giu va chay VSCRIPT (Squirrel). No gom mot nhom entity
+#        theo TEN (khoa Group00..Group16) roi chay file .nut/.nuc ghi o khoa
+#        vscripts. Ban than no khong model, khong va cham, khong ve gi.
+#
+#   !! LOP NAY KHAC MOI LOP DA THEM: no chay MA TUY Y (script Squirrel).
+#      Doc server.dll KHONG DU - script co the tu goi self.GetEntityIndex().
+#      PHAI DOC SCRIPT. Da doc (xem duoi).
+#
+#   BA NGUON:
+#
+#   WEB (VDC /wiki/Logic_script): "Entity that holds and runs a VScript."
+#
+#   SDK (source-sdk-2013-master/src/game/server/logicentities.cpp:30)
+#        class CLogicScript : public CPointEntity
+#        void RunVScripts() {
+#            // chay szAddCode: EntityGroup <- [];
+#            //   function __AppendToScriptGroup(name) {
+#            //       local ent = Entities.FindByName(null, name); ...
+#            ...
+#            BaseClass::RunVScripts();
+#        }
+#        => chi gom entity theo TEN roi chay script. Khong edict, khong chi so.
+#        !! Day la SDK 2013, KHONG phai ma L4D2 => bac 🟡, phai cong binary.
+#
+#   BINARY (server.dll may chu):
+#        vtable 0x1061415C - RIENG, khong lop nao dung chung => noedict thuong.
+#        Create 0x10115360 -> giai ra dung 0x1061415C (truc tiep, khong qua
+#        nhanh du phong). Da mo phong bang tools/thu_resolve_vtable.py truoc
+#        khi bat, de chan loi "bo qua am tham" da giau info_zombie_spawn 6 phien.
+#
+#   SCRIPT THAT - cua ma binary KHONG soi duoc:
+#        File trong VPK la .nuc (Squirrel DA BIEN DICH), khong phai .nut.
+#        Chuoi hang van doc duoc trong bytecode. Da rut va soi DU 14 script
+#        Valve ma 38 thuc the nay dung:
+#          jukebox_main 4484B . jukebox_dlc1 4995B
+#          carnival_games/gallery_main 11952B . gallery_copy_targets 157B
+#          gallery_copy_positions/movelinears/rotators/counters ~160B moi cai
+#          strongman_game_script 4218B . whacker_timer 6924B
+#          whacker_counter 2759B
+#          c1_3/c4_3/c4_4_trafficmessage_frequency 524-746B
+#        KHONG script nao chua: entindex . GetEntityIndex . EntIndexToHScript
+#                               . NetProps . GetEntityFromIndex
+#        (cong cu: tools/vpk.py - da them ham doc() de rut noi dung; truoc do
+#         chi liet ke duoc ten)
+#        NGOAI LE: c1918_red_square_c3 co 1 cai tro toi "boomer_gibs.nut" -
+#        file nay KHONG CO tren may chu (khong o pak01, khong o addon vpk,
+#        khong o scripts/vscripts, khong trong pak lump cua BSP). Cai do von
+#        da khong chay duoc gi.
+#
+#   TAM CUA (tools/kiem_tam_cua.py, ban 27/09 da hieu chuan tren 17 ca doi chung):
+#     DK1  slot9 = 0x10050CF0 -> 0x107D78A8 (DT_BaseEntity).              DAT
+#     DK2  khong SetSolid / AddSolidFlags / AddEffects / SetModel nao,
+#          quet CA BA NGUON ham (vtable rieng + datadesc + private_fns),
+#          khong chi Spawn.                                              DAT
+#     DK3  khong mau ENTINDEX noi dong tren ca ba nguon ham. Cong voi 14
+#          script o tren => ca phia C++ lan phia Squirrel deu sach.       DAT
+#     DK4  so_kiem.json = 0 (chua server-only).                          DAT
+#     DK5  khong X->SetOwnerEntity(this) / X->SetParent(this) / [+0x39C].
+#          Do tren 82 BSP: 0 lan bi dung lam parentname.                 DAT
+#     DK6  slot21 mac dinh 0x10056A40; 0/38 co model => GetModelIndex()==0
+#          => nhanh 0x10056A84 push 0x10 = FL_EDICT_DONTSEND.            DAT
+#     CUA7 khong bi ham tim-theo-ban-kinh nao chan.                      DAT
+#     CUA8 ma CO chay that: day la thu dieu khien tro hoi cho va may hat. DAT
+#
+#   !! 38/38 DEU CO targetname, va 10 cai LA DICH cua I/O.
+#      KHONG chan cat. Da tu dich nguoc kiem lai 27/09:
+#      CGlobalEntityList::FindEntityByName = 0x100B4F20, than 224 byte,
+#      co DUNG 0 lenh cham [+0x28]. No so [esi+0x140] = m_iName:
+#          100B4F8A  mov eax,[esi+0x140]   ; m_iName
+#          100B4F94  cmp eax,ebx
+#          100B4F9B  call 0x10052df0       ; so chuoi neu khong trung con tro
+#      => entity khong edict VAN duoc goi ten binh thuong.
+#      12 dau ra cua chung deu tro toi logic_relay co ten; KHONG dau ra nao
+#      dung !caller / !activator / !self.
+#
+#   MAT GI NEU SAI: mini-game va may hat ngung hoat dong. Khong anh huong
+#        loi choi chinh (qua man van duoc), nhung mat noi dung tuong tac.
+#   GO: xoa dong duoi, khoi dong lai server.
+#       Ban sao luu: noedict.txt.bak_truoc_logicscript_20260927
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 27/09/2026, chua phat hanh tren
+#     GitHub) ==
+#   LUU Y: CUA 9: plugin l4d2_script_cmd_swap tao logic_script luc chay -> EntIndexToEntRef
+#     nem 'Invalid entity index' (27/09). Kiem plugin truoc khi bat.
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     logic_script
+#       chien dich (11 map, 18 cai): c2m2_fairgrounds 6, c2m4_barns 3, c1m2_streets 1,
+#         c3m1_plankcountry 1, c4m3_sugarmill_b 1, c4m4_milltown_b 1,
+#         c4m5_milltown_escape 1, c5m1_waterfront 1, c6m2_bedlam 1, c6m3_port 1,
+#         c7m3_port 1
+#       map thu nghiem/dev cua Valve (3 map): zoo_carnivalgames 9, zoo_trafficsigns 3,
+#         zoo_jukebox 1
+#       custom/workshop (2 map): anemoia_party 6, c1918_red_square_c3 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+logic_script
+# ---------------------------------------------------------------------------
+# logic_director_query  (them 27/09/2026)  -- 34 thuc the / 14 ban do
+#
+#   LA GI: no HOI AI DIRECTOR "dang gian co nao" roi tra ra MOT SO NGUYEN.
+#        Ban do dung so do de tu dieu chinh: nhip con bao Hard Rain, dam chay,
+#        coi xe, thang may, tank. Khong model, khong va cham, khong ve gi.
+#
+#   BA NGUON KHOP NHAU:
+#
+#   WEB (VDC /wiki/Logic_director_query):
+#        CLogicDirectorQuery -> CPointEntity -> CBaseEntity, xep "logical entity"
+#        Input  HowAngry:  "Asks the director: On a scale of Min to Max, how
+#                           angry are you?"
+#        Output OutAnger <integer>: "Director is this much angry (expressed as
+#                           an integer) ... logic_case is generally the most
+#                           useful."
+#        Output On20SecondsToMob / On60SecondsToMob: ban truoc khi mot bay
+#                           zombie xuat hien 20 / 60 giay.
+#        => OutAnger gui SO NGUYEN, khong phai handle entity. Day la DK3 nhin
+#           tu phia tai lieu.
+#
+#   SDK: KHONG CO. Ca ba cay deu 0 file (hl2sdk-sdk2013 co 1 "khop" nhung la
+#        trung ten bien HowAngry trong bone_merge_cache.cpp, khong lien quan).
+#        Lop rieng cua L4D2 giong upgrade_spawn. KHONG duoc suy tu lop khac.
+#
+#   BINARY (server.dll): vtable 0x106682DC RIENG . ctor 0x10263850
+#        Spawn 0x10266E20 . datadesc co 3 input:
+#          InputHowAngry            0x10263210
+#          InputPanicEvent          0x1025E2D0
+#          InputScriptedPanicEvent  0x1026ED10
+#        InputHowAngry: duyet nguoi choi, cong [player+0xEC], co gian,
+#          RandomInt, anh xa vao [this+0x474]/[+0x478] (min/max) va [+0x47C],
+#          roi 0x1008BDB0 dat variant `push 5` = FIELD_INTEGER va 0x1008D7A0
+#          ban m_OutAnger o [this+0x42C] voi pCaller = this.
+#          => KHOP DUNG VDC: ra SO NGUYEN.
+#        Spawn dat Think: 10266E30 push 0x10263120 ; call 0x10070220
+#        Think 0x10263120: doc Director toan cuc [0x1083B1B8]+0x29C, so nguong,
+#          ban hai output o [this+0x444]/[+0x45C] (= On20SecondsToMob /
+#          On60SecondsToMob), roi SetNextThink. Khong doc edict nao.
+#
+#   !! LOP NAY LA CA DUONG TINH GIA KINH DIEN - da kiem lai lan nua 27/09:
+#        1026321A  mov ebx, ecx           ; ebx = this, giu suot ham
+#        10263251  call 0x10207270        ; UTIL_PlayerByIndex(i)
+#        10263256  mov esi, eax           ; esi = NGUOI CHOI
+#        1026325F  mov eax, [esi+0x28]    ; edict CUA NGUOI CHOI
+#        1026326C  sub eax, [ecx+0x58]
+#        1026326F  sar eax, 4             ; = ENTINDEX(nguoi choi)
+#        10263272  test eax,eax / je      ; chi de KIEM TRA HOP LE
+#      Chi so do la CUA NGUOI CHOI. `this` o ebx, KHONG BAO GIO bi lay chi so.
+#      Bo do khong bam `this` se loai oan lop nay.
+#
+#   !! DAY LA LOP DA LO RA LO THU NAM CUA BO DO:
+#      Think 0x10263120 KHONG nam trong bat ky nguon nao trong ba nguon cu
+#      (vtable / datadesc / private_fns), vi con tro ham duoc DAY NHU DU LIEU
+#      (`push 0x10263120`) chu khong phai lenh `call`, nen do thi goi khong
+#      thay canh nao toi no. Da them NGUON THU TU vao tools/kiem_tam_cua.py.
+#      Va fstarts.json (20272 muc) THIEU ca 0x10263120 lan 0x10263210 nen
+#      cat cua so phai cong them diem dung 2x 0xCC.
+#
+#   TAM CUA (chay lai sau khi va, 18 ca doi chung van dung):
+#     DK1  slot9 = 0x10050CF0 -> 0x107D78A8 (DT_BaseEntity).              DAT
+#     DK2  khong SetSolid/AddSolidFlags/AddEffects/SetModel tren CA BON
+#          nguon ham.                                                     DAT
+#     DK3  khong mau ENTINDEX cua `this`. Cong VDC: OutAnger la integer.  DAT
+#     DK4  so_kiem.json = 0.                                              DAT
+#     DK5  khong X->SetOwnerEntity(this) / SetParent(this) / [+0x39C].
+#          Do tren 8 thu muc ban do: 0/34 co parentname, 0 lan bi dung lam
+#          cha, 0 lan bi dung lam lightingorigin.                         DAT
+#     DK6  slot21 mac dinh 0x10056A40; 0/34 co model => GetModelIndex()==0
+#          => nhanh 0x10056A84 push 0x10 = FL_EDICT_DONTSEND.             DAT
+#     CUA7 khong bi ham tim-theo-ban-kinh chan.                           DAT
+#     CUA8 ma CO chay: HowAngry duoc ban tu trigger_once, logic_relay,
+#          logic_timer, logic_auto, trigger_multiple tren 14 ban do.      DAT
+#
+#   30/34 co targetname va no LA DICH cua I/O (input HowAngry). KHONG chan
+#   cat: FindEntityByName 0x100B4F20 than 224 byte co DUNG 0 lenh cham
+#   [+0x28] (da tu dich nguoc kiem 27/09) - goi ten khong can edict.
+#   38 dau ra, 0 cai dung !caller / !activator / !self.
+#
+#   PHAN BO: c4m1_milltown_a 7 . c6m1_riverbank 7 . c1m1_hotel 3 .
+#        c1m3_mall 3 . c4m3_sugarmill_b 2 . c4m4_milltown_b 2 .
+#        c4m5_milltown_escape 2 . c5m3_cemetery 2 . ch04_pripyat03 1 .
+#        c1m2_streets 1 . ...
+#
+#   MAT GI NEU SAI: bao/chay/tank/coi xe khong kich hoat theo do gian nua.
+#        Khong sap, khong mat hinh, qua man van duoc - nhung mat NHIP KHO DE
+#        DONG cua chien dich. Nang hon logic_script.
+#   GO: xoa dong duoi, khoi dong lai server.
+#       Ban sao luu: noedict.txt.bak_truoc_ldq_20260927
+#
+# ===================== CACH TEST NHANH (27/09/2026) =======================
+#
+#   1) CHINH NO TU IN RA CONSOLE - khong can developer 1.
+#      InputHowAngry 0x102633D7 goi Msg (tier0, KHONG phai DevMsg) voi chuoi
+#      o 0x10668E90:
+#          "TRUE Anger: %3.2f  Processed Anger: %3d  Out Anger: %3d"
+#      Moi lan HowAngry ban, console may chu IN MOT DONG. Day la bang chung
+#      chac nhat: thay dong do = entity CON SONG va CON CHAY du khong co edict.
+#
+#   2) CAI GI LAM DIRECTOR GIAN - da giai het phep tinh tu ma may:
+#          tong = tong m_iHealth cua survivor hop le   ([player+0xEC];
+#                 da xac minh offset qua datadesc: fieldType=5, keyvalue
+#                 "health", offset 0xEC)
+#          x    = tong * 0.25 * 0.01          = tong / 400
+#          x    = kep [0,1] * 49 + 1          -> Processed Anger 1..50
+#          neu RandomInt(1,100) <= `noise` thi THAY bang so ngau nhien 0..50
+#          Out Anger = anh xa 1..50 -> [minAngerRange, maxAngerRange] (x 1/49)
+#
+#      => DO GIAN = TONG MAU SURVIVOR. 4 nguoi x 100 mau = 400 = GIAN TOI DA.
+#         Khop dung VDC: "the director is angered by players that are
+#         performing well".
+#
+#      !! CHOI MOT MINH KHONG CO BOT thi tong = 100/400 = 25% -> gian THAP.
+#         Muon gian toi da: du 4 survivor con song, mau day (vua dau man la du).
+#         Muon gian thap: de bi thuong.
+#
+#   3) BAN INPUT BANG TAY cho nhanh, khong doi bay trigger cua ban do:
+#          ent_fire <targetname> HowAngry
+#      LUU Y: neu ent_fire khong toi duoc thi do la gioi han cua ent_fire voi
+#      entity khong edict, KHONG phai entity hong. Dong Msg o muc 1 moi la
+#      cai quyet dinh.
+#
+#   4) CHON DUNG CAI DE TEST - `noise` cang cao ket qua cang NGAU NHIEN.
+#      noise=100 la ngau nhien hoan toan, VO DUNG de test:
+#          ldq_caralarm . randompath_1_query . ldq_cemetery .
+#          ldq_tier1/tier2/any_a_weapons (c6m1)
+#      Nen dung nhung cai noise=0 (tat dinh):
+#          ch04_pripyat03  demontank_query   min=0  max=10  -> demontank_case (TANK)
+#          c6m1_riverbank  ldq_stormtime     min=45 max=90  -> timer_stormtime
+#          c4m3/c4m4/c4m5  ldq_stormtime     min=15 max=45  -> timer_stormtime
+#          c5m3_cemetery   ldq_alarm_lot     min=1  max=6   -> case_alarm_lot
+#
+#      Vi du day du tren ban do cua anh:
+#          nap ch04_pripyat03, du 4 survivor mau day
+#          ent_fire demontank_query HowAngry
+#          -> console phai in: TRUE Anger: 1.00  Processed Anger: 50  Out Anger: 10
+#          (mau day => gian kich tran => Out Anger = max = 10)
+#          Bi thuong nhieu roi ban lai => Out Anger tut xuong gan 0.
+# ==========================================================================
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 27/09/2026, chua phat hanh tren
+#     GitHub) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     logic_director_query
+#       chien dich (13 map, 33 cai): c4m1_milltown_a 7, c6m1_riverbank 7, c1m1_hotel 3,
+#         c1m3_mall 3, c4m3_sugarmill_b 2, c4m4_milltown_b 2, c4m5_milltown_escape 2,
+#         c5m3_cemetery 2, c1m2_streets 1, c2m4_barns 1, c5m1_waterfront 1,
+#         c5m4_quarter 1, c5m5_bridge 1
+#       custom/workshop (1 map): ch04_pripyat03 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+logic_director_query
+# ---------------------------------------------------------------------------
+# info_elevator_floor  (them 01/10/2026)  -- 33 thuc the / 14 ban do
+#
+#   LA GI: diem danh dau TANG cua thang may. Lop CUC MONG: datadesc dung MOT
+#        truong (m_OnReachedFloor o +0x42C), khong input, khong think, khong
+#        co ca Spawn rieng.
+#
+#   BA NGUON:
+#   WEB (VDC): CInfoElevatorFloor -> CPointEntity -> CBaseEntity, thuoc
+#        func_elevator.cpp. Dau ra OnReachedFloor ban voi
+#        !activator = caller = func_elevator.
+#   SDK: KHONG CO. Ca ba cay deu 0 file. Lop rieng cua L4D2 giong upgrade_spawn
+#        va logic_director_query. KHONG duoc suy tu lop khac.
+#   BINARY: vtable 0x10607CCC RIENG . ctor 0x100E4750 . datamap 0x1076C058
+#        base 0x1076C1D4, nfld = 1.
+#        !! CAN THAN KHI DOC DATADESC: phai TON TRONG nfld. Doc tran qua nfld
+#        se lan sang datamap cua func_elevator nam ke tiep trong bo nho va cho
+#        ra cac truong m_topFloorPosition / m_maxSpeed / m_soundStart - KHONG
+#        phai cua lop nay. Da doc nham mot lan dung kieu do.
+#
+#   SAU DIEU KIEN:
+#     DK1  slot9 = 0x10050CF0 -> 0x107D78A8 (DT_BaseEntity).              DAT
+#     DK2  khong SetSolid/AddSolidFlags/AddEffects/SetModel tren tap ham
+#          rieng. No KHONG co Spawn rieng: vt24 = 0x101E77B0 la ham CO SO
+#          dung chung 38 lop, va ham do goi SetSolid(SOLID_NONE).           DAT
+#     DK3  khong mau ENTINDEX noi dong.                                   DAT
+#     DK4  so_kiem.json = 0 (chua san server-only).                       DAT
+#     DK5  khong X->SetOwnerEntity(this)/SetParent(this)/[+0x39C].
+#          Do tren 99 BSP / 8 thu muc: 0/33 co parentname, 0 lan bi dung
+#          lam cha.                                                        DAT
+#     DK6  slot21 mac dinh 0x10056A40; 0/33 co model => GetModelIndex()==0
+#          => nhanh 0x10056A84 push 0x10 = FL_EDICT_DONTSEND.              DAT
+#
+#   !! KHONG CO PHEP TRA CUU NAO DE LAM HONG - day la cho chac nhat cua lop:
+#     - chuoi 'info_elevator_floor' co DUNG 1 xref trong .text = dang ky factory.
+#       Khong ham nao tim no theo classname.
+#     - 33/33 co targetname (12 ten khac nhau) nhung 0 entity nao tro toi cac
+#       ten do trong bat ky keyvalue.
+#     - func_elevator KHONG tim san theo TEN ma luu thang TOA DO trong keyvalue
+#       cua chinh no. Do tren c6m3_port:
+#           func_elevator 'generator_elevator'  top '-768 -580 316'
+#                                               bottom '-768 -580 -4'
+#           info_elevator_floor 'elevator_top'    origin '-768 -580 316'
+#           info_elevator_floor 'elevator_bottom' origin '-768 -580 -4'
+#       Toa do khop tung so. Nen sau khi ban do nap xong, func_elevator khong
+#       can doc entity nay nua.
+#
+#   PHAN BO (du 14 ban do):
+#        c6m3_port 4 . toyz4_v7 4 . c7m3_port 3
+#        anemoia_reality . c1918_red_square_c5 . c1m1_hotel . c1m4_atrium .
+#        c4m2_sugarmill_a . c4m3_sugarmill_b . c5m5_bridge . c6m1_riverbank .
+#        the_hive_m1 . tutorial_standards . tutorial_standards_vs  = 2 moi cai
+#
+#   MAT GI NEU SAI: thang may khong bao cao toi tang => cua khong mo/khoa, co
+#        the KET NGUOI CHOI trong thang may. Khong sap, nhung chan duong.
+#   GO: xoa dong duoi, khoi dong lai server.
+#       Ban sao luu: noedict.txt.bak_truoc_elevfloor_20261001
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 01/10/2026, chua phat hanh tren
+#     GitHub) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     info_elevator_floor
+#       chien dich (8 map, 19 cai): c6m3_port 4, c7m3_port 3, c1m1_hotel 2,
+#         c1m4_atrium 2, c4m2_sugarmill_a 2, c4m3_sugarmill_b 2, c5m5_bridge 2,
+#         c6m1_riverbank 2
+#       map thu nghiem/dev cua Valve (2 map): tutorial_standards 2,
+#         tutorial_standards_vs 2
+#       custom/workshop (4 map): toyz4_v7 4, c1918_red_square_c5 2, anemoia_reality 2,
+#         the_hive_m1 2
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+info_elevator_floor
+
+# ###########################################################################
+#  NAM UNG VIEN MOI - THEM 01/10/2026, MAC DINH TAT HET
+#
+#  BAT: xoa dau # truoc ten lop o cuoi moi khoi, roi khoi dong lai server.
+#  MOI LAN CHI BAT MOT CAI. Hong thi khong biet tai cai nao.
+#
+#  Nhom nay tim ra bang cach QUET LAI TU DAU: 250 classname tren 99 BSP, loc
+#  qua DK1+DK4+DK6 (ba cong may kiem duoc) -> 39 ung vien, roi chay du sau
+#  dieu kien cho nhom dau bang. KHONG dua vao danh sach cu.
+#
+#  !! BANG 39 DO CHI QUA DK1+DK4+DK6. Trong do van co lop DA BIET TRUOT:
+#     ambient_generic 170/map (truot DK3: EmitAmbientSound(entindex))
+#     env_player_blocker 38   (truot DK2: SetSolid(SOLID_BBOX))
+#     env_instructor_hint 33  (truot DK3: SetInt hint_entindex)
+#     ambient_music 8         (truot DK3: InputPlaySound)
+#     Dung doc bang 39 nhu danh sach an toan.
+# ###########################################################################
+
+# ---------------------------------------------------------------------------
+# env_entity_maker   181 tren MOT ban do . 241 tong / 22 ban do   <<< TO NHAT
+#
+#   LA GI: bo sinh thuc the tu point_template. Nhan input ForceSpawn roi tao
+#        ban sao cua template tai cho no dung.
+#   TO CO NAO: 181 cai tren mot ban do - lon hon moi lop tung them ke tu
+#        upgrade_spawn (48). Day la ung vien gia tri nhat con lai.
+#
+#   SAU DIEU KIEN - DAT HET:
+#     DK1  slot9 = 0x10050CF0 -> 0x107D78A8 (DT_BaseEntity)
+#     DK2  khong SetSolid/AddSolidFlags/AddEffects/SetModel tren ca BON nguon ham
+#     DK3  khong mau ENTINDEX noi dong
+#     DK4  so_kiem = 0
+#     DK5  khong X->Set...(this); 0 lan bi dung lam cha tren 99 BSP
+#     DK6  slot21 mac dinh 0x10056A40; 0/241 co model => GetModelIndex()==0
+#          => FL_EDICT_DONTSEND
+#   cua 7: chuoi co 2 xref . cua 9: khong plugin nao nhac ten
+#   Mot minh mot vtable => noedict thuong.
+#
+#   !! CAU HOI HO CUOI CUNG DA DONG (01/10/2026) - doc binary:
+#     181/181 cai co dau ra  OnEntitySpawned -> !self, Kill  (tu xoa minh).
+#     Da tra: '!self' @0x105D9604, 4 xref, ham giai la 0x101C33A0:
+#         101C33BA  push '!self' ; call strcmp
+#         101C33CC  mov ecx,[esi+0x700]      ; EHANDLE
+#         101C33DF  and eax,0xFFF            ; chi so 12 BIT
+#         101C33E6  lea eax,[0x1075E9B8 + eax*8 + 4]   ; CBaseEntityList
+#         101C33F1  cmp [eax+4],ecx          ; so serial
+#     CA 4 XREF cua '!self' deu 0 lan cham [+0x28] (edict).
+#     => !self giai qua CBaseEntityList bang chi so 12 bit (0..4095), dai
+#        khong-mang 2049-4095 nam tron trong do. KHONG CAN EDICT.
+#     Cung khuon voi FindEntityByName 0x100B4F20 va FindEntityByClassname
+#     0x100B47F0. Xem tools/dao-client-khong-thay.md �27.
+#
+#   VDC: 'It spawns a specified point_template entity at the env_entity_maker's
+#        origin'. Output OnEntitySpawned mang !activator = !caller = !self.
+#        No co the duoc PARENT vao entity khac de sinh theo vat di chuyen.
+#   SDK (hl2sdk-l4d2/game/server/env_entity_maker.cpp): CEnvEntityMaker :
+#        CPointEntity. Co giu EHANDLE m_hCurrentInstance / m_hCurrentBlocker,
+#        NHUNG la DEFINE_FIELD (save/restore), KHONG phai SendProp, va la chieu
+#        NO giu handle toi thu khac - khong phai chieu bi giu. DK5 khong dinh.
+#
+#   TREN c1m3_mall (181 cai): toan bo la bo sinh MA-NO-CANH -
+#        77 cai @template_mannequin_setup_male + 77 cai _female + cac cai khac.
+#        181 cai nam o 79 VI TRI (77 vi tri co 2 cai, 1 vi tri co 26 cai).
+#        Sinh xong TU XOA => chi ton edict trong khoanh khac NAP BAN DO, dung
+#        dinh ngan sach. Cung dang voi logic_auto (583 cai, song 0.2 giay).
+#
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 01/10/2026, chua phat hanh tren
+#     GitHub) ==
+#   LUU Y: c1m3_mall bao 'failed to find template @template_mannequin_setup_*' CA KHI TAT -
+#     loi goc cua map (template tu Kill sau 1s), khong do lop nay.
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     env_entity_maker
+#       chien dich (21 map, 240 cai): c1m3_mall 181, c5m3_cemetery 10,
+#         c6m1_riverbank 10, c4m1_milltown_a 5, c4m4_milltown_b 5,
+#         c4m5_milltown_escape 5, c7m2_barge 5, c2m1_highway 3, c5m4_quarter 3,
+#         c1m2_streets 2, c11m1_greenhouse 1, c11m2_offices 1, c11m3_garage 1,
+#         c12m4_barn 1, c13m2_southpinestream 1, c13m3_memorialbridge 1[h:0],
+#         c5m1_waterfront 1[h:0], c8m1_apartment 1, c8m2_subway 1, c9m1_alleys 1,
+#         c9m2_lots 1
+#       custom/workshop (3 map): tropic_03 8, c1918_red_square_c1 1, tropic_01 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+env_entity_maker
+
+# ---------------------------------------------------------------------------
+# env_explosion      52 tren mot ban do . 84 tong / 14 ban do
+#
+#   SAU DIEU KIEN - DAT HET. Mot minh mot vtable => noedict thuong.
+#   cua 9: khong plugin nao nhac ten. 0 lan bi dung lam cha.
+#
+#   !! DK6 CUA NO MONG HON CAC LOP KHAC - PHAI BIET:
+#     No dat EF_NODRAW: Spawn 0x100CB530 goi SetSolid[0] roi AddEffects[32].
+#     Nghia la no di NHANH THU NHAT cua CBaseEntity::UpdateTransmitState:
+#         if (IsEffectActive(EF_NODRAW) && !m_hMoveChild.Get()) return DONTSEND;
+#     Nhanh nay con doi dieu kien KHONG CO CON (m_hMoveChild). Do tren 99 BSP:
+#     0 lan bi dung lam cha => DAT. Nhung mot BAN DO MOI gan entity lam CON cua
+#     env_explosion se lam no DUOC GUI tro lai.
+#     Giong y het truong hop func_nav_blocker - xem khoi cua lop do o tren.
+#     (Cac lop khac trong nhom di nhanh thu hai !GetModelIndex(), khong phu
+#      thuoc dieu kien nay.)
+#
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 01/10/2026, chua phat hanh tren
+#     GitHub) ==
+#   LUU Y: DK6 di nhanh EF_NODRAW: chi DONTSEND khi KHONG co con. Ban do moi gan entity lam
+#     con cua no thi no duoc gui tro lai.
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     env_explosion
+#       chien dich (6 map, 9 cai): c8m3_sewers 4, c11m3_garage 1,
+#         c13m2_southpinestream 1, c1m2_streets 1, c5m3_cemetery 1, c9m1_alleys 1
+#       custom/workshop (12 map): toyz4_v7 52, anemoia_party 5, anemoia_kitty 5,
+#         c1918_red_square_c1 4, anemoia_arcade 4, anemoia_poolrooms2 3, tropic_02 2,
+#         ch03_pripyat02 1, anemoia_poolrooms 1, tropic_04 1, tropic_03 1, tropic_01 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+env_explosion
+
+# ---------------------------------------------------------------------------
+# env_shake          24 tren mot ban do . 125 tong / 37 ban do
+#
+#   *** CUA 9: plugin l4d_plane_crash TAO no luc chay (xem duoi). ***
+#
+#   Qua het sau dieu kien va 0 lan bi dung lam cha - nhung KHONG DUOC BAT, vi
+#   plugin l4d_plane_crash TAO no luc chay o HAI cho, va ca hai cho deu dung
+#   native se vo khi entity khong co edict:
+#
+#     l4d_plane_crash.sp:138   Frame_CreateMapStartShake()
+#         int shake = CreateEntityByName("env_shake");
+#         ... DispatchSpawn / ActivateEntity / AcceptEntityInput ...
+#         RemoveEdict(shake);          <<< goi tren entity KHONG CO EDICT
+#
+#     l4d_plane_crash.sp:618
+#         entity = CreateEntityByName("env_shake");
+#         ...
+#         g_iEntities[count++] = EntIndexToEntRef(entity);   <<< nem exception
+#
+#   Do nang hon ca info_gamemode: no dinh CA HAI kieu vo.
+#   EntIndexToEntRef chi nem exception (nhu ca logic_script 27/09), nhung
+#   RemoveEdict tren entity khong edict thi co the SAP.
+#
+#   Chi xet lai SAU KHI co ban sua "chi cat luc nap ban do" - xem
+#   tools/ban-sua-noedict-chi-luc-nap-map.md. Co cong do thi instance do plugin
+#   tao van giu mang va plugin chay binh thuong.
+# ---------------------------------------------------------------------------
+#  *** DA BAT 01/10/2026 de THU NGHIEM theo yeu cau nguoi van hanh. ***
+#  Muc dich: xem khi env_shake thanh server-only thi plugin phai lam gi de goi
+#  may bay. Plugin l4d_plane_crash da duoc va truoc (ban plugins_v2):
+#     - SafeRef()    thay EntIndexToEntRef()  -> khong nem Invalid entity index
+#     - SafeRemove() thay RemoveEdict()       -> khong sap khi entity khong edict
+#  PHAI deploy ban plugins_v2 TRUOC khi bat dong duoi, neu khong se vo dung kieu
+#  l4d2_script_cmd_swap ngay 27/09 (va con nang hon: RemoveEdict co the sap).
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 01/10/2026, chua phat hanh tren
+#     GitHub) ==
+#   LUU Y: CUA 9: plugin l4d_plane_crash tao env_shake luc chay (EntIndexToEntRef +
+#     RemoveEdict). Chi bat khi plugin da dung SafeRef/SafeRemove.
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     env_shake
+#       chien dich (28 map, 83 cai): c1m1_hotel 24, c5m4_quarter 21, c5m5_bridge 3,
+#         c6m1_riverbank 3, c8m3_sewers 3, c13m2_southpinestream 2,
+#         c13m3_memorialbridge 2, c4m3_sugarmill_b 2, c5m3_cemetery 2, c6m3_port 2,
+#         c8m4_interior 2, c10m2_drainage 1, c11m3_garage 1, c11m5_runway 1,
+#         c14m1_junkyard 1, c14m2_lighthouse 1, c1m2_streets 1, c1m4_atrium 1,
+#         c3m2_swamp 1, c4m2_sugarmill_a 1, c4m4_milltown_b 1, c4m5_milltown_escape 1,
+#         c5m1_waterfront 1, c7m1_docks 1, c7m3_port 1, c8m1_apartment 1, c8m2_subway 1,
+#         c9m1_alleys 1
+#       custom/workshop (12 map): ch01_jupiter 11, toyz4_v7 10, ch02_pripyat01 10,
+#         ch04_pripyat03 3, the_hive_m5 3, ch05_pripyat04 2, tropic_02 2,
+#         c1918_red_square_c5 1, c1918_red_square_c3 1, ch03_pripyat02 1, the_hive_m2 1,
+#         the_hive_m4 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+env_shake
+
+# ---------------------------------------------------------------------------
+# info_item_position   14 tren mot ban do . 14 tong / 1 ban do
+#
+#   SAU DIEU KIEN - DAT HET. Mot minh mot vtable => noedict thuong.
+#   0 lan bi dung lam cha . cua 9 sach . chuoi co 4 xref.
+#
+#   Chi co tren DUNG MOT ban do (14 cai), nen gia tri thap nhung DE TEST NHAT:
+#   nap ban do do, `song` phai tut dung 14.
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: MOI (them 02/10/2026) - MAC DINH TAT. Thong tin con MO HO, chua du de
+#     test tren may chu that. Bat: bo dau # o dong ten lop ben duoi. ==
+#   LUU Y: Moc vi tri co ten cho EMS (spawnpositionname). Khong co I/O nao tro toi tren ban
+#     do duy nhat co no -> quan sat duy nhat la `song` -14.
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     info_item_position
+#       chien dich: 0 map
+#       map thu nghiem/dev cua Valve (1 map): curling_stadium 14
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+#info_item_position
+
+# ---------------------------------------------------------------------------
+# point_hurt           9 tren mot ban do . 15 tong / 5 ban do
+#
+#   SAU DIEU KIEN - DAT HET. Mot minh mot vtable => noedict thuong.
+#   0 lan bi dung lam cha . cua 9 sach . chuoi 1 xref.
+#
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 01/10/2026, chua phat hanh tren
+#     GitHub) ==
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     point_hurt
+#       chien dich (2 map, 2 cai): c1m1_hotel 1, c5m3_cemetery 1
+#       custom/workshop (3 map): ch01_jupiter 9, ch02_pripyat01 3, ch05_pripyat04 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+point_hurt
+
+# ###########################################################################
+#  CHUYEN TU noedict_lab SANG noedict  (01/10/2026) - MAC DINH TAT
+#
+#  VI SAO CHUYEN: noedict_lab von duoc lap de NGHIEN CUU LOP TRUOT MOT TRONG
+#  SAU DIEU KIEN (giong sprite_lab voi env_sprite truot DK1). Dung no de xu ly
+#  chuyen "dung chung vtable" la LECH HUONG - chuyen chum vtable la viec cua
+#  noedict, vi noedict von va theo vtable.
+#
+#  Do duoc tren 99 BSP: hai vtable duy nhat co ban-cung-vtable CO THUC THE thi
+#  MOI thanh vien co thuc the deu SACH sau dieu kien => noedict thuong du.
+#
+#  !! QUAN TRONG - KHONG DUOC DE HAI CO CHE CUNG VA MOT VTABLE.
+#  noedict va slot 29 -> thunk cua no; noedict_lab cung va slot 29 -> thunk cua
+#  no. Hai cai cung va mot vtable thi thunk nay ghi de thunk kia, va `orig` cua
+#  cai sau tro vao thunk cua cai truoc -> luc go se sai thu tu.
+#  => TRUOC khi bo dau # o duoi, PHAI xoa dong tuong ung trong
+#     addons/noedict_lab/noedict_lab.txt
+# ###########################################################################
+
+# ---------------------------------------------------------------------------
+# info_landmark  -> BAT CA CHUM vtable 105D517C (6 classname)
+#
+#   Bo dau # o dong cuoi khoi nay se cat MOT LUC ca 6 lop dung chung vtable
+#   105D517C, vi noedict va theo vtable chu khong theo ten:
+#
+#     info_teleport_destination   41/map   91 tong /  8 map   <-- LOI MOI
+#     info_player_start           11/map  110 tong / 77 map   (dang chay o lab)
+#     info_landmark                3/map  125 tong / 77 map   (dang chay o lab)
+#     logic_proximity              0 thuc the tren ca 99 BSP
+#     info_player_logo             0 thuc the tren ca 99 BSP
+#     info_hang_lighting           0 thuc the tren ca 99 BSP
+#
+#   Ca 6 cung slot9 = 0x10050CF0 -> 0x107D78A8 (DK1 DAT) va cung
+#   slot21 = 0x10056A40 mac dinh; 0 cai nao co model => DK6 DAT.
+#   so_kiem = 0 cho ca 6 => DK4 DAT.
+#
+#   !! info_hang_lighting LA LOP BAN: 0x10303040 CreateEntityByName +
+#      [+0x39C] SetLightingOrigin + 0x10320710 UTIL_Remove.
+#      NHUNG no co 0 THUC THE tren ca 99 BSP, cung voi logic_proximity va
+#      info_player_logo. Va vtable khong the lam hong thu khong bao gio sinh ra.
+#      Day la ly do noedict thuong du, va la dieu kien CHAT CHE hon ban cu:
+#         lab CHI can khi co lop khac vua BAN vua CO >=1 thuc the.
+#      Rui ro con lai: BAN DO MOI co the them mot info_hang_lighting. Cung loai
+#      rui ro da chap nhan o func_nav_blocker.
+#
+#   TRUOC KHI BAT: xoa hai dong `info_landmark` va `info_player_start` trong
+#   addons/noedict_lab/noedict_lab.txt (xem canh bao o dau khoi).
+#
+#   MAT GI NEU SAI: info_player_start la diem hoi sinh; info_landmark la moc
+#        chuyen man; info_teleport_destination la dich cua trigger_teleport.
+#        Hong thi nguoi choi khong hoi sinh dung cho, hoac teleport sai cho.
+#   GO: them lai dau # va tra hai dong kia ve noedict_lab.txt.
+#       Ban sao luu: noedict.txt.bak_truoc_chuyen_lab_20261001
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: DA TEST tren may chu that - BAT (them 01/10/2026, chua phat hanh tren
+#     GitHub) ==
+#   LUU Y: KEO CA CHUM vtable 105D517C (noedict va THEO VTABLE).
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     info_landmark
+#       chien dich (58 map, 91 cai): c8m2_subway 3, c8m3_sewers 3, c10m2_drainage 2,
+#         c10m3_ranchhouse 2, c10m4_mainstreet 2, c11m2_offices 2, c11m3_garage 2,
+#         c11m4_terminal 2, c12m2_traintunnel 2, c12m3_bridge 2, c12m4_barn 2,
+#         c13m1_alpinecreek 2, c13m2_southpinestream 2, c13m3_memorialbridge 2,
+#         c1m2_streets 2, c1m3_mall 2, c2m2_fairgrounds 2, c2m3_coaster 2, c2m4_barns 2,
+#         c3m2_swamp 2, c3m3_shantytown 2, c4m2_sugarmill_a 2, c4m3_sugarmill_b 2,
+#         c4m4_milltown_b 2, c4m5_milltown_escape 2, c5m2_park 2, c5m3_cemetery 2,
+#         c5m4_quarter 2, c6m2_bedlam 2, c7m2_barge 2, c8m4_interior 2, c10m1_caves 1,
+#         c10m5_houseboat 1, c11m1_greenhouse 1, c11m5_runway 1, c12m1_hilltop 1,
+#         c12m5_cornfield 1, c13m4_cutthroatcreek 1, c14m1_junkyard 1,
+#         c14m2_lighthouse 1, c1m1_hotel 1, c1m4_atrium 1, c2m1_highway 1,
+#         c2m5_concert 1, c3m1_plankcountry 1, c3m4_plantation 1, c4m1_milltown_a 1,
+#         c5m1_waterfront 1, c5m1_waterfront_sndscape 1, c5m5_bridge 1,
+#         c6m1_riverbank 1, c6m3_port 1, c7m1_docks 1, c7m3_port 1, c8m1_apartment 1,
+#         c8m5_rooftop 1, c9m1_alleys 1, c9m2_lots 1
+#       custom/workshop (25 map): tropic_03 4, tropic_01 3, c1918_red_square_c4 2,
+#         c1918_red_square_c3 2, c1918_red_square_c2 2, c1918_red_square_c1 2,
+#         ch04_pripyat03 2, ch03_pripyat02 2, ch02_pripyat01 2, anemoia_poolrooms2 2,
+#         anemoia_poolrooms 2, anemoia_party 2, anemoia_kitty 2, anemoia_arcade 2,
+#         tropic_02 2, the_hive_m3 2, the_hive_m2 2, the_hive_m4 2,
+#         c1918_red_square_c5 1, ch05_pripyat04 1, ch01_jupiter 1, anemoia_reality 1,
+#         tropic_04 1, the_hive_m5 1, the_hive_m1 1
+#     info_player_start  (KEO THEO - cung vtable)
+#       chien dich (40 map, 70 cai): c5m3_cemetery 11, c6m2_bedlam 10, c1m1_hotel 4,
+#         c2m1_highway 4, c3m2_swamp 4, c10m1_caves 2, c5m4_quarter 2, c10m2_drainage 1,
+#         c11m1_greenhouse 1, c11m2_offices 1, c11m3_garage 1, c11m4_terminal 1,
+#         c11m5_runway 1, c12m1_hilltop 1, c12m2_traintunnel 1, c12m3_bridge 1,
+#         c12m4_barn 1, c12m5_cornfield 1, c13m1_alpinecreek 1, c13m2_southpinestream 1,
+#         c13m3_memorialbridge 1, c13m4_cutthroatcreek 1, c14m1_junkyard 1,
+#         c14m2_lighthouse 1, c2m2_fairgrounds 1, c2m3_coaster 1, c2m4_barns 1,
+#         c2m5_concert 1, c3m3_shantytown 1, c4m3_sugarmill_b 1, c5m2_park 1,
+#         c5m5_bridge 1, c6m1_riverbank 1, c6m3_port 1, c7m1_docks 1, c7m2_barge 1,
+#         c7m3_port 1, c8m2_subway 1, c8m4_interior 1, c9m2_lots 1
+#       map thu nghiem/dev cua Valve (18 map): styleguide_semiurban_01 3,
+#         test_macguffin 2, credits 1, motionprimingtest 1, motionprimingtest_rev 1,
+#         navigationtest_a 1, styleguide_swamp01 1, styleguide_swamp_cheapwater01 1,
+#         styleguide_urban_01 1, test_box2 1, test_mall 1, test_scavenge 1,
+#         zoo_carnivalgames 1, zoo_infected2 1, zoo_jukebox 1, zoo_swamp_foliage_01 1,
+#         zoo_trafficsigns 1, zoo_urban_foliage_01 1
+#       custom/workshop (25 map): tropic_03 2, c1918_red_square_c5 1,
+#         c1918_red_square_c4 1, c1918_red_square_c3 1, c1918_red_square_c1 1,
+#         toyz4_v7 1, ch05_pripyat04 1, ch04_pripyat03 1, ch03_pripyat02 1,
+#         ch02_pripyat01 1, ch01_jupiter 1, anemoia_reality 1, anemoia_poolrooms2 1,
+#         anemoia_poolrooms 1, anemoia_party 1, anemoia_kitty 1, anemoia_arcade 1,
+#         tropic_04 1, tropic_02 1, tropic_01 1, the_hive_m5 1, the_hive_m3 1,
+#         the_hive_m2 1, the_hive_m4 1, the_hive_m1 1
+#     info_teleport_destination  (KEO THEO - cung vtable)
+#       chien dich: 0 map
+#       custom/workshop (9 map): toyz4_v7 41, anemoia_party 12, anemoia_poolrooms2 10,
+#         anemoia_poolrooms 10, anemoia_kitty 10, anemoia_arcade 5, anemoia_reality 2,
+#         c1918_red_square_c2 1, tropic_04 1
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+info_landmark
+
+# ---------------------------------------------------------------------------
+# info_ambient_mob_end  -> BAT CA CHUM vtable 106DBA84 (2 classname)
+#
+#     info_ambient_mob_start   4/map   18 tong / 6 map   <-- LOI MOI
+#     info_ambient_mob_end     4/map   18 tong / 6 map   (dang chay o lab)
+#
+#   Ca hai cung slot21 = 0x10056A40 mac dinh, 0 model, so_kiem = 0.
+#   Khong co thanh vien thu ba => khong co gi ban di kem.
+#
+#   TRUOC KHI BAT: xoa dong `info_ambient_mob_end` trong noedict_lab.txt.
+#
+#   MAT GI NEU SAI: hai lop nay danh dau vung sinh tieng bay zombie xa.
+#        Hong thi mat tieng bao hieu, khong anh huong loi choi.
+#   GO: them lai dau # va tra dong kia ve noedict_lab.txt.
+# ---------------------------------------------------------------------------
+#   == TRANG THAI: BIET LOI - TAT (them 01/10/2026). Da xac minh loi trong binary, xem LUU
+#     Y. Bat: bo dau # o dong ten lop ben duoi. ==
+#   LUU Y: !! KHONG BAT. Keo theo info_ambient_mob_start (cung vtable 106DBA84), ma lop do
+#     TRUOT CUA 7: 0x100B5370 FindEntityByClassnameNearest bo qua entity khong edict
+#     ([esi+0x28]==0) -> ham tim diem bat dau ambient mob (0x1035EF78) khong bao gio thay.
+#     Chi lam duoc bang noedict_lab (loc theo TEN).
+#   BAN DO DE KIEM CHUNG (so cai/ban do; [l:/h:/s:] = so trong update/maps/*_l|h|s_0.lmp neu KHAC .bsp):
+#     info_ambient_mob_end
+#       chien dich (6 map, 18 cai): c3m3_shantytown 4, c3m1_plankcountry 3,
+#         c5m1_waterfront 3, c5m3_cemetery 3, c5m4_quarter 3, c1m3_mall 2
+#     info_ambient_mob_start  (KEO THEO - cung vtable)
+#       chien dich (6 map, 18 cai): c3m3_shantytown 4, c3m1_plankcountry 3,
+#         c5m1_waterfront 3, c5m3_cemetery 3, c5m4_quarter 3, c1m3_mall 2
+#   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+#info_ambient_mob_end
