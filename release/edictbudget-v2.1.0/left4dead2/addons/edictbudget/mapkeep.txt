@@ -1,0 +1,11 @@
+# mapkeep.txt - lop KHONG DUOC DON khi chuyen man (chi dung khi mapclear >= 2)
+#
+# LUON GIU (ghi cung trong ma nguon, khong can ghi lai o day):
+#   weapon_            vu khi, vat pham, bom, weapon_*_spawn,
+#                      weapon_gascan / weapon_propanetank / weapon_oxygentank
+#   prop_fuel_barrel   prop_fuel_barrel_piece
+#   player
+#   info_landmark  trigger_changelevel  info_changelevel  trigger_transition
+#   + toan bo preserve list cua game (38 lop)
+
+prop_door_rotating_checkpoint

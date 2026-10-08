@@ -61,7 +61,54 @@ lẫn entity tạo lúc chơi.
 Đo được trên `the_hive_m4`: entity sống 1954 → 1330 (giảm 624).
 
 Cái giá: `client.dll` cố định kích thước quầng sáng là 60, nên map đặt `HaloScale 10` sẽ thấy
-quầng sáng to gấp 6.
+quầng sáng to gấp 6. Muốn giữ đúng quầng mà vẫn ít edict: `spotlight=2` (mục kế tiếp, v2.1.0).
+
+---
+
+## spotlight
+
+*Thêm ở v2.1.0, mặc định tắt (`spotlight=0`). Đã chạy trên máy chủ cục bộ với 9 map (số đo ở
+[06-do-dac.md](06-do-dac.md#spotlight)); chưa chạy trên máy chủ đông người.*
+
+Sửa cái giá của `swap`. Thay vì đổi **cả lớp** `point_spotlight`, plugin quyết **từng đèn** ngay lúc
+map đọc khối keyvalue của nó (`MapEntity_ParseEntity`), trước khi entity được tạo:
+
+| khối keyvalue của đèn | plugin làm gì | edict |
+|---|---|---|
+| `HaloScale` = 60, hoặc không ghi (mặc định là 60) | tạo `beam_spotlight` thay cho `point_spotlight` — vẽ giống hệt | 1 |
+| `HaloScale` ≠ 60, không có `parentname` | giữ `point_spotlight` của Valve; nó và `spotlight_end` của nó không cấp edict (`EFL_SERVER_ONLY`), chỉ `beam` có edict | 1, quầng đúng |
+| `HaloScale` ≠ 60, có `parentname` | giữ nguyên như Valve | 3 khi đèn bật |
+
+Vì sao hàng thứ hai an toàn (địa chỉ ở [04-dia-chi.md](04-dia-chi.md#spotlight-serverdll-clientdll)):
+
+- `point_spotlight` không có cha là loại "efficient": `beam` của nó dựng từ hai toạ độ, không trỏ
+  tới hai entity kia.
+- `point_spotlight` vốn không gửi về client.
+- Ở client, `spotlight_end` chỉ tạo đèn động có độ sáng nhân với alpha/255, mà máy chủ đặt alpha 0
+  hoặc 1 — gần như không sáng.
+- Tìm entity theo tên không lọc edict, nên `LightOn` / `LightOff` từ map vẫn chạy.
+
+Mỗi đèn ở hàng thứ hai chiếm 2 ô trong dải không mạng 2049–4095 (README, mục **Giới hạn**). Nặng
+nhất đã gặp: `the_hive_m4`, 624 ô cộng phần của `noedict` ≈ 1133 / 2047.
+
+**Với `swap`:** khi `spotlight=2`, `point_spotlight` đọc từ map (kể cả qua `point_template`) do module
+này quyết và **bỏ qua** dòng `point_spotlight` trong `swap.txt`. `point_spotlight` do plugin hay script
+tạo lúc chơi vẫn đi qua `swap`.
+
+`spotlight=1` chỉ ghi log quyết định, không đổi gì. Log khi `spotlight=2`:
+
+```
+SPOTLIGHT [the_hive_m4] (lam that): 312 point_spotlight | doi beam_spotlight 0 | giu + khong edict 312 | giu nguyen 0 (spotlight_end: xem dong het map)
+SPOTLIGHT [the_hive_m4] het map: spotlight_end khong edict 312
+```
+
+Dòng thứ hai in lúc sang map sau, vì `spotlight_end` sinh trong `Activate()`, sau dòng thứ nhất.
+
+**Tự kiểm lúc nạp** — trượt bước nào thì cả module tự tắt và ghi lý do vào log: prologue của 3 hàm
+đích; quét toàn `.text` phải thấy đúng 2 lệnh `call` tới `MapEntity_ParseEntity`, đúng 3 tới
+`SpotlightCreate` và không có `jmp`; vtable của `point_spotlight` / `spotlight_end` đúng và slot 29
+chưa bị sửa (tức hai lớp này không nằm trong `noedict.txt`); có factory `beam_spotlight`; dictionary
+đúng. Không có danh sách map viết tay — mọi quyết định lấy từ chính khối keyvalue.
 
 ---
 

@@ -60,12 +60,17 @@ TUONG THICH, khong phai lua chon tuy tien.
 ===========================================================================
 PHAM VI - CAI GI KHONG THUOC GIAY PHEP NAY
 
-Goi nay KHONG chua ma cua Valve.
+Ma nguon trong goi nay KHONG chua ma cua Valve (rieng DLL dung san: xem duoi).
 
-  src/sample_mm.cpp   ma tu viet.
-                      Cac dia chi ham va doan assembly trong chu thich la
-                      MO TA HANH VI cua server.dll / engine.dll phuc vu viec
-                      tuong thich, KHONG phai ma sao chep.
+  src/sample_mm.cpp   ma tu viet (module chinh + moi module tinh nang).
+  src/src/*.cpp       Cac dia chi ham va doan assembly trong chu thich la
+                      MO TA HANH VI cua server.dll / engine.dll / client.dll
+                      phuc vu viec tuong thich, KHONG phai ma sao chep.
+
+  release/*/.../edictbudget_mm.dll
+                      ban build san tu src/ (MSVC x86). Lien ket cac thu vien
+                      tier0, tier1, vstdlib cua HL2SDK cho L4D2; phan do thuoc
+                      giay phep SDK cua Valve, khong thuoc giay phep cua kho nay.
 
   SDK cua Valve       KHONG nam trong kho nay.
   Nhi phan cua game   KHONG nam trong kho nay.

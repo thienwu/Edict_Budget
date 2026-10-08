@@ -141,6 +141,9 @@ the engine read freed memory. Crashed for real with `mapclear=2` and with `mapcl
   `HaloScale 10` on `point_spotlight` will see halos 6 times larger.
 - `beam_spotlight` carries over to the next map (`point_spotlight` does not). Measured on
   `the_hive` m3 → m4: 48 more entities in the carry-over list; the engine limit is 512.
+- Since v2.1.0: `spotlight=2` keeps the right halo for lights with `HaloScale` ≠ 60 by keeping
+  them as `point_spotlight`. See [01-co-che.en.md](01-co-che.en.md#spotlight). Effect on the
+  number of entities carried over: not measured.
 
 ---
 
@@ -156,6 +159,18 @@ The map's two `point_template`s `@template_mannequin_setup_male` / `_female` hav
 `OnEntitySpawned !self,Kill,,1,-1` — they delete themselves 1 second after their first spawn, while
 154 `env_entity_maker`s point at them. Makers that run later find no template. The bug is in the
 map itself.
+
+---
+
+## 10. `mapclear` ignores Windows line endings in `mapkeep.txt` / `mapkill.txt`
+
+The reader for these two files strips `\n` twice and never strips `\r` (every other list reader in
+the plugin strips `\r`). With a CRLF file every line keeps a trailing `\r`, fails the character
+check and is **silently dropped**. Present since `v2.0.2` and earlier; not fixed yet.
+
+Impact: `mapclear` only. The release ships `mapclear=1` (log only), so only the counts are off.
+Check: the log line `MAPCLEAR: mapkeep.txt - giu them N lop` — `N` must equal the number of class
+lines in the file. Workaround: save those two files with LF line endings.
 
 ---
 

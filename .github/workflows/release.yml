@@ -1,0 +1,37 @@
+name: Release
+
+# Day tag v* -> tao GitHub Release, dinh kem thu muc release/edictbudget-<tag>/ nen thanh zip.
+# DLL trong goi la ban DA BUILD VA CHAY THU, duoc commit cung tag - KHONG build lai o day
+# (build.yml van build tu src/ de doi chieu).
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Dong goi
+        run: |
+          set -e
+          D="release/edictbudget-${GITHUB_REF_NAME}"
+          test -f "$D/GHI_CHU.md"
+          test -f "$D/left4dead2/addons/metamod/edictbudget.vdf"
+          test -f "$D/left4dead2/addons/edictbudget/bin/edictbudget_mm.dll"
+          md5sum "$D/left4dead2/addons/edictbudget/bin/edictbudget_mm.dll"
+          (cd "$D" && zip -r -X "$GITHUB_WORKSPACE/edictbudget-${GITHUB_REF_NAME}.zip" left4dead2)
+          unzip -l "edictbudget-${GITHUB_REF_NAME}.zip"
+
+      - name: Tao Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: edictbudget ${{ github.ref_name }}
+          body_path: release/edictbudget-${{ github.ref_name }}/GHI_CHU.md
+          files: edictbudget-${{ github.ref_name }}.zip

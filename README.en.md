@@ -33,6 +33,7 @@ No SourceMod required. It does not raise the engine's edict limit.
 |---|---|---|
 | `noedict` | does not give an edict to entity classes that never need to reach the client | main, running |
 | `swap` | turns `point_spotlight` (3 edicts) into `beam_spotlight` (1 edict) at creation | running |
+| `spotlight` | decides **per** `point_spotlight`: keeps the right halo with as few edicts as `swap` | **new in v2.1.0, off by default** — run on a local server |
 | `wipeclear` | when the whole team loses, clears entities **earlier** than the game (before the respawn loop) | running |
 | `freegate` | lets a freed edict be reused immediately | **weak, almost no real effect — keep off** |
 | `mapclear` | observes entities during map transitions | log only |
@@ -84,7 +85,9 @@ Full list: [docs/03-loi-da-biet.en.md](docs/03-loi-da-biet.en.md).
 
 ## Installation
 
-1. Build the DLL (see **Build**) or take the artifact from GitHub Actions.
+1. Get the DLL: download `edictbudget-<version>.zip` from **Releases** (already laid out as
+   `left4dead2/addons/...` — unzip into the server's root folder and skip step 2), or build it
+   (see **Build**), or take the artifact from GitHub Actions.
 2. Copy into the server folder:
 
 ```
@@ -112,6 +115,7 @@ Run a few days with minimal intervention, read `addons/edictbudget/edictbudget.l
 |---|---|---|
 | `noedict` | `1` | use `noedict.txt` |
 | `swap` | `2` | `0` off · `1` log only · `2` really swap, per `swap.txt` |
+| `spotlight` | `0` | `0` off · `1` log only · `2` really do it. With `2`, lights read from the map skip `swap.txt` |
 | `wipeclear` | `2` | `0` off · `1` log only · `2` really clear |
 | `freegate` | `0` | `0` off · `1` per `freekeep.txt` · `2` unconditional (**breaks item transfer**) |
 | `mapclear` | `1` | `1` log only. **Don't use `2`** |
@@ -121,9 +125,10 @@ Run a few days with minimal intervention, read `addons/edictbudget/edictbudget.l
 | `loadprobe` | `8` | number of frames sampled after a map loads |
 | `logconsole` | `0` | `1` = also print to the console |
 
-The switches `bigarray`, `snapshot`, `pinmax`, `pinglobals`, `markfree`, `freetime`,
-`indexbounds`, `forcedindex`, `detour`, `reuse`, `nonetkill`, `nonethigh`: **keep `0`**. These are
-abandoned approaches, see [docs/05-huong-da-bo.en.md](docs/05-huong-da-bo.en.md).
+`nonetkill`: **keep `0`** — an abandoned approach, see
+[docs/05-huong-da-bo.en.md](docs/05-huong-da-bo.en.md). If an older `patches.txt` still has keys of
+the removed approaches, the plugin ignores them (any that is switched on gets one warning line in
+the log).
 
 | file | used for |
 |---|---|
@@ -142,6 +147,8 @@ abandoned approaches, see [docs/05-huong-da-bo.en.md](docs/05-huong-da-bo.en.md)
   (`c1m1_hotel`, `c1m3_mall`, `c2m4_barns`, `c6m1_riverbank`…). Coop, 1–4 players.
 - Long runs: 7 long play sessions, all 7 ended with **fewer** entities than they started with;
   0 `ED_Alloc` errors in 105 sessions.
+- `spotlight` (v2.1.0): local server, 9 maps, modes 1 and 2, no players — see
+  [docs/06-do-dac.en.md](docs/06-do-dac.en.md#spotlight).
 - Most other numbers come from **reading map files** (not running them) and are estimates.
 
 ---
@@ -153,6 +160,7 @@ abandoned approaches, see [docs/05-huong-da-bo.en.md](docs/05-huong-da-bo.en.md)
 | `v2.0.0` | first release |
 | `v2.0.1` | fix: `noedict` could pick another class's vtable (seen with `upgrade_spawn`) |
 | `v2.0.2` | fix: server crashed at startup when `noedict.txt` contained one of 9 classes (e.g. `beam_spotlight`); `noedict.txt` is no longer silently cut after 32 lines |
+| `v2.1.0` | added `spotlight` (off by default); code split into modules (`src/sample_mm.cpp` + `src/src/*.cpp`, still one translation unit); the code and `patches.txt` keys of the abandoned approaches removed (except `nonetkill`); prebuilt package on Releases |
 
 ---
 
@@ -164,6 +172,11 @@ build.bat
 
 Place next to the project folder: `hl2sdk-l4d2/` and `metamod-source-1.12.0.1225/`. MSVC 32-bit.
 Use the defines in `build.bat` as they are.
+
+Code: `src/sample_mm.cpp` is the main module (plugin lifecycle); each feature is one file in
+`src/src/`, `#include`d into the main module — still one translation unit, so the build command
+is unchanged. The hook map and the code that is still duplicated are listed at the top of
+`src/sample_mm.cpp`.
 
 ---
 

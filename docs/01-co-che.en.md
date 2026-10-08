@@ -63,7 +63,60 @@ and entities created during play.
 Measured on `the_hive_m4`: live entities 1954 → 1330 (624 fewer).
 
 Cost: `client.dll` hard-codes the halo size to 60, so a map that sets `HaloScale 10` will see
-halos 6 times larger.
+halos 6 times larger. To keep the right halo with as few edicts: `spotlight=2` (next section,
+v2.1.0).
+
+---
+
+## spotlight
+
+*Added in v2.1.0, off by default (`spotlight=0`). Run on a local server with 9 maps (numbers in
+[06-do-dac.en.md](06-do-dac.en.md#spotlight)); not yet run on a busy server.*
+
+Fixes the cost of `swap`. Instead of swapping the **whole** `point_spotlight` class, the plugin
+decides **per light** while the map parses its keyvalue block (`MapEntity_ParseEntity`), before the
+entity is created:
+
+| the light's keyvalue block | what the plugin does | edicts |
+|---|---|---|
+| `HaloScale` = 60, or absent (the default is 60) | creates `beam_spotlight` instead of `point_spotlight` — draws the same | 1 |
+| `HaloScale` ≠ 60, no `parentname` | keeps Valve's `point_spotlight`; it and its `spotlight_end` get no edict (`EFL_SERVER_ONLY`), only the `beam` has one | 1, correct halo |
+| `HaloScale` ≠ 60, has `parentname` | left as Valve made it | 3 while lit |
+
+Why the second row is safe (addresses in [04-dia-chi.en.md](04-dia-chi.en.md#spotlight-serverdll-clientdll)):
+
+- A `point_spotlight` without a parent is the "efficient" kind: its `beam` is built from two
+  points, not from the other two entities.
+- `point_spotlight` is never sent to clients anyway.
+- On the client, `spotlight_end` only creates a dynamic light whose brightness is multiplied by
+  alpha/255, and the server sets alpha to 0 or 1 — practically dark.
+- Looking entities up by name does not filter on edicts, so `LightOn` / `LightOff` from the map
+  still work.
+
+Each light in the second row takes 2 slots of the non-networked range 2049–4095 (README,
+**Limits**). Heaviest seen: `the_hive_m4`, 624 slots plus `noedict`'s share ≈ 1133 / 2047.
+
+**With `swap`:** when `spotlight=2`, a `point_spotlight` read from the map (including via
+`point_template`) is decided by this module and **skips** the `point_spotlight` line in
+`swap.txt`. A `point_spotlight` created during play by a plugin or script still goes through
+`swap`.
+
+`spotlight=1` only logs the decisions and changes nothing. Log with `spotlight=2`:
+
+```
+SPOTLIGHT [the_hive_m4] (lam that): 312 point_spotlight | doi beam_spotlight 0 | giu + khong edict 312 | giu nguyen 0 (spotlight_end: xem dong het map)
+SPOTLIGHT [the_hive_m4] het map: spotlight_end khong edict 312
+```
+
+The second line is printed when the next map loads, because `spotlight_end` is created in
+`Activate()`, after the first line.
+
+**Self-check at load** — if any step fails, the whole module turns itself off and logs why: the
+prologue of the 3 target functions; a scan of all of `.text` must find exactly 2 `call`s to
+`MapEntity_ParseEntity`, exactly 3 to `SpotlightCreate` and no `jmp`; the vtables of
+`point_spotlight` / `spotlight_end` are as expected and slot 29 is untouched (i.e. neither class is
+in `noedict.txt`); a `beam_spotlight` factory exists; the dictionary is as expected. No
+hand-written map list — every decision comes from the keyvalue block itself.
 
 ---
 

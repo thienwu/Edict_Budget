@@ -2,7 +2,9 @@
 
 *Tiếng Việt · [English](05-huong-da-bo.en.md)*
 
-Các công tắc dưới đây vẫn còn trong mã để đối chiếu. Trong `patches.txt` chúng phải là `0`.
+Từ v2.1.0, mã của hướng nâng trần và của `reuse` đã gỡ khỏi plugin và khoá của chúng không
+còn trong `patches.txt`; hai mục đó bên dưới chỉ còn là ghi chép. `nonetkill` và `mapclear=2` vẫn còn trong
+mã để đối chiếu — giữ `nonetkill=0`, `mapclear` không quá `1`.
 
 ---
 
@@ -11,7 +13,7 @@ Các công tắc dưới đây vẫn còn trong mã để đối chiếu. Trong 
 Đây là hướng **đầu tiên** của dự án. Nó không giữ được ổn định, và dự án chuyển sang cắt giảm
 (`noedict`, `swap`, `wipeclear`).
 
-Công tắc: `bigarray`, `snapshot`, `pinmax`, `pinglobals`, `markfree`, `freetime`,
+Công tắc (đã gỡ khỏi mã ở v2.1.0): `bigarray`, `snapshot`, `pinmax`, `pinglobals`, `markfree`, `freetime`,
 `indexbounds`, `forcedindex`, `detour`.
 
 Nâng số edict của engine lên 4096 thì **làm được** (`bigarray` sửa hằng `0x800` trong
@@ -58,7 +60,7 @@ tức thuộc nhóm 4096 ở trên. Đã gây sập khi thử.
 ## reuse
 
 Bản đầu của việc tái dùng edict ngay (gọi `AllowImmediateEdictReuse`). Đã thay bằng `freegate`,
-mà `freegate` cũng gần như không có tác dụng. Giữ `0`.
+mà `freegate` cũng gần như không có tác dụng. Đã gỡ khỏi mã ở v2.1.0.
 
 ---
 
@@ -94,3 +96,6 @@ Chỉ người làm map giảm được.
 
 Đã dò mọi lớp tự tạo thêm entity con lúc spawn. Chỉ `point_spotlight` có cặp thay thế
 (`beam_spotlight`). Các lớp khác hoặc đã ở mức 1 edict, hoặc không có lớp tương đương.
+
+v2.1.0 thêm `spotlight`: không phải cặp mới, mà quyết **từng** `point_spotlight` để giữ đúng quầng
+sáng. Xem [01-co-che.md](01-co-che.md#spotlight).

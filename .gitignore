@@ -10,3 +10,6 @@ edictbudget_mm.map
 vc140.pdb
 sample_mm.lib
 sample_mm.exp
+
+# Goi phat hanh dung san (release/*/): DLL da build va chay thu, phai duoc commit
+!release/**/edictbudget_mm.dll

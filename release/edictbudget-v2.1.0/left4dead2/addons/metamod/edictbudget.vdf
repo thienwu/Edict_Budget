@@ -1,0 +1,5 @@
+"Metamod Plugin"
+{
+	"file"		"addons/edictbudget/bin/edictbudget_mm"
+	"alias"		"edictbudget"
+}

@@ -2,7 +2,10 @@
 
 *[Tiếng Việt](05-huong-da-bo.md) · English*
 
-The switches below are still in the code for reference. In `patches.txt` they must be `0`.
+Since v2.1.0 the code of raising the limit and of `reuse` is removed from the
+plugin and their keys are gone from `patches.txt`; those two sections below are records only.
+`nonetkill` and `mapclear=2` are still in the code for reference — keep `nonetkill=0` and
+`mapclear` at `1` or lower.
 
 ---
 
@@ -11,7 +14,7 @@ The switches below are still in the code for reference. In `patches.txt` they mu
 This was the project's **first** approach. It could not be kept stable, and the project moved to
 reduction (`noedict`, `swap`, `wipeclear`).
 
-Switches: `bigarray`, `snapshot`, `pinmax`, `pinglobals`, `markfree`, `freetime`,
+Switches (removed from the code in v2.1.0): `bigarray`, `snapshot`, `pinmax`, `pinglobals`, `markfree`, `freetime`,
 `indexbounds`, `forcedindex`, `detour`.
 
 Raising the engine's edict count to 4096 **can be done** (`bigarray` patches the constant
@@ -60,7 +63,7 @@ you use it:
 ## reuse
 
 The first version of immediate edict reuse (calls `AllowImmediateEdictReuse`). Replaced by
-`freegate`, and `freegate` itself has almost no effect. Keep `0`.
+`freegate`, and `freegate` itself has almost no effect. Removed from the code in v2.1.0.
 
 ---
 
@@ -100,3 +103,6 @@ Only the map author can reduce it.
 Every class that creates extra child entities at spawn was checked. Only `point_spotlight` has a
 replacement (`beam_spotlight`). The others are either already at 1 edict or have no equivalent
 class.
+
+v2.1.0 adds `spotlight`: not a new pair, but a **per-light** decision for `point_spotlight` that
+keeps the right halo. See [01-co-che.en.md](01-co-che.en.md#spotlight).

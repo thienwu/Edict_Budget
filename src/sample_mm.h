@@ -44,6 +44,8 @@ public: //hooks
 		bool loadGame,
 		bool background);
 	void Hook_GameFrame(bool simulating);
+	// edictbudget chi moc 3 ham tren (xem sample_mm.cpp Load). Cac khai bao duoi
+	// day sot lai tu plugin mau cua Metamod: KHONG co than ham, KHONG ai goi.
 	void Hook_LevelShutdown(void);
 	void Hook_ClientActive(edict_t *pEntity, bool bLoadGame);
 	void Hook_ClientDisconnect(edict_t *pEntity);

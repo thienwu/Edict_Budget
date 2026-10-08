@@ -1,0 +1,49 @@
+# edictbudget - BANG DOI LOP ENTITY
+#
+# Dinh dang:   <lop_cu>  ->  <lop_moi>       (dau -> tuy chon, khoang trang cung duoc)
+# Dong bat dau bang # la ghi chu.
+#
+# Doi lop NGAY LUC TAO, ke ca luc engine phan tich lump entity cua BSP.
+# KHAC HAN noedict: day KHONG phai go mang. Client van nhan entity va van ve
+# binh thuong. Chi la doi sang mot lop lam viec tuong tu nhung TON IT EDICT HON.
+# Vi vay khong dinh 6 dieu kien cua noedict.txt.
+#
+# Cong tac trong patches.txt:
+#   swap=0   tat
+#   swap=1   CHI QUAN SAT - dem xem gap bao nhieu cai, KHONG doi gi
+#   swap=2   doi that
+#   swapmax=N   tran so lan doi (0 = khong gioi han). Dung de thu vai chuc cai truoc.
+#
+# Cong an toan tu dong: ca hai lop phai ton tai that trong factory dictionary,
+# neu khong thi cap do bi bo va ghi log ro ly do.
+#
+# ============================================================
+#  point_spotlight -> beam_spotlight
+# ============================================================
+#
+# VI SAO:
+#   point_spotlight khi spawn TU TAO THEM spotlight_end + beam => 3 edict moi cai.
+#   beam_spotlight ve HOAN TOAN PHIA CLIENT, khong sinh entity con => 1 edict.
+#   Chinh tac gia the_hive da dung ca hai lop trong cung mot chien dich:
+#     m1: 2 beam_spotlight, 0 point_spotlight
+#     m4: 1 beam_spotlight, 312 point_spotlight   <- 937 edict -> 313
+#     m5: 21 beam_spotlight, 12 point_spotlight
+#   Tong tren the_hive: tiet kiem 792 edict.
+#
+# ANH XA KEYVALUE (doc datamap ca hai lop trong server.dll):
+#   SpotlightLength / SpotlightWidth / HDRColorScale   TRUNG TEN TUYET DOI
+#   input LightOn / LightOff, output OnLightOn         trung ten
+#   cung baseMap = CBaseEntity                         moi khoa ke thua giong het
+#   spawnflags bit 0 (bat san) va bit 1 (khong den dong)  giong het
+#
+# DANH DOI DUY NHAT:
+#   MAT khoa HaloScale. client.dll ghi cung halo = 60.0 tai 1006CC80.
+#   Map nao dat HaloScale 10 (the_hive_m4 dat 10) se thay HALO TO GAP 6.
+#   43/517 point_spotlight tren 50 map von da dat 60 = dung mac dinh, khong doi gi.
+#   => PHAI NHIN BANG MAT MOI QUYET DUOC. Thu m5 truoc: map do co ca hai lop
+#      dat canh nhau nen so duoc ngay.
+#
+# CHUA BAT: dang de swap=1 (chi quan sat) trong patches.txt.
+# Chay mot lan de xem log dem duoc bao nhieu, roi moi doi sang swap=2.
+
+point_spotlight -> beam_spotlight

@@ -61,6 +61,25 @@ Cả `.text` chỉ có 3 chỗ gọi slot 1: `CreateEntityByName` và 2 nhánh c
 
 ---
 
+## spotlight (`server.dll`, `client.dll`)
+
+| thứ | địa chỉ |
+|---|---|
+| `MapEntity_ParseEntity` (cdecl: `CBaseEntity*&`, `const char*`, `IMapEntityFilter*` → `const char*`) | `0x101198F0`; đúng 2 lệnh `call`: `0x1011A6DD` (`MapEntity_ParseAllEntities` — nạp map và `CleanUpMap`), `0x101912B2` (`CPointTemplate::CreateInstance`) |
+| `CPointSpotlight::SpotlightCreate` (thiscall) | `0x1018E3D0`; đúng 3 lệnh `call`: `0x1018F1A2` (trong `CreateEfficientSpotlight` `0x1018F160`), `0x1018ECB3`, `0x1018ED08` |
+| `CPointSpotlight::Activate` — không cha thì chọn "efficient" | `0x1018F3F0` |
+| constructor `CPointSpotlight` — `HaloScale` mặc định 60.0 ở `+0x46C` | `0x1018DC20` |
+| vtable `point_spotlight` / `spotlight_end` | `0x10630E64` / `0x10643B54`; slot 29 = `PostConstructor` `0x10055620` |
+| `CEntityFactoryDictionary` vtable / `Create` gốc | `0x10654F48` / `0x10206A40` (`GetEntityFactoryDictionary` `0x1020CA70`) |
+| `m_iEFlags` / `EFL_SERVER_ONLY` | `+0x138` / bit 9 |
+| `client.dll`: `C_BeamSpotLight` gán quầng cố định 60 | `0x1006CAD0` |
+| `client.dll`: `C_SpotlightEnd::ClientThink` — màu × alpha/255 | `0x1009E7A0` |
+
+Plugin tự đếm mọi lệnh `call` tới hai hàm đích lúc nạp (quét toàn `.text`); số khác 2 / 3, hoặc có
+`jmp`, thì module tự tắt.
+
+---
+
 ## wipeclear (`server.dll`)
 
 | thứ | địa chỉ |

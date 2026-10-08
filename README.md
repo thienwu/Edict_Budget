@@ -34,6 +34,7 @@ Không cần SourceMod. Không nâng giới hạn edict của engine.
 |---|---|---|
 | `noedict` | không cấp edict cho những lớp entity không cần gửi về client | chính, đang chạy |
 | `swap` | đổi `point_spotlight` (3 edict) thành `beam_spotlight` (1 edict) lúc tạo | đang chạy |
+| `spotlight` | quyết **từng** `point_spotlight`: giữ đúng quầng sáng mà vẫn ít edict như `swap` | **mới ở v2.1.0, mặc định tắt** — đã chạy máy chủ cục bộ |
 | `wipeclear` | khi cả đội thua, dọn entity **sớm hơn** game (trước vòng hồi sinh) | đang chạy |
 | `freegate` | cho tái dùng ngay edict vừa giải phóng | **yếu, gần như không có tác dụng thật — để tắt** |
 | `mapclear` | quan sát entity lúc chuyển màn | chỉ ghi log |
@@ -84,7 +85,9 @@ Danh sách đầy đủ: [docs/03-loi-da-biet.md](docs/03-loi-da-biet.md).
 
 ## Cài đặt
 
-1. Build DLL (mục **Build**) hoặc lấy artifact từ GitHub Actions.
+1. Lấy DLL: tải gói `edictbudget-<phiên bản>.zip` ở trang **Releases** (đã xếp sẵn thư mục
+   `left4dead2/addons/...` — giải nén vào thư mục gốc của máy chủ rồi bỏ qua bước 2), hoặc build
+   (mục **Build**), hoặc lấy artifact từ GitHub Actions.
 2. Chép vào thư mục máy chủ:
 
 ```
@@ -112,6 +115,7 @@ Nên chạy vài ngày ở chế độ ít can thiệp, đọc `addons/edictbudg
 |---|---|---|
 | `noedict` | `1` | dùng `noedict.txt` |
 | `swap` | `2` | `0` tắt · `1` chỉ ghi log · `2` đổi thật, theo `swap.txt` |
+| `spotlight` | `0` | `0` tắt · `1` chỉ ghi log · `2` làm thật. Với `2`, đèn đọc từ map bỏ qua `swap.txt` |
 | `wipeclear` | `2` | `0` tắt · `1` chỉ ghi log · `2` dọn thật |
 | `freegate` | `0` | `0` tắt · `1` theo danh sách `freekeep.txt` · `2` vô điều kiện (**làm hỏng chuyển vật phẩm**) |
 | `mapclear` | `1` | `1` chỉ ghi log. **Không dùng `2`** |
@@ -121,9 +125,9 @@ Nên chạy vài ngày ở chế độ ít can thiệp, đọc `addons/edictbudg
 | `loadprobe` | `8` | số frame lấy mẫu sau khi nạp map |
 | `logconsole` | `0` | `1` = in cả ra console |
 
-Các công tắc `bigarray`, `snapshot`, `pinmax`, `pinglobals`, `markfree`, `freetime`,
-`indexbounds`, `forcedindex`, `detour`, `reuse`, `nonetkill`, `nonethigh`: **giữ `0`**. Đó là
-các hướng đã bỏ, xem [docs/05-huong-da-bo.md](docs/05-huong-da-bo.md).
+`nonetkill`: **giữ `0`** — hướng đã bỏ, xem [docs/05-huong-da-bo.md](docs/05-huong-da-bo.md).
+`patches.txt` của bản cũ còn khoá của những hướng đã gỡ thì plugin bỏ qua (khoá nào đang bật sẽ có
+một dòng cảnh báo trong log).
 
 | file | dùng cho |
 |---|---|
@@ -143,6 +147,8 @@ các hướng đã bỏ, xem [docs/05-huong-da-bo.md](docs/05-huong-da-bo.md).
   1–4 người.
 - Đo dài ngày: 7 phiên chơi dài, cả 7 kết thúc với ít entity hơn lúc bắt đầu; 0 lần
   `ED_Alloc` trong 105 phiên.
+- `spotlight` (v2.1.0): máy chủ cục bộ, 9 map, chế độ 1 và 2, không có người chơi — xem
+  [docs/06-do-dac.md](docs/06-do-dac.md#spotlight).
 - Phần lớn số liệu còn lại là **đọc file map** (không chạy), dùng làm ước lượng.
 
 ---
@@ -154,6 +160,7 @@ các hướng đã bỏ, xem [docs/05-huong-da-bo.md](docs/05-huong-da-bo.md).
 | `v2.0.0` | bản đầu |
 | `v2.0.1` | sửa: `noedict` có thể nhận nhầm vtable của lớp khác (gặp ở `upgrade_spawn`) |
 | `v2.0.2` | sửa: máy chủ sập lúc khởi động khi `noedict.txt` có một trong 9 lớp (vd `beam_spotlight`); `noedict.txt` không còn bị cắt im lặng sau 32 dòng |
+| `v2.1.0` | thêm `spotlight` (mặc định tắt); mã chia module (`src/sample_mm.cpp` + `src/src/*.cpp`, vẫn một đơn vị biên dịch); gỡ khỏi mã và `patches.txt` các công tắc của hướng đã bỏ (trừ `nonetkill`); có gói dựng sẵn ở Releases |
 
 ---
 
@@ -165,6 +172,10 @@ build.bat
 
 Đặt cạnh thư mục dự án: `hl2sdk-l4d2/` và `metamod-source-1.12.0.1225/`. MSVC 32-bit.
 Dùng nguyên các định nghĩa trong `build.bat`.
+
+Mã: `src/sample_mm.cpp` là module chính (vòng đời plugin); mỗi tính năng một file trong `src/src/`,
+được `#include` vào module chính — vẫn một đơn vị biên dịch, nên lệnh build không đổi. Bản đồ móc
+và các đoạn mã còn lặp lại ghi ở đầu `src/sample_mm.cpp`.
 
 ---
 

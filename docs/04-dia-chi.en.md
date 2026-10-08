@@ -62,6 +62,25 @@ entity lump parser.
 
 ---
 
+## spotlight (`server.dll`, `client.dll`)
+
+| item | address |
+|---|---|
+| `MapEntity_ParseEntity` (cdecl: `CBaseEntity*&`, `const char*`, `IMapEntityFilter*` → `const char*`) | `0x101198F0`; exactly 2 `call`s: `0x1011A6DD` (`MapEntity_ParseAllEntities` — map load and `CleanUpMap`), `0x101912B2` (`CPointTemplate::CreateInstance`) |
+| `CPointSpotlight::SpotlightCreate` (thiscall) | `0x1018E3D0`; exactly 3 `call`s: `0x1018F1A2` (in `CreateEfficientSpotlight` `0x1018F160`), `0x1018ECB3`, `0x1018ED08` |
+| `CPointSpotlight::Activate` — no parent means "efficient" | `0x1018F3F0` |
+| `CPointSpotlight` constructor — default `HaloScale` 60.0 at `+0x46C` | `0x1018DC20` |
+| vtable `point_spotlight` / `spotlight_end` | `0x10630E64` / `0x10643B54`; slot 29 = `PostConstructor` `0x10055620` |
+| `CEntityFactoryDictionary` vtable / original `Create` | `0x10654F48` / `0x10206A40` (`GetEntityFactoryDictionary` `0x1020CA70`) |
+| `m_iEFlags` / `EFL_SERVER_ONLY` | `+0x138` / bit 9 |
+| `client.dll`: `C_BeamSpotLight` sets the halo to a fixed 60 | `0x1006CAD0` |
+| `client.dll`: `C_SpotlightEnd::ClientThink` — colour × alpha/255 | `0x1009E7A0` |
+
+The plugin counts every `call` to the two target functions itself at load (scanning all of
+`.text`); a count other than 2 / 3, or any `jmp`, turns the module off.
+
+---
+
 ## wipeclear (`server.dll`)
 
 | item | address |

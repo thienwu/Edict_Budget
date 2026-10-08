@@ -83,6 +83,33 @@ This is how to compare a `noedict` class on and off (same map, same `round_start
 
 ---
 
+## spotlight
+
+Measured 08–09/10/2026 on a local server (Coop, no players): one start, then 9 map changes with
+`changelevel`. Baseline: same map, `swap=2` (every `point_spotlight` → `beam_spotlight`) with
+`spotlight=0` or `1`. `live` is taken from the `NAP[frame 7]` line of `loadprobe` (`song=`).
+
+| map | lights / to `beam_spotlight` / kept, no edict / left as is | `spotlight_end` without edict | `live`: baseline → `spotlight=2` |
+|---|---|---:|---|
+| `the_hive_m4` | 312 / 0 / 312 / 0 | 312 | 1293 → 1293 |
+| `the_hive_m3` | 80 / 0 / 80 / 0 | 80 | 1368 → 1368 |
+| `the_hive_m2` | 18 / 18 / 0 / 0 | 0 | 1705 → 1705 |
+| `the_hive_m5` | 12 / 12 / 0 / 0 | 0 | 1233 → 1233 |
+| `c2m3_coaster` | 77 / 1 / 76 / 0 | 76 | 638 → 639 |
+| `c14m2_lighthouse` | 7 / 2 / 5 / 0 | 5 | 684 → 686 |
+| `c8m2_subway` | 29 / 29 / 0 / 0 | 0 | 1101 → 1097 |
+| `c1m4_atrium` | 2 / 0 / 2 / 0 | 2 | 398 → 397 |
+| `ch05_pripyat04` | 7 / 1 / 4 / 2 | 2 | 506 → 504 |
+
+- `live` matches the baseline within 4 (`c8m2_subway` changes no light and still differs by 4 —
+  noise from items and the director). So the lights keep their class and halo **at no extra edict
+  cost** compared with `swap`.
+- `ch05_pripyat04`: 2 of the 4 lights in the "kept, no edict" column start switched off, so only 2
+  `spotlight_end` are created at load.
+- Halos not yet checked by eye on a client; not yet run with players.
+
+---
+
 ## Results so far
 
 - 7 long play sessions on a live server: all 7 ended with **fewer** entities than they started

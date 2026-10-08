@@ -60,7 +60,11 @@ mapclearmax=100
 #
 # Mot lan bao loi chuc nang chua tai hien duoc: nguoi choi ket o the_hive.
 # Nhieu luot sau do deu binh thuong, ke ca m4 voi ca 312 den da doi.
-# Chua du bang chung quy ket cho swap. Chi tiet: tools\beam-spotlight-loi.md
+# Chua du bang chung quy ket cho swap. Xem docs/03-loi-da-biet.md muc 8.
+#
+# !! QUANG SANG: client.dll co dinh quang cua beam_spotlight = 60. Map dat
+#    HaloScale khac (the_hive: 10) se thay quang to gap 6. Muon dung quang ma van
+#    tiet kiem edict: spotlight=2 (ben duoi).
 swap=2
 swapmax=0
 
@@ -79,18 +83,23 @@ heartbeat=300
 # Toan bo log cua plugin ghi vao:  addons\edictbudget\edictbudget.log
 # Moi dong co dau thoi gian, file mo che do noi tiep, khong ghi de.
 logconsole=0
-# Nhom nay lam HONG VONG HOI SINH LUC WIPE (ghi chu trong ma nguon, dong 210-214),
-# ma wipeclear song duoc chinh la nho vong hoi sinh do.
-# Phep kiem truoc moi de xuat ve dai chi so cao: "No co can bigarray khong?" - co thi DUNG.
-bigarray=0
-snapshot=0
-pinmax=0
-pinglobals=0
-markfree=0
-freetime=0
-indexbounds=0
-forcedindex=0
-detour=0
-reuse=0
+
+# ===== MOI O v2.1.0 - MAC DINH TAT =====
+
+# Quyet THEO TUNG point_spotlight luc map doc khoi keyvalue cua no.
+#   0 = tat (chay y nhu v2.0.x) | 1 = chi ghi log quyet dinh | 2 = lam that
+#   HaloScale = 60 (hoac khong ghi) -> beam_spotlight (1 edict, ve giong het)
+#   HaloScale != 60, khong cha      -> giu point_spotlight; no va spotlight_end
+#                                      KHONG edict, chi beam co edict
+#                                      => 1 edict, DUNG quang sang
+#   HaloScale != 60, co cha         -> giu nguyen
+# Voi 2: point_spotlight doc tu map BO QUA dong point_spotlight trong swap.txt;
+# point_spotlight do plugin/script tao luc choi van di qua swap.
+# Da do tren may chu cuc bo (9 map, docs/06-do-dac.md); chua chay may chu dong nguoi.
+spotlight=0
+
+# ===== DA LOAI BO - GIU 0 =====
+
+# Doi ten lop trong entity lump. Lam mat Spawn()/Activate(): mat decal, sai anh
+# sang. Xem docs/05-huong-da-bo.md.
 nonetkill=0
-nonethigh=0

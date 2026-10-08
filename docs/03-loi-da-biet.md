@@ -138,6 +138,9 @@ vùng nhớ đã giải phóng. Đã sập thật với `mapclear=2` và với `
   cho `point_spotlight` sẽ thấy quầng to gấp 6.
 - `beam_spotlight` được mang sang màn sau (`point_spotlight` thì không). Đo trên `the_hive`
   m3 → m4: thêm 48 entity vào danh sách mang sang; trần của engine là 512.
+- Từ v2.1.0: `spotlight=2` giữ đúng quầng cho đèn có `HaloScale` ≠ 60 bằng cách giữ chúng là
+  `point_spotlight`. Xem [01-co-che.md](01-co-che.md#spotlight). Ảnh hưởng tới số entity mang
+  sang màn sau: chưa đo.
 
 ---
 
@@ -153,6 +156,18 @@ Hai `point_template` `@template_mannequin_setup_male` / `_female` của map có 
 `OnEntitySpawned !self,Kill,,1,-1` — tự xoá 1 giây sau lần sinh đầu, trong khi 154
 `env_entity_maker` cùng trỏ vào chúng. Maker nào chạy sau thì không còn template. Lỗi có sẵn
 trong map.
+
+---
+
+## 10. `mapclear` bỏ qua dòng kết thúc kiểu Windows trong `mapkeep.txt` / `mapkill.txt`
+
+Bộ đọc hai file này cắt `\n` hai lần mà không cắt `\r` (các bộ đọc danh sách khác của plugin đều
+cắt `\r`). File lưu kiểu CRLF thì mọi dòng còn `\r` ở cuối, không qua phép kiểm ký tự và **bị bỏ
+im lặng**. Có từ `v2.0.2` trở về trước, chưa sửa.
+
+Ảnh hưởng: chỉ `mapclear`. Gói phát hành để `mapclear=1` (chỉ ghi log), nên chỉ sai số đếm. Kiểm:
+dòng log `MAPCLEAR: mapkeep.txt - giu them N lop` — `N` phải bằng số dòng tên lớp trong file.
+Tránh: lưu hai file đó kiểu LF.
 
 ---
 

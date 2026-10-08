@@ -79,6 +79,33 @@ Tự in ra console ở `round_start`, `mission_lost` và khi survivor gục:
 
 ---
 
+## spotlight
+
+Đo 08–09/10/2026 trên máy chủ cục bộ (Coop, không người chơi): một lần khởi động, đổi map 9 lần
+bằng `changelevel`. Đối chứng: cùng map, `swap=2` (mọi `point_spotlight` → `beam_spotlight`) với
+`spotlight=0` hoặc `1`. `song` lấy ở dòng `NAP[frame 7]` của `loadprobe`.
+
+| map | đèn / đổi `beam_spotlight` / giữ, không edict / giữ nguyên | `spotlight_end` không edict | `song`: đối chứng → `spotlight=2` |
+|---|---|---:|---|
+| `the_hive_m4` | 312 / 0 / 312 / 0 | 312 | 1293 → 1293 |
+| `the_hive_m3` | 80 / 0 / 80 / 0 | 80 | 1368 → 1368 |
+| `the_hive_m2` | 18 / 18 / 0 / 0 | 0 | 1705 → 1705 |
+| `the_hive_m5` | 12 / 12 / 0 / 0 | 0 | 1233 → 1233 |
+| `c2m3_coaster` | 77 / 1 / 76 / 0 | 76 | 638 → 639 |
+| `c14m2_lighthouse` | 7 / 2 / 5 / 0 | 5 | 684 → 686 |
+| `c8m2_subway` | 29 / 29 / 0 / 0 | 0 | 1101 → 1097 |
+| `c1m4_atrium` | 2 / 0 / 2 / 0 | 2 | 398 → 397 |
+| `ch05_pripyat04` | 7 / 1 / 4 / 2 | 2 | 506 → 504 |
+
+- `song` bằng đối chứng, lệch tối đa 4 (`c8m2_subway` không đổi đèn nào mà cũng lệch 4 — nhiễu
+  của vật phẩm và director). Tức đèn giữ đúng lớp và quầng mà **không tốn thêm edict** so với
+  `swap`.
+- `ch05_pripyat04`: 2 trong 4 đèn ở cột "giữ, không edict" tắt sẵn, nên lúc nạp chỉ sinh 2
+  `spotlight_end`.
+- Chưa kiểm quầng sáng bằng mắt trên client; chưa chạy khi có người chơi.
+
+---
+
 ## Kết quả đã có
 
 - 7 phiên chơi dài trên máy chủ thật: cả 7 kết thúc với **ít** entity hơn lúc bắt đầu (trung
