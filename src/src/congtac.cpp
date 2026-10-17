@@ -54,6 +54,7 @@ static void LoadPatchSwitches() {
         else if (!_stricmp(p, "swap"))        g_Swap             = atoi(eq + 1);  // 0/1/2, xem InstallSwap()
         else if (!_stricmp(p, "swapmax"))     g_SwapMax          = atoi(eq + 1);  // 0 = khong gioi han
         else if (!_stricmp(p, "spotlight"))   g_Spotlight        = atoi(eq + 1);  // 0/1/2, xem src/spotlight.cpp
+        else if (!_stricmp(p, "hopbao"))      g_HopBao           = atoi(eq + 1);  // 0/1, xem src/hopbao.cpp
         else if (!_stricmp(p, "heartbeat"))   g_Heartbeat        = atoi(eq + 1);  // giay, 0 = tat
         else if (!_stricmp(p, "logconsole"))  g_LogConsole       = on;
         else if (KhoaDaTach(p) && on)

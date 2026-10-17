@@ -35,6 +35,7 @@ Không cần SourceMod. Không nâng giới hạn edict của engine.
 | `noedict` | không cấp edict cho những lớp entity không cần gửi về client | chính, đang chạy |
 | `swap` | đổi `point_spotlight` (3 edict) thành `beam_spotlight` (1 edict) lúc tạo | đang chạy |
 | `spotlight` | quyết **từng** `point_spotlight`: giữ đúng quầng sáng mà vẫn ít edict như `swap` | **mới ở v2.1.0, mặc định tắt** — đã chạy máy chủ cục bộ |
+| `hopbao` | cho entity không edict được tính lại hộp bao xung quanh — cần cho `func_nav_blocker` trong `noedict.txt` | **mới ở v2.1.1, bật trong gói** — đã chạy máy chủ cục bộ |
 | `wipeclear` | khi cả đội thua, dọn entity **sớm hơn** game (trước vòng hồi sinh) | đang chạy |
 | `freegate` | cho tái dùng ngay edict vừa giải phóng | **yếu, gần như không có tác dụng thật — để tắt** |
 | `mapclear` | quan sát entity lúc chuyển màn | chỉ ghi log |
@@ -116,6 +117,7 @@ Nên chạy vài ngày ở chế độ ít can thiệp, đọc `addons/edictbudg
 | `noedict` | `1` | dùng `noedict.txt` |
 | `swap` | `2` | `0` tắt · `1` chỉ ghi log · `2` đổi thật, theo `swap.txt` |
 | `spotlight` | `0` | `0` tắt · `1` chỉ ghi log · `2` làm thật. Với `2`, đèn đọc từ map bỏ qua `swap.txt` |
+| `hopbao` | `1` | `0` tắt · `1` vá. Đặt `0` thì phải bỏ `func_nav_blocker` khỏi `noedict.txt` |
 | `wipeclear` | `2` | `0` tắt · `1` chỉ ghi log · `2` dọn thật |
 | `freegate` | `0` | `0` tắt · `1` theo danh sách `freekeep.txt` · `2` vô điều kiện (**làm hỏng chuyển vật phẩm**) |
 | `mapclear` | `1` | `1` chỉ ghi log. **Không dùng `2`** |
@@ -149,6 +151,8 @@ một dòng cảnh báo trong log).
   `ED_Alloc` trong 105 phiên.
 - `spotlight` (v2.1.0): máy chủ cục bộ, 9 map, chế độ 1 và 2, không có người chơi — xem
   [docs/06-do-dac.md](docs/06-do-dac.md#spotlight).
+- `hopbao` (v2.1.1): máy chủ cục bộ, map `defl_3`, 4 bot — xem
+  [docs/06-do-dac.md](docs/06-do-dac.md#hopbao).
 - Phần lớn số liệu còn lại là **đọc file map** (không chạy), dùng làm ước lượng.
 
 ---
@@ -161,6 +165,7 @@ một dòng cảnh báo trong log).
 | `v2.0.1` | sửa: `noedict` có thể nhận nhầm vtable của lớp khác (gặp ở `upgrade_spawn`) |
 | `v2.0.2` | sửa: máy chủ sập lúc khởi động khi `noedict.txt` có một trong 9 lớp (vd `beam_spotlight`); `noedict.txt` không còn bị cắt im lặng sau 32 dòng |
 | `v2.1.0` | thêm `spotlight` (mặc định tắt); mã chia module (`src/sample_mm.cpp` + `src/src/*.cpp`, vẫn một đơn vị biên dịch); gỡ khỏi mã và `patches.txt` các công tắc của hướng đã bỏ (trừ `nonetkill`); có gói dựng sẵn ở Releases |
+| `v2.1.1` | sửa: `func_nav_blocker` trong `noedict.txt` của v2.1.0 không chặn nav (map `defl_3`: cửa mở ngược hoặc không mở). Thêm `hopbao`, bật trong gói |
 
 ---
 

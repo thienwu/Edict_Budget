@@ -120,6 +120,56 @@ hand-written map list — every decision comes from the keyvalue block itself.
 
 ---
 
+## hopbao
+
+*Added in v2.1.1, **on** in the package (`hopbao=1`). Run on a local server (map `defl_3`,
+measurements in [06-do-dac.en.md](06-do-dac.en.md#hopbao)); not yet run on a busy server.*
+
+Fixes a v2.1.0 bug ([03-loi-da-biet.en.md](03-loi-da-biet.en.md), item 11). An entity without an
+edict never gets its **surrounding bounds** recomputed, because
+`CCollisionProperty::MarkSurroundingBoundsDirty` only marks them dirty when the entity has an edict:
+
+```
+10093A86  mov eax,[ecx+0x28]   ; edict
+10093A89  test eax,eax
+10093A8B  je 10093AE2          ; no edict -> return, nothing marked
+```
+
+So those bounds stay a single point at the origin. `func_nav_blocker` uses exactly these bounds to
+pick nav areas (`BlockNav`, `UnblockNav`), so with it in `noedict.txt` it blocks no area at all.
+
+`hopbao` replaces the 7 bytes at `10093A86` with a jump to a stub:
+
+| entity | what the stub does |
+|---|---|
+| has an edict | continues on the original path — nothing changes |
+| no edict, has `EFL_SERVER_ONLY` | sets `EFL_DIRTY_SURROUNDING_COLLISION_BOUNDS` (`0x4000`): the next time a function asks for the bounds, they are recomputed |
+| no edict, no `EFL_SERVER_ONLY` | returns, as the original does |
+
+The rest of the original function (spatial partition, PVS) is skipped for entities without an
+edict: such an entity is never in the partition, and PVS only means something with an edict. All 12
+calls to this function (position / angle changes, `SetModel`, `SetSolid`, model scale, physics…) go
+through the patched spot.
+
+**Self-check at load** — if a step fails, nothing is patched and the reason is logged: the
+instruction `or dword [ecx+0x138],0x4000` must occur exactly once in `.text` (function start = that
+instruction − 0x1D); all 0x64 bytes of the function must match the pattern, except 2 absolute
+addresses. On unload the 7 bytes are restored, if that spot still holds the plugin's jump.
+
+Log:
+
+```
+HOPBAO: da va MarkSurroundingBoundsDirty @... (RVA 0x93A80), stub @... (48 byte) - ...
+HOPBAO: stub = 8B 41 28 85 C0 0F 85 ...
+HOPBAO: 4 lan danh dau hop bao cho thuc the server-only tu lan bao truoc (tong 4)
+```
+
+The last line is printed at every map load. If `noedict.txt` has `func_nav_blocker` but `hopbao` is
+not running, the log has the line `!! HOPBAO: noedict.txt co func_nav_blocker ma hopbao KHONG chay
+...` — then put a `#` in front of the `func_nav_blocker` line.
+
+---
+
 ## wipeclear
 
 When the whole team loses, the game clears the map **too late**: the player respawn loop runs

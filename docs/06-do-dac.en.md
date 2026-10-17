@@ -110,6 +110,34 @@ Measured 08–09/10/2026 on a local server (Coop, no players): one start, then 9
 
 ---
 
+## hopbao
+
+Measured 17/10/2026 on a local server, map `defl_3` (addon 3798061830), Coop, 4 bots added with
+`sb_add` (needed to get a `round_start`, when the map's `logic_auto` calls `BlockNav`). Counted with
+VScript: for each `func_nav_blocker`, take the nav areas overlapping it
+(`NavMesh.GetNavAreasOverlappingEntityExtent`) and count those with `IsBlocked(3, false)`.
+
+| setup | blocker has an edict? | blocked / overlapping areas, 4 blockers | door blocker after `UnblockNav` | stub count |
+|---|---|---|---|---:|
+| `func_nav_blocker` not in `noedict.txt` (stock game) | yes | 2/2 · 52/52 · 7/7 · 1/1 | 4/7 | 0 |
+| v2.1.0: `func_nav_blocker` in, no `hopbao` | no | 0/2 · 0/52 · 0/7 · 0/1 | — | — |
+| v2.1.1: `func_nav_blocker` in, `hopbao=1` | no | 2/2 · 52/52 · 7/7 · 1/1 | 4/7; `BlockNav` again → 7/7 | 4 |
+
+- `hopbao=1` gives the stock numbers. 4/7 after `UnblockNav` is stock behaviour: 4 areas lie under
+  the closed door.
+- Without `hopbao` the log has the warning `!! HOPBAO: noedict.txt co func_nav_blocker ma hopbao KHONG chay`.
+- The stub bytes printed in the log disassemble to the intended code
+  ([04-dia-chi.en.md](04-dia-chi.en.md#hopbao-serverdll)).
+- Self-check gates tried outside the game: a program loads a copy of `server.dll` (no `DllMain`,
+  loaded off its preferred base, so relocated) and runs the actual `hopbao.cpp` code. Original →
+  patched, the stub behaves as intended (`0x200` → `0x4200`; an entity without `EFL_SERVER_ONLY` is
+  left alone), unloading restores the 7 bytes. One byte changed in the function, the anchor twice,
+  the anchor missing, the spot already patched → nothing written, the reason logged. A change inside
+  the 2 absolute addresses (masked) → still patched.
+- Not yet run with players; no other map measured yet.
+
+---
+
 ## Results so far
 
 - 7 long play sessions on a live server: all 7 ended with **fewer** entities than they started

@@ -79,6 +79,32 @@ entity lump parser.
 The plugin counts every `call` to the two target functions itself at load (scanning all of
 `.text`); a count other than 2 / 3, or any `jmp`, turns the module off.
 
+## hopbao (`server.dll`)
+
+| item | address |
+|---|---|
+| `CCollisionProperty::MarkSurroundingBoundsDirty` (thiscall), 0x64 bytes long, 12 calls in 9 functions | `0x10093A80` |
+| patched spot: `mov eax,[ecx+0x28]` · `test eax,eax` · `je` = `8B 41 28 85 C0 74 55` | `0x10093A86` → `E9 <stub> 90 90` |
+| path with an edict continues at / `pop esi; ret` | `0x10093A8D` / `0x10093AE2` |
+| self-locating anchor: `or dword [ecx+0x138],0x4000` = `81 89 38 01 00 00 00 40 00 00`, unique in `.text` | `0x10093A9D` = function start + 0x1D |
+| 2 absolute addresses inside the function, skipped when matching the pattern | `gpGlobals` `0x107F7690` (+0x0F), partition list `0x107DCA70` (+0x3A) |
+| `CCollisionProperty::WorldSpaceSurroundingBounds` — recomputes only when bit 14 is set | `0x100935F0` |
+| `CFuncNavBlocker::BlockNav` / `UnblockNav` | `0x1048BCC0` / `0x1048C470` |
+| `m_iEFlags` / `EFL_SERVER_ONLY` / `EFL_DIRTY_SURROUNDING_COLLISION_BOUNDS` | `+0x138` / bit 9 (`0x200`) / bit 14 (`0x4000`) |
+
+48-byte stub (the log prints every byte at load, so it can be disassembled and checked):
+
+```
+8B 41 28                         mov  eax,[ecx+0x28]
+85 C0                            test eax,eax
+0F 85 rel32                      jnz  0x10093A8D
+F7 81 38 01 00 00 00 02 00 00    test dword [ecx+0x138],0x200
+0F 84 rel32                      jz   0x10093AE2
+FF 05 addr32                     inc  dword [g_HopBaoDem]
+81 89 38 01 00 00 00 40 00 00    or   dword [ecx+0x138],0x4000
+E9 rel32                         jmp  0x10093AE2
+```
+
 ---
 
 ## wipeclear (`server.dll`)
@@ -126,6 +152,7 @@ The start of this function contains an absolute address; matching must skip thos
 | item | how to find it |
 |---|---|
 | `PostConstructor` | the function that appears most often in slot 29 of entity vtables |
+| `MarkSurroundingBoundsDirty` (`hopbao`) | the only `or dword [ecx+0x138],0x4000` in `.text`; function start = that instruction − 0x1D. The plugin finds it itself |
 | `DT_BaseEntity` | the most common `imm32` in slot-9 bodies (`B8 imm32 C3`) |
 | preserve list | string `"ai_network"`; the array whose `[33]` is `"predicted_viewmodel"` |
 | `PrepChangelevel` | string `"Preparing player entities for changelevel"` |
@@ -161,3 +188,19 @@ Subtract the base from an address in the log and add `0x10000000` to get the sta
 compare with the tables (example above: `0x680940A4 − 0x67A90000 + 0x10000000 = 0x106040A4`, the
 vtable of `func_areaportal`). `N` smaller than `M` is normal when classes share a vtable (e.g.
 `light` / `light_spot`).
+
+`hopbao` finds its function itself (unique anchor + all 0x64 bytes matched) and prints the RVA and
+the real bytes for checking:
+
+```
+HOPBAO: da va MarkSurroundingBoundsDirty @6D1B3A80 (RVA 0x93A80), stub @1A660000 (48 byte) - ...
+HOPBAO: stub = 8B 41 28 85 C0 0F 85 82 3A B5 52 F7 81 38 01 00 00 00 02 00 00 0F 84 C7 3A B5 52 FF 05 88 9E FF 6C 81 89 38 01 00 00 00 40 00 00 E9 B2 3A B5 52
+HOPBAO: dau+6 = E9 75 C5 4A AD 90 90 (goc 8B 41 28 85 C0 74 55)
+```
+
+`0x93A80` + `0x10000000` = `0x10093A80`, matching the hopbao table. Disassembling the `stub` line
+must give exactly the 8 instructions listed there; with the addresses in the log, the three rel32
+point to function start + `0x0D` (`0x6D1B3A8D`), + `0x62` (`0x6D1B3AE2`) twice, and the `E9` in
+the `dau+6` line points to the stub (`0x1A660000`). If these three lines are missing and a
+`HOPBAO: ... BO QUA` line is there instead, the plugin did not patch (`server.dll` differs from the
+pattern) — see **Re-deriving after an update**.

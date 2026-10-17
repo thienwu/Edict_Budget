@@ -98,6 +98,18 @@ logconsole=0
 # Da do tren may chu cuc bo (9 map, docs/06-do-dac.md); chua chay may chu dong nguoi.
 spotlight=0
 
+# ===== MOI O v2.1.1 - BAT (sua loi func_nav_blocker cua v2.1.0) =====
+
+# Cho thuc the KHONG edict duoc tinh lai hop bao xung quanh.
+#   0 = tat | 1 = va 7 byte trong MarkSurroundingBoundsDirty cua server.dll (tu dinh vi,
+#   so du 0x64 byte, lech mau thi tu bo qua va ghi log)
+# CAN cho func_nav_blocker trong noedict.txt: thieu hopbao thi nav blocker KHONG chan vung
+# nav nao (v2.1.0, map defl_3: cua dao chieu / khong mo). Thuc the CO edict khong doi gi.
+# NGOAI LE cua quy uoc o dau file: moi do tren may chu cuc bo (defl_3, docs/06-do-dac.md),
+# chua chay may chu dong nguoi - bat vi v2.1.0 da bat func_nav_blocker.
+# Dat 0 thi PHAI them # truoc dong func_nav_blocker trong noedict.txt.
+hopbao=1
+
 # ===== DA LOAI BO - GIU 0 =====
 
 # Doi ten lop trong entity lump. Lam mat Spawn()/Activate(): mat decal, sai anh

@@ -2,7 +2,7 @@
 
 | nội dung | Tiếng Việt | English |
 |---|---|---|
-| các cơ chế / mechanisms: `noedict`, `swap`, `spotlight`, `wipeclear` + `wipekeep.txt`, `freegate`, `mapclear` | [01-co-che.md](01-co-che.md) | [01-co-che.en.md](01-co-che.en.md) |
+| các cơ chế / mechanisms: `noedict`, `swap`, `spotlight`, `hopbao`, `wipeclear` + `wipekeep.txt`, `freegate`, `mapclear` | [01-co-che.md](01-co-che.md) | [01-co-che.en.md](01-co-che.en.md) |
 | `noedict` chi tiết / in detail: điều kiện, cách thêm và kiểm một lớp, plugin SourceMod | [02-noedict.md](02-noedict.md) | [02-noedict.en.md](02-noedict.en.md) |
 | lỗi đã biết / known issues | [03-loi-da-biet.md](03-loi-da-biet.md) | [03-loi-da-biet.en.md](03-loi-da-biet.en.md) |
 | địa chỉ / addresses — `server.dll`, `engine.dll` | [04-dia-chi.md](04-dia-chi.md) | [04-dia-chi.en.md](04-dia-chi.en.md) |

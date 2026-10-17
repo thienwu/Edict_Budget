@@ -306,6 +306,13 @@ info_zombie_spawn
 #         ch02_pripyat01 1, ch01_jupiter 1, anemoia_reality 1, anemoia_party 1,
 #         tropic_03 1, tropic_02 1
 #   Cach kiem: nap mot ban do ben tren, so `song`/num_edicts luc round_start khi BAT va khi TAT.
+#   !! v2.1.1 (17/10/2026): LOI THAT o v2.1.0, sau ca 6 dieu kien. Thuc the KHONG edict khong
+#      bao gio duoc tinh lai hop bao xung quanh (MarkSurroundingBoundsDirty 0x10093A80 bo qua
+#      [+0x28]==0) => BlockNav 0x1048BCC0 / UnblockNav 0x1048C470 thay hop rong => KHONG chan
+#      vung nav nao. Map defl_3 (addon 3798061830): infected ket vao cua hub_gate_door, cua dao
+#      chieu / khong mo. Do bang VScript, 4 bot: plugin tat 7/7 vung bi chan | v2.1.0 0/7 |
+#      hopbao=1 7/7. => lop nay CHI dung duoc khi patches.txt co hopbao=1 (thieu thi plugin
+#      ghi canh bao vao edictbudget.log). Dat hopbao=0 thi PHAI them # vao dong duoi.
 func_nav_blocker
 #
 # ===========================================================================

@@ -59,7 +59,9 @@ But:
 - clients never receive it;
 - `ent_text`, `ent_dump`… don't see it;
 - any function that only considers entities with an edict (`[entity+0x28] != 0`) skips it —
-  see condition 7.
+  see condition 7;
+- its surrounding bounds are never recomputed, unless `hopbao=1` — see condition 9;
+- parented to something (`parentname`), it does not follow the parent — see condition 10.
 
 ---
 
@@ -101,7 +103,7 @@ Before patching a class, the plugin checks:
 
 If a check fails, that class is skipped and the reason logged; the server keeps running.
 
-**Only condition 1 is checked by the plugin.** Conditions 2–8 below are the responsibility of
+**Only condition 1 is checked by the plugin.** Conditions 2–10 below are the responsibility of
 whoever adds the class.
 
 Test on 02/10/2026: all 465 classes that are not already server-only were put in `noedict.txt`.
@@ -136,6 +138,8 @@ class without any warning. (Both are already server-only, so nobody needs to add
 | 6 | not sent to clients — no model, or `EF_NODRAW` and no child entities | `info_target`, `point_viewcontrol`, `func_illusionary` |
 | 7 | not looked up by a function that only considers entities with an edict | `info_ambient_mob_start` (`FindEntityByClassnameNearest` `0x100B5370`) |
 | 8 | no plugin creates that class at runtime — or the plugin handles negative numbers, see below | `logic_script`, `env_shake` with some plugins |
+| 9 | does not use the surrounding bounds (`WorldSpaceSurroundingBounds` `0x100935F0`) — or turn on `hopbao=1` | `func_nav_blocker` (`BlockNav` `0x1048BCC0`) |
+| 10 | not parented (`parentname`) to a moving entity — `SetParent` skips `LinkChild` when the child has no edict (`0x10065A6C`) | `env_shake` parented to a `func_elevator` ([03-loi-da-biet.en.md](03-loi-da-biet.en.md), item 12) |
 
 If you are not sure about a condition, don't add the class.
 

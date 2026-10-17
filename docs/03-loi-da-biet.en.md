@@ -174,6 +174,45 @@ lines in the file. Workaround: save those two files with LF line endings.
 
 ---
 
+## 11. `func_nav_blocker` does not block nav in v2.1.0
+
+The v2.1.0 `noedict.txt` contains `func_nav_blocker`. An entity without an edict never gets its
+surrounding bounds recomputed, so `BlockNav` / `UnblockNav` select no nav area: where a map places a
+blocker to keep infected and bots out of a spot, they still walk into it. Seen on `defl_3` (addon
+3798061830): infected get stuck in the closing `hub_gate_door`, the blocked door reverses or never
+opens, and the console prints `Interpenetrating entities! (infected and func_door)`.
+
+Fixed in v2.1.1 with `hopbao=1` ([01-co-che.en.md](01-co-che.en.md#hopbao)). Still on v2.1.0 and
+unable to upgrade: put a `#` in front of the `func_nav_blocker` line in `noedict.txt` and restart.
+To check v2.1.1: at load the log has the line `HOPBAO: da va MarkSurroundingBoundsDirty ...` and no
+line `!! HOPBAO: noedict.txt co func_nav_blocker ma hopbao KHONG chay`.
+
+---
+
+## 12. A parented entity without an edict does not follow its parent
+
+`SetParent` (`0x10065860`) only links the entity to its parent (`LinkChild`) when it has an edict:
+`0x10065A6C cmp [esi+0x28],0 ; je`. An entity of a class in `noedict.txt` that a map parents
+(`parentname`) to something **moving** stays where it was when the parent moves. From reading 240
+map sources with the package's `noedict.txt` (not yet run map by map):
+
+| child ← parent | count | maps | expected effect |
+|---|---:|---|---|
+| `env_entity_maker` ← `prop_car_alarm` | 190 | `c11m1`–`c11m3` | if the car is pushed away, what the maker spawns still appears at the old spot |
+| `env_shake` ← `func_elevator` / `func_tracktrain` | 24 | `c1m4`, `c4m2`, `c4m3`, `c8m1`… | the shake centre stays put; none of them is global |
+| `info_teleport_destination` ← `func_tracktrain` | 3 | `ToyZ_4` | teleports to where the train started |
+| `env_explosion` ← train / prop | 3 | `ToyZ_4`, `anemoia` | explodes at the old spot |
+| `info_zombie_spawn` ← `func_tracktrain` | 1 | `the_hive_m4` | the hunter spawns at the old spot |
+| `env_entity_maker` ← `prop_dynamic` | 4 | Back To School ch6 | spawns at the old spot |
+
+`info_teleport_destination` has no line of its own: it shares a vtable with `info_landmark`. The
+other way round (child with an edict, parent without): 1 case, `weapon_ammo_spawn` →
+`upgrade_spawn` in a `the_hive_m2` template. None of these has been reported yet. If one is: decide
+per entity while the map parses its keyvalue block (as `spotlight` does) — give an edict to anything
+with a `parentname`.
+
+---
+
 ## Fixed
 
 | tag | bug |
@@ -181,3 +220,4 @@ lines in the file. Workaround: save those two files with LF line endings.
 | `v2.0.1` | the vtable lookup read past the end of a function and picked up another class's vtable (seen with `upgrade_spawn` → vtable of `weapon_melee_spawn`) |
 | `v2.0.2` | the server crashed at startup when `noedict.txt` contained `beam_spotlight`, `func_breakable`, `logic_choreographed_scene`, `logic_scene_list_manager`, `scene_manager`, `scripted_scene`, `sky_camera`, `weapon_basecsgrenade` or `weapon_hunter_claw` (derived pointers were not bounds-checked) |
 | `v2.0.2` | only the first 32 lines of `noedict.txt` were read, the rest silently dropped |
+| `v2.1.1` | `func_nav_blocker` in `noedict.txt` did not block nav (item 11) — added `hopbao` |

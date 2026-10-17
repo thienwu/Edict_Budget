@@ -112,6 +112,54 @@ chưa bị sửa (tức hai lớp này không nằm trong `noedict.txt`); có fa
 
 ---
 
+## hopbao
+
+*Thêm ở v2.1.1, **bật** trong gói (`hopbao=1`). Đã chạy trên máy chủ cục bộ (map `defl_3`, số đo ở
+[06-do-dac.md](06-do-dac.md#hopbao)); chưa chạy trên máy chủ đông người.*
+
+Sửa một lỗi của v2.1.0 ([03-loi-da-biet.md](03-loi-da-biet.md), mục 11). Entity không có edict không
+bao giờ được tính lại **hộp bao xung quanh** (surrounding bounds), vì
+`CCollisionProperty::MarkSurroundingBoundsDirty` chỉ đánh dấu "cần tính lại" khi entity có edict:
+
+```
+10093A86  mov eax,[ecx+0x28]   ; edict
+10093A89  test eax,eax
+10093A8B  je 10093AE2          ; không edict -> về, không đánh dấu gì
+```
+
+Hộp đó vì vậy mãi là một điểm ở gốc toạ độ. `func_nav_blocker` dùng đúng hộp này để chọn vùng nav
+(`BlockNav`, `UnblockNav`), nên khi nằm trong `noedict.txt` nó không chặn vùng nào.
+
+`hopbao` thay 7 byte ở `10093A86` bằng lệnh nhảy tới một stub:
+
+| entity | stub làm gì |
+|---|---|
+| có edict | chạy tiếp đường gốc — không đổi gì |
+| không edict, có `EFL_SERVER_ONLY` | bật cờ `EFL_DIRTY_SURROUNDING_COLLISION_BOUNDS` (`0x4000`): lần sau có hàm hỏi hộp bao thì hộp được tính lại |
+| không edict, không có `EFL_SERVER_ONLY` | về như bản gốc |
+
+Phần còn lại của hàm gốc (spatial partition, PVS) bỏ qua với entity không edict: entity đó vốn không
+vào partition, còn PVS chỉ có nghĩa khi có edict. Cả 12 lời gọi tới hàm này (đổi vị trí / góc,
+`SetModel`, `SetSolid`, đổi tỉ lệ model, vật lý…) đều đi qua chỗ vá.
+
+**Tự kiểm lúc nạp** — trượt thì không vá và ghi lý do vào log: lệnh `or dword [ecx+0x138],0x4000`
+phải có đúng 1 lần trong `.text` (đầu hàm = lệnh đó − 0x1D); đủ 0x64 byte của hàm phải khớp mẫu, trừ
+2 địa chỉ tuyệt đối. Gỡ plugin thì trả lại 7 byte, nếu chỗ đó vẫn là lệnh nhảy của plugin.
+
+Log:
+
+```
+HOPBAO: da va MarkSurroundingBoundsDirty @... (RVA 0x93A80), stub @... (48 byte) - ...
+HOPBAO: stub = 8B 41 28 85 C0 0F 85 ...
+HOPBAO: 4 lan danh dau hop bao cho thuc the server-only tu lan bao truoc (tong 4)
+```
+
+Dòng cuối in mỗi lần nạp map. `noedict.txt` có `func_nav_blocker` mà `hopbao` không chạy thì log có
+dòng `!! HOPBAO: noedict.txt co func_nav_blocker ma hopbao KHONG chay ...` — khi đó thêm `#` trước
+dòng `func_nav_blocker`.
+
+---
+
 ## wipeclear
 
 Khi cả đội thua, game dọn map **muộn**: vòng hồi sinh người chơi chạy trước và ăn hết edict

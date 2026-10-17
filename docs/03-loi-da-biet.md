@@ -171,6 +171,44 @@ Tránh: lưu hai file đó kiểu LF.
 
 ---
 
+## 11. `func_nav_blocker` không chặn nav ở v2.1.0
+
+`noedict.txt` của v2.1.0 có `func_nav_blocker`. Entity không edict không bao giờ được tính lại hộp
+bao xung quanh, nên `BlockNav` / `UnblockNav` không chọn được vùng nav nào: map đặt blocker để
+zombie và bot tránh một chỗ thì chúng vẫn đi vào chỗ đó. Đã gặp ở `defl_3` (addon 3798061830):
+zombie kẹt vào cửa `hub_gate_door` đang hạ, cửa bị chặn nên đảo chiều hoặc không mở; console in
+`Interpenetrating entities! (infected and func_door)`.
+
+Sửa ở v2.1.1 bằng `hopbao=1` ([01-co-che.md](01-co-che.md#hopbao)). Đang chạy v2.1.0 mà chưa nâng
+được: thêm `#` trước dòng `func_nav_blocker` trong `noedict.txt` rồi khởi động lại. Kiểm v2.1.1: lúc
+nạp log có dòng `HOPBAO: da va MarkSurroundingBoundsDirty ...` và không có dòng
+`!! HOPBAO: noedict.txt co func_nav_blocker ma hopbao KHONG chay`.
+
+---
+
+## 12. Entity không edict gắn làm con không đi theo cha
+
+`SetParent` (`0x10065860`) chỉ nối entity vào cha (`LinkChild`) khi nó có edict:
+`0x10065A6C cmp [esi+0x28],0 ; je`. Entity của lớp trong `noedict.txt` mà map gắn `parentname` vào một
+vật **di chuyển** sẽ đứng ở chỗ cũ khi cha chạy. Đọc file 240 nguồn bản đồ với `noedict.txt` của gói
+(chưa chạy thử từng map):
+
+| con ← cha | số | map | hệ quả dự đoán |
+|---|---:|---|---|
+| `env_entity_maker` ← `prop_car_alarm` | 190 | `c11m1`–`c11m3` | xe bị đẩy đi thì thứ do maker sinh vẫn ra ở chỗ cũ |
+| `env_shake` ← `func_elevator` / `func_tracktrain` | 24 | `c1m4`, `c4m2`, `c4m3`, `c8m1`… | tâm rung đứng yên; không cái nào là global |
+| `info_teleport_destination` ← `func_tracktrain` | 3 | `ToyZ_4` | dịch chuyển về chỗ tàu xuất phát |
+| `env_explosion` ← tàu / prop | 3 | `ToyZ_4`, `anemoia` | nổ ở chỗ cũ |
+| `info_zombie_spawn` ← `func_tracktrain` | 1 | `the_hive_m4` | hunter sinh ở chỗ cũ |
+| `env_entity_maker` ← `prop_dynamic` | 4 | Back To School ch6 | sinh ở chỗ cũ |
+
+`info_teleport_destination` không có dòng riêng: nó chung vtable với `info_landmark`. Chiều ngược lại
+(con có edict, cha không): 1 cái, `weapon_ammo_spawn` → `upgrade_spawn` trong template của
+`the_hive_m2`. Chưa có báo lỗi nào trong số này. Sẽ sửa khi có báo: quyết theo từng entity lúc map
+đọc khối keyvalue (như `spotlight`) — có `parentname` thì vẫn cấp edict.
+
+---
+
 ## Đã sửa
 
 | tag | lỗi |
@@ -178,3 +216,4 @@ Tránh: lưu hai file đó kiểu LF.
 | `v2.0.1` | tìm vtable đọc lấn sang hàm kế tiếp, nhận nhầm vtable của lớp khác (gặp ở `upgrade_spawn` → vtable của `weapon_melee_spawn`) |
 | `v2.0.2` | máy chủ sập lúc khởi động khi `noedict.txt` có `beam_spotlight`, `func_breakable`, `logic_choreographed_scene`, `logic_scene_list_manager`, `scene_manager`, `scripted_scene`, `sky_camera`, `weapon_basecsgrenade` hoặc `weapon_hunter_claw` (con trỏ suy ra không được chặn biên) |
 | `v2.0.2` | `noedict.txt` chỉ được đọc 32 dòng đầu, phần sau bị bỏ không báo |
+| `v2.1.1` | `func_nav_blocker` trong `noedict.txt` không chặn nav (mục 11) — thêm `hopbao` |

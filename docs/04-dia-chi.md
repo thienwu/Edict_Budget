@@ -78,6 +78,32 @@ Cả `.text` chỉ có 3 chỗ gọi slot 1: `CreateEntityByName` và 2 nhánh c
 Plugin tự đếm mọi lệnh `call` tới hai hàm đích lúc nạp (quét toàn `.text`); số khác 2 / 3, hoặc có
 `jmp`, thì module tự tắt.
 
+## hopbao (`server.dll`)
+
+| thứ | địa chỉ |
+|---|---|
+| `CCollisionProperty::MarkSurroundingBoundsDirty` (thiscall), dài 0x64 byte, 12 lời gọi trong 9 hàm | `0x10093A80` |
+| chỗ vá: `mov eax,[ecx+0x28]` · `test eax,eax` · `je` = `8B 41 28 85 C0 74 55` | `0x10093A86` → `E9 <stub> 90 90` |
+| đường có edict tiếp ở / `pop esi; ret` | `0x10093A8D` / `0x10093AE2` |
+| neo tự định vị: `or dword [ecx+0x138],0x4000` = `81 89 38 01 00 00 00 40 00 00`, duy nhất trong `.text` | `0x10093A9D` = đầu hàm + 0x1D |
+| 2 địa chỉ tuyệt đối trong hàm, bỏ qua khi so mẫu | `gpGlobals` `0x107F7690` (+0x0F), danh sách partition `0x107DCA70` (+0x3A) |
+| `CCollisionProperty::WorldSpaceSurroundingBounds` — chỉ tính lại khi bit 14 bật | `0x100935F0` |
+| `CFuncNavBlocker::BlockNav` / `UnblockNav` | `0x1048BCC0` / `0x1048C470` |
+| `m_iEFlags` / `EFL_SERVER_ONLY` / `EFL_DIRTY_SURROUNDING_COLLISION_BOUNDS` | `+0x138` / bit 9 (`0x200`) / bit 14 (`0x4000`) |
+
+Stub 48 byte (log in đủ byte lúc nạp, để dịch ngược kiểm):
+
+```
+8B 41 28                         mov  eax,[ecx+0x28]
+85 C0                            test eax,eax
+0F 85 rel32                      jnz  0x10093A8D
+F7 81 38 01 00 00 00 02 00 00    test dword [ecx+0x138],0x200
+0F 84 rel32                      jz   0x10093AE2
+FF 05 addr32                     inc  dword [g_HopBaoDem]
+81 89 38 01 00 00 00 40 00 00    or   dword [ecx+0x138],0x4000
+E9 rel32                         jmp  0x10093AE2
+```
+
 ---
 
 ## wipeclear (`server.dll`)
@@ -125,6 +151,7 @@ Phần đầu hàm này có một địa chỉ tuyệt đối; so khớp phải 
 | thứ | cách tìm |
 |---|---|
 | `PostConstructor` | hàm xuất hiện nhiều nhất ở slot 29 của các vtable entity |
+| `MarkSurroundingBoundsDirty` (`hopbao`) | lệnh `or dword [ecx+0x138],0x4000` duy nhất trong `.text`; đầu hàm = lệnh đó − 0x1D. Plugin tự tìm |
 | `DT_BaseEntity` | giá trị `imm32` xuất hiện nhiều nhất trong thân slot 9 (`B8 imm32 C3`) |
 | preserve list | chuỗi `"ai_network"`; mảng nào có `[33]` = `"predicted_viewmodel"` |
 | `PrepChangelevel` | chuỗi `"Preparing player entities for changelevel"` |
@@ -156,3 +183,17 @@ NOEDICT: da sua N vtable / M lop yeu cau
 Lấy địa chỉ trong log trừ base rồi cộng `0x10000000` là ra địa chỉ tĩnh để so với bảng
 (ví dụ trên: `0x680940A4 − 0x67A90000 + 0x10000000 = 0x106040A4`, vtable của `func_areaportal`).
 `N` nhỏ hơn `M` là bình thường khi có lớp dùng chung vtable (vd `light` / `light_spot`).
+
+`hopbao` tự tìm hàm (neo duy nhất + so đủ 0x64 byte) rồi in sẵn RVA và byte thật để đối chiếu:
+
+```
+HOPBAO: da va MarkSurroundingBoundsDirty @6D1B3A80 (RVA 0x93A80), stub @1A660000 (48 byte) - ...
+HOPBAO: stub = 8B 41 28 85 C0 0F 85 82 3A B5 52 F7 81 38 01 00 00 00 02 00 00 0F 84 C7 3A B5 52 FF 05 88 9E FF 6C 81 89 38 01 00 00 00 40 00 00 E9 B2 3A B5 52
+HOPBAO: dau+6 = E9 75 C5 4A AD 90 90 (goc 8B 41 28 85 C0 74 55)
+```
+
+`0x93A80` + `0x10000000` = `0x10093A80`, khớp bảng ở mục hopbao. Dịch ngược dòng `stub` phải ra
+đúng 8 lệnh ở mục đó; tính theo địa chỉ trong log, ba rel32 trỏ về đầu hàm + `0x0D`
+(`0x6D1B3A8D`), + `0x62` (`0x6D1B3AE2`) hai lần, và `E9` ở dòng `dau+6` trỏ tới stub (`0x1A660000`).
+Không có ba dòng này mà có dòng `HOPBAO: ... BO QUA` thì plugin đã không vá (bản `server.dll` khác
+mẫu) — xem mục **Suy lại sau khi cập nhật**.

@@ -20,8 +20,8 @@
 //  (file nay #include src/*.cpp) nen build.bat khong doi.
 //
 //    noedict.cpp  freegate.cpp  wipeclear.cpp  mapclear.cpp  swap.cpp
-//    spotlight.cpp (v2.1.0)  baycapphat.cpp (trap)  doluong.cpp (heartbeat,
-//    loadprobe)  nonetkill.cpp (DA LOAI BO, giu de doc)
+//    spotlight.cpp (v2.1.0)  hopbao.cpp (v2.1.1)  baycapphat.cpp (trap)
+//    doluong.cpp (heartbeat, loadprobe)  nonetkill.cpp (DA LOAI BO, giu de doc)
 //
 //  ------------------------------------------------------------------------
 //  BAN DO MOC - module nao moc vao dau. Hai cho co HAI module cung moc (dau *)
@@ -44,6 +44,10 @@
 //      CPointSpotlight::SpotlightCreate (3 lenh call) spotlight
 //      CTerrorGameRules vtable slot 178 RestartRound  wipeclear
 //      CTerrorGameRules vtable slot 38 (chuyen man)   mapclear
+//      CCollisionProperty::MarkSurroundingBoundsDirty hopbao - VA 7 BYTE GIUA HAM
+//        (jmp toi stub). Ham CHUNG cua moi thuc the: thuc the co edict di duong
+//        goc; server-only duoc danh dau hop bao can tinh lai. Can cho noedict co
+//        func_nav_blocker (hop bao chet => khong chan nav). docs/01-co-che.md
 //    engine.dll
 //      IVEngineServer::RemoveEdict (slot 23)          freegate=1
 //      ED_Alloc: 1 byte jae -> jmp                    freegate=2
@@ -64,7 +68,11 @@
 //    bang dem theo classname    freegate, mapclear, doluong (heartbeat), baycapphat
 //    dem slot trong             CountFreeEdicts (congcu_entity) + ban chep o baycapphat
 //    duyet entity (NextEnt)     wipeclear, mapclear, doluong
-//    lay base server.dll        noedict, wipeclear, mapclear, swap, spotlight
+//    lay base server.dll        noedict, wipeclear, mapclear, swap, spotlight,
+//                               hopbao
+//    duyet section .text        spotlight (QuetCall), hopbao (tim neo)
+//    stub VirtualAlloc + jmp    baycapphat (trap, engine.dll), hopbao - cung
+//      vao giua ham             cach ghi rel32 = dich - (cho + 4)
 //    dictionary (base+0x20CA70) noedict (ResolveClassVtable), swap, spotlight
 //    g_pGameRules (base+0x7F7F6C) wipeclear, mapclear
 //    ghi vtable                 WriteProtected (tienich); wipeclear, mapclear
@@ -108,6 +116,21 @@
 //                            module nao khac; de 0 la chay y nhu truoc.
 //                            Chi tiet: docs/01-co-che.md muc spotlight;
 //                            dia chi: docs/04-dia-chi.md; so do: docs/06-do-dac.md
+//  ------------------------------------------------------------------------
+//  BAN SUA LOI v2.1.1 (17/10/2026). Da do tren may chu CUC BO (defl_3,
+//  docs/06-do-dac.md), CHUA chay may chu dong nguoi:
+//
+//    src/hopbao.cpp          patches.txt: hopbao=0/1  (MAC DINH 0 trong ma;
+//                            configs/patches.txt phat hanh ghi 1)
+//                            v2.1.0 dua func_nav_blocker vao noedict.txt nhung
+//                            thuc the KHONG edict khong bao gio duoc tinh lai hop
+//                            bao xung quanh => nav blocker khong chan vung nav nao
+//                            (defl_3: cua dao chieu / khong mo). hopbao va 7 byte
+//                            trong MarkSurroundingBoundsDirty de thuc the
+//                            server-only cung duoc danh dau tinh lai. Thuc the co
+//                            edict di dung duong goc. Khong sua module nao khac.
+//                            Chi tiet: docs/01-co-che.md muc hopbao; dia chi:
+//                            docs/04-dia-chi.md; so do: docs/06-do-dac.md
 // ===========================================================================
 
 #include "sample_mm.h"
@@ -159,6 +182,7 @@ PLUGIN_EXPOSE(SamplePlugin, g_SamplePlugin);
 #include "src/noedict.cpp"
 #include "src/swap.cpp"
 #include "src/spotlight.cpp"     // dung ResolveClassVtable cua noedict.cpp; TU moc dictionary rieng
+#include "src/hopbao.cpp"        // doc danh sach cua noedict.cpp (canh bao func_nav_blocker)
 #include "src/doluong.cpp"
 #include "src/congtac.cpp"        // doc patches.txt - SAU moi module
 
@@ -188,13 +212,14 @@ bool SamplePlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, 
     LoadPatchSwitches();
     // Dong trang thai - PHAI o day, ngoai moi nhanh dieu kien.
     EL_LOG("[EdictBudget] noedict=%d mapclear=%d mapclearmax=%d mapclearcarry=%d "
-             "heartbeat=%d loadprobe=%d swap=%d swapmax=%d spotlight=%d logconsole=%d",
+             "heartbeat=%d loadprobe=%d swap=%d swapmax=%d spotlight=%d hopbao=%d logconsole=%d",
              g_NoEdict ? 1 : 0, g_MapClear, g_MapClearMax, g_MapClearCarryOnly,
-             g_Heartbeat, g_LoadProbe, g_Swap, g_SwapMax, g_Spotlight, g_LogConsole ? 1 : 0);
+             g_Heartbeat, g_LoadProbe, g_Swap, g_SwapMax, g_Spotlight, g_HopBao, g_LogConsole ? 1 : 0);
 
     FreeGate_OnLoad();
     BayCapPhat_OnLoad();
     NoEdict_OnLoad();
+    HopBao_OnLoad();                // SAU NoEdict_OnLoad: doc danh sach noedict.txt de canh bao
     Swap_OnLoad();
     Spotlight_OnLoad();             // SAU Swap_OnLoad: moc dictionary noi chuoi ben ngoai moc cua swap
     return true;
@@ -211,6 +236,7 @@ bool SamplePlugin::Unload(char *error, size_t maxlen)
     // EL_LOG mo lai edictbudget.log va khong ai dong nua.
     EL_LOG_CLOSE();
     NoEdict_OnUnload();
+    HopBao_OnUnload();              // khong ghi log (log da dong o tren)
     Spotlight_OnUnload();           // TRUOC Swap_OnUnload
     Swap_OnUnload();
     return true;
@@ -246,6 +272,7 @@ void SamplePlugin::Hook_ServerActivate(edict_t *pEdictList, int edictCount, int 
     if (g_Stage != 0) {
         DoLuong_OnServerActivate();
         NoEdict_OnServerActivate();
+        HopBao_OnServerActivate();
         Swap_OnServerActivate();
         Spotlight_OnServerActivate();
         WipeClear_OnServerActivate();
@@ -259,7 +286,7 @@ void SamplePlugin::AllPluginsLoaded() {}
 bool SamplePlugin::Pause(char *error, size_t maxlen) { return true; }
 bool SamplePlugin::Unpause(char *error, size_t maxlen) { return true; }
 const char *SamplePlugin::GetLicense() { return "GPLv3"; }
-const char *SamplePlugin::GetVersion() { return "2.1.0"; }
+const char *SamplePlugin::GetVersion() { return "2.1.1"; }
 const char *SamplePlugin::GetDate() { return __DATE__; }
 const char *SamplePlugin::GetLogTag() { return "EDICTBUDGET"; }
 // Toan bo ma nguon nay do Claude (Anthropic) viet. Xem khoi TAC GIA o dau file.

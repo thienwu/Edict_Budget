@@ -55,7 +55,9 @@ Entity không có edict vẫn:
 Nhưng:
 - client không nhận được nó;
 - lệnh `ent_text`, `ent_dump`… không thấy nó;
-- hàm nào chỉ xét entity có edict (`[entity+0x28] != 0`) sẽ bỏ qua nó — xem điều kiện 7.
+- hàm nào chỉ xét entity có edict (`[entity+0x28] != 0`) sẽ bỏ qua nó — xem điều kiện 7;
+- hộp bao xung quanh của nó không được tính lại, trừ khi `hopbao=1` — xem điều kiện 9;
+- gắn làm con (`parentname`) thì không đi theo cha — xem điều kiện 10.
 
 ---
 
@@ -97,7 +99,7 @@ Trước khi vá một lớp, plugin kiểm:
 
 Không qua thì bỏ qua lớp đó và ghi log lý do; máy chủ chạy tiếp.
 
-**Chỉ điều kiện 1 được máy kiểm.** Điều kiện 2–8 bên dưới là trách nhiệm của người thêm lớp.
+**Chỉ điều kiện 1 được máy kiểm.** Điều kiện 2–10 bên dưới là trách nhiệm của người thêm lớp.
 
 Thử ngày 02/10/2026: đưa cả 465 lớp chưa server-only vào `noedict.txt`. Plugin làm đúng như dự
 đoán (172 lớp bị cắt, 293 bị chặn). Nhưng trong 172 lớp bị cắt có **52 lớp trượt các điều kiện
@@ -131,6 +133,8 @@ báo gì. (Hiện hai lớp này đã server-only sẵn nên không ai cần th�
 | 6 | không được gửi về client — không model, hoặc có `EF_NODRAW` và không có entity con | `info_target`, `point_viewcontrol`, `func_illusionary` |
 | 7 | không bị tìm bằng hàm chỉ xét entity có edict | `info_ambient_mob_start` (`FindEntityByClassnameNearest` `0x100B5370`) |
 | 8 | không có plugin tạo lớp đó lúc chạy — hoặc plugin đã xử lý số âm, xem dưới | `logic_script`, `env_shake` với một số plugin |
+| 9 | không dùng hộp bao xung quanh (`WorldSpaceSurroundingBounds` `0x100935F0`) — hoặc bật `hopbao=1` | `func_nav_blocker` (`BlockNav` `0x1048BCC0`) |
+| 10 | không được gắn làm con (`parentname`) của entity di chuyển — `SetParent` bỏ qua `LinkChild` khi con không có edict (`0x10065A6C`) | `env_shake` gắn vào `func_elevator` ([03-loi-da-biet.md](03-loi-da-biet.md), mục 12) |
 
 Không chắc một điều kiện thì không thêm.
 

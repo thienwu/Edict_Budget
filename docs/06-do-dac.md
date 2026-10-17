@@ -106,6 +106,32 @@ bằng `changelevel`. Đối chứng: cùng map, `swap=2` (mọi `point_spotligh
 
 ---
 
+## hopbao
+
+Đo 17/10/2026 trên máy chủ cục bộ, map `defl_3` (addon 3798061830), Coop, 4 bot thêm bằng `sb_add`
+(cần để có `round_start`, lúc `logic_auto` của map gọi `BlockNav`). Đếm bằng VScript: với mỗi
+`func_nav_blocker`, lấy các vùng nav chồng lên nó (`NavMesh.GetNavAreasOverlappingEntityExtent`) rồi
+đếm vùng có `IsBlocked(3, false)`.
+
+| cấu hình | blocker có edict? | vùng bị chặn / vùng chồng lên, 4 blocker | blocker sát cửa sau `UnblockNav` | stub đếm |
+|---|---|---|---|---:|
+| `func_nav_blocker` không trong `noedict.txt` (như game gốc) | có | 2/2 · 52/52 · 7/7 · 1/1 | 4/7 | 0 |
+| v2.1.0: có `func_nav_blocker`, không có `hopbao` | không | 0/2 · 0/52 · 0/7 · 0/1 | — | — |
+| v2.1.1: có `func_nav_blocker`, `hopbao=1` | không | 2/2 · 52/52 · 7/7 · 1/1 | 4/7; `BlockNav` lại → 7/7 | 4 |
+
+- `hopbao=1` cho đúng số của game gốc. 4/7 sau `UnblockNav` là hành vi gốc: 4 vùng nằm dưới cánh cửa
+  đang đóng.
+- Không có `hopbao` thì log có dòng cảnh báo `!! HOPBAO: noedict.txt co func_nav_blocker ma hopbao KHONG chay`.
+- Byte stub đọc từ log dịch ngược khớp thiết kế ([04-dia-chi.md](04-dia-chi.md#hopbao-serverdll)).
+- Cổng tự kiểm thử ngoài game: một chương trình nạp bản sao `server.dll` (không chạy `DllMain`, nạp
+  lệch base nên có relocation) rồi chạy đúng mã `hopbao.cpp`. Bản gốc → vá, stub chạy đúng
+  (`0x200` → `0x4200`; entity không `EFL_SERVER_ONLY` giữ nguyên), gỡ trả đúng 7 byte. Lệch 1 byte
+  trong hàm, neo có 2 lần, mất neo, chỗ vá đã bị sửa trước → không ghi byte nào, log ghi lý do.
+  Lệch trong 2 địa chỉ tuyệt đối (có mặt nạ) → vẫn vá.
+- Chưa chạy khi có người chơi; chưa đo map khác.
+
+---
+
 ## Kết quả đã có
 
 - 7 phiên chơi dài trên máy chủ thật: cả 7 kết thúc với **ít** entity hơn lúc bắt đầu (trung

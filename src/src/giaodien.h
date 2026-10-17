@@ -41,6 +41,11 @@ static void Spotlight_OnLevelInit(const char* pMapName);
 static void Spotlight_OnServerActivate();
 static void Spotlight_OnUnload();
 
+// hopbao.cpp     - patches.txt: hopbao=0/1 (va MarkSurroundingBoundsDirty cho thuc the server-only)
+static void HopBao_OnLoad();
+static void HopBao_OnServerActivate();
+static void HopBao_OnUnload();
+
 // doluong.cpp    - patches.txt: loadprobe=N, heartbeat=giay
 static void DoLuong_OnServerActivate();
 static void LoadProbe_OnGameFrame();
