@@ -12,14 +12,14 @@ static bool g_NoEdict   = false;
 //
 // !!  DAY LA DIA CHI TRONG ANH TINH (ImageBase 0x10000000). Luc chay server.dll nap
 //    o base khac, con tro doc tu vtable DA DUOC DOI THEO BASE.
-//    Phai so voi  base + (0x107D78A8 - 0x10000000)  chu KHONG so thang.
+//    Phai so voi  base + RVA  chu KHONG so thang. RVA lay tu bang dia chi theo ban game
+//    (src/diachi.cpp, g_DC->dtBaseEntity; ban 533888fb va 5e4d1e32 deu la 0x7D78A8).
 //
 //    Ban 16:01 ngay 14/08 so thang -> ca 4 lop dang chay (infodecal/light/light_spot/
 //    path_track) deu bi TU CHOI, noedict tat hoan toan, "da sua 0 vtable / 4 lop".
 //    Log cho thay ca bon deu tra 0x540378A8, base that la 0x53860000:
 //        0x53860000 + 0x7D78A8 = 0x540378A8   <- dung, chi la chua doi hang so.
 //    Cung loai loi voi vu chu ky mapclue bi tu choi vi prologue chua mat na.
-#define DT_BASEENTITY_RVA 0x7D78A8u
 
 // NOEDICT - khien mot so lop KHONG BAO GIO duoc cap edict, bang cach dat
 // EFL_SERVER_ONLY (bit 9 cua m_iEFlags) trong PostConstructor (vtable slot 29).
@@ -174,11 +174,10 @@ static void** ScanForVtableStore(uint8_t* base, uint8_t* fn) {
 // Dung chung: noedict (ben duoi) va spotlight.cpp (cong 3). Can g_SrvBase/g_SrvSize
 // da gan (TrongSrv) - InstallNoEdict gan, InstallSpotlight gan neu noedict chua chay.
 static void** ResolveClassVtable(uint8_t* base, const char* cls) {
-    typedef void* (__cdecl *GetDict_t)(void);
     typedef void* (__thiscall *FindFactory_t)(void*, const char*);
 
-    GetDict_t getDict = (GetDict_t)(base + 0x20CA70);
-    void* dict = getDict();
+    // EntityFactoryDictionary: dia chi theo ban game, kiem prologue truoc khi goi (diachi.cpp)
+    void* dict = LayFactoryDictionary(base);
     if (!dict) return NULL;
 
     void** dvt = *(void***)dict;
@@ -269,10 +268,11 @@ static bool InstallNoEdict() {
     GetModuleInformation(GetCurrentProcess(), h, &mi, sizeof(mi));
     uint8_t* base = (uint8_t*)mi.lpBaseOfDll;
 
-    void* pPostCtor = (void*)(base + 0x55620);
+    if (!g_DC) { EL_LOG("[EdictBudget] NOEDICT: server.dll ban la - BO QUA"); return false; }
+    void* pPostCtor = (void*)(base + g_DC->postCtor);
 
-    // Cong an toan 1: prologue PostConstructor phai dung.
-    // 0x55620: 55 8B EC 8B 45 08 56 8B F1 85 C0
+    // Cong an toan 1: prologue PostConstructor phai dung (RVA theo ban game, diachi.cpp).
+    // 55 8B EC 8B 45 08 56 8B F1 85 C0
     static const uint8_t kSig[] = { 0x55,0x8B,0xEC,0x8B,0x45,0x08,0x56,0x8B,0xF1,0x85,0xC0 };
     if (memcmp(pPostCtor, kSig, sizeof(kSig)) != 0) {
         EL_LOG("[EdictBudget] NOEDICT: prologue PostConstructor KHONG khop "
@@ -301,7 +301,7 @@ static bool InstallNoEdict() {
         }
 // Cong an toan 3 - DIEU KIEN 1: lop KHONG duoc co SendTable rieng.
 // GetServerClass() = vtable slot 9, than ham `mov eax, imm32; ret`.
-// PHAI so voi base + DT_BASEENTITY_RVA, KHONG so thang dia chi tinh.
+// PHAI so voi base + g_DC->dtBaseEntity, KHONG so thang dia chi tinh.
 // Xem docs/01-co-che.md muc noedict.
         {
             const uint8_t* gsc = (const uint8_t*)vt[9];
@@ -318,7 +318,7 @@ static bool InstallNoEdict() {
                          cls, (void*)vt, (void*)gsc);
                 continue;
             }
-            uint32_t want = (uint32_t)(uintptr_t)(base + DT_BASEENTITY_RVA);
+            uint32_t want = (uint32_t)(uintptr_t)(base + g_DC->dtBaseEntity);
             if (sc != want) {
                 EL_LOG("[EdictBudget] NOEDICT: '%s' CO SENDTABLE RIENG "
                          "(ServerClass=0x%08X, can 0x%08X) - TRUOT DIEU KIEN 1, TU CHOI. "

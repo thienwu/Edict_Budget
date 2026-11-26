@@ -153,6 +153,8 @@ the log).
   [docs/06-do-dac.en.md](docs/06-do-dac.en.md#spotlight).
 - `hopbao` (v2.1.1): local server, map `defl_3`, 4 bots — see
   [docs/06-do-dac.en.md](docs/06-do-dac.en.md#hopbao).
+- v2.1.2 on the 25/11/2026 game build: local server, 4 bots — `c6m1_riverbank` 3 wipes, `ch04_pripyat03`
+  2 wipes, map change, `defl_3`, `the_hive_m2`/`m4` — see [docs/06-do-dac.en.md](docs/06-do-dac.en.md#v212-on-the-25112026-game-build).
 - Most other numbers come from **reading map files** (not running them) and are estimates.
 
 ---
@@ -166,6 +168,7 @@ the log).
 | `v2.0.2` | fix: server crashed at startup when `noedict.txt` contained one of 9 classes (e.g. `beam_spotlight`); `noedict.txt` is no longer silently cut after 32 lines |
 | `v2.1.0` | added `spotlight` (off by default); code split into modules (`src/sample_mm.cpp` + `src/src/*.cpp`, still one translation unit); the code and `patches.txt` keys of the abandoned approaches removed (except `nonetkill`); prebuilt package on Releases |
 | `v2.1.1` | fix: `func_nav_blocker` in the v2.1.0 `noedict.txt` did not block nav (map `defl_3`: the gate opened the wrong way or not at all). Added `hopbao`, on in the package |
+| `v2.1.2` | fix: the plugin crashed the server at load after the 25/11/2026 game update. Added the address table for the 25/11 build (the game version number is still 2.2.4.3); an unknown `server.dll` turns off the modules that use hard-coded addresses |
 
 ---
 

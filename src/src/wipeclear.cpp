@@ -196,18 +196,21 @@ static bool InstallWipeClear() {
     GetModuleInformation(GetCurrentProcess(), h, &mi, sizeof(mi));
     uint8_t* b = (uint8_t*)mi.lpBaseOfDll;
 
+    // Dia chi theo ban game (src/diachi.cpp). Ban la => khong dong gi.
+    if (!g_DC) { EL_LOG("[EdictBudget] WIPECLEAR: server.dll ban la - BO QUA"); return false; }
+
     // Xac minh prologue RestartRound truoc khi dong vao vtable.
-    // 0x2E0650: 55 8B EC 0F 57 C0 83 EC 08 53 33 DB 56 57 8B F9
+    // 55 8B EC 0F 57 C0 83 EC 08 53 33 DB 56 57 8B F9
     static const uint8_t kSig[] = {
         0x55,0x8B,0xEC,0x0F,0x57,0xC0,0x83,0xEC,0x08,0x53,0x33,0xDB,0x56,0x57,0x8B,0xF9 };
-    uint8_t* fn = b + 0x2E0650;
+    uint8_t* fn = b + g_DC->restartRound;
     if (memcmp(fn, kSig, sizeof(kSig)) != 0) {
         EL_LOG("[EdictBudget] WIPECLEAR: prologue RestartRound KHONG khop "
                  "- server.dll khac ban? Bo qua, khong dong gi.");
         return false;
     }
 
-    void*** grPtr = (void***)(b + 0x7F7F6C);          // g_pGameRules
+    void*** grPtr = (void***)(b + g_DC->gameRules);   // g_pGameRules
     void** gr = *grPtr;
     if (!gr) { EL_LOG("[EdictBudget] WIPECLEAR: g_pGameRules con NULL, hoan lai"); return false; }
 
@@ -222,12 +225,12 @@ static bool InstallWipeClear() {
     // Cong cu go entity dung chung (khai bao o congcu_entity.cpp). InstallMapClear
     // gan CUNG cac dia chi nay neu chua co; o day gan de len - cung gia tri, vo hai.
     // g_InCleanupDelete chi gan o day (mapclear khong can).
-    g_CleanupDeleteList = (fnCleanupDeleteList_t)(b + 0x0B5D10);
-    g_NextEnt           = (fnNextEnt_t)          (b + 0x0B4270);
-    g_UtilRemove        = (fnUtilRemove_t)       (b + 0x2071E0);
-    g_EntList           = (void*)                (b + 0x7E0760);
-    g_InCleanupDelete   = (bool*)                (b + 0x7E0730);
-    g_PreserveList      = (const char**)         (b + 0x7ACE40);
+    g_CleanupDeleteList = (fnCleanupDeleteList_t)(b + g_DC->cleanupDeleteList);
+    g_NextEnt           = (fnNextEnt_t)          (b + g_DC->nextEnt);
+    g_UtilRemove        = (fnUtilRemove_t)       (b + g_DC->utilRemove);
+    g_EntList           = (void*)                (b + g_DC->entList);
+    g_InCleanupDelete   = (bool*)                (b + g_DC->inCleanupDelete);
+    g_PreserveList      = (const char**)         (b + g_DC->preserveList);
 
     // Kiem preserve list doc dung khong: phan tu 0 phai la "ai_network",
     // phan tu 33 phai la "predicted_viewmodel".

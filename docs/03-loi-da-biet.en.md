@@ -213,6 +213,22 @@ with a `parentname`.
 
 ---
 
+## 13. The plugin crashes the server at load after the 25/11/2026 game update (v2.1.1 and earlier)
+
+Valve moved the functions in `server.dll`. The `swap` module called the old address of
+`EntityFactoryDictionary` (`server.dll+0x20CA70`) **before** any check ⇒ on the new build that address lands
+in the middle of another instruction ⇒ access violation as soon as the plugin loads. `mapclear` also read
+`g_pGameRules` and its vtable before checking the prologue. The other modules (`noedict`, `spotlight`,
+`wipeclear`) check first and turned themselves off correctly.
+
+Fixed in v2.1.2: an address table per `server.dll` build (identified by `TimeDateStamp` + `SizeOfImage`,
+including the 25/11 build); an unknown build turns off every module that uses hard-coded addresses; the call to
+`EntityFactoryDictionary` checks the prologue first; `mapclear` checks the prologue before reading
+`g_pGameRules`. If you can't upgrade yet: set `swap=0`, `spotlight=0`, `mapclear=0` in `patches.txt` so the
+server doesn't crash (the main features then turn themselves off too).
+
+---
+
 ## Fixed
 
 | tag | bug |
@@ -221,3 +237,4 @@ with a `parentname`.
 | `v2.0.2` | the server crashed at startup when `noedict.txt` contained `beam_spotlight`, `func_breakable`, `logic_choreographed_scene`, `logic_scene_list_manager`, `scene_manager`, `scripted_scene`, `sky_camera`, `weapon_basecsgrenade` or `weapon_hunter_claw` (derived pointers were not bounds-checked) |
 | `v2.0.2` | only the first 32 lines of `noedict.txt` were read, the rest silently dropped |
 | `v2.1.1` | `func_nav_blocker` in `noedict.txt` did not block nav (item 11) — added `hopbao` |
+| `v2.1.2` | crash at load after the 25/11/2026 game update (item 13) — per-build address table, turns itself off on an unknown build |

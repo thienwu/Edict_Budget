@@ -19,6 +19,40 @@ Left 4 Dead 2 Dedicated Server `2.2.4.3`, build `10097`. RVA tính theo ImageBas
 
 md5 khác thì đừng dùng RVA trong bảng — xem mục **Suy lại sau khi cập nhật**.
 
+### Hai bản `server.dll` đã có bảng địa chỉ
+
+Valve cập nhật ngày 25/11/2026 mà **số phiên bản không đổi**: console vẫn báo `2.2.4.3`, build `10097`,
+Exe build 30/06/2026. Plugin nhận bản bằng `TimeDateStamp` + `SizeOfImage` trong PE header của
+`server.dll` (bảng `kBan[]` ở `src/src/diachi.cpp`), không bằng số phiên bản.
+
+| | bản cũ | bản 25/11/2026 |
+|---|---|---|
+| `server.dll` md5 | `533888fb…` | `5e4d1e32333e3e1e798642bdd6564ad3` |
+| `server.dll` cỡ / `TimeDateStamp` | 9 130 288 / `6A440E53` | 9 130 800 / `6AFCCCA0` |
+| `engine.dll` md5 | `a16cd381…` | `5768e2ff7fe4eb367aa7fa01540364e8` (4 818 224) |
+| `client.dll` md5 | `21565d29…` | `3e7bb093e12e0d670a136bd6137ee916` |
+
+RVA trong các bảng dưới là của **bản cũ**. Bản 25/11:
+
+| thứ | bản cũ | bản 25/11 |
+|---|---|---|
+| `EntityFactoryDictionary` | `0x20CA70` | `0x20CBF0` |
+| `PostConstructor` | `0x55620` | `0x55610` |
+| `RestartRound` | `0x2E0650` | `0x2E0750` |
+| `CTerrorGameRules` slot 38 | `0x2B8140` | `0x2B8230` |
+| `CleanupDeleteList` / `NextEnt` / `UTIL_Remove` | `0xB5D10` / `0xB4270` / `0x2071E0` | `0xB5DE0` / `0xB4340` / `0x207370` |
+| `MapEntity_ParseEntity` / `SpotlightCreate` | `0x1198F0` / `0x18E3D0` | `0x1199A0` / `0x18E5B0` |
+| dictionary `Create` / vtable | `0x206A40` / `0x654F48` | `0x206BD0` / `0x654FA0` |
+| vtable `point_spotlight` / `spotlight_end` | `0x630E64` / `0x643B54` | `0x630EBC` / `0x643BAC` |
+| `MarkSurroundingBoundsDirty` (`hopbao` tự tìm) | `0x93A80` | `0x93B20` |
+| `DT_BaseEntity`, `g_pGameRules`, `gEntList`, `g_fInCleanupDelete`, preserve list, vtable `CBaseEntity` | | không đổi |
+
+Mười hàm plugin móc vào, so cả thân (dãy lệnh, che địa chỉ): giống hệt bản cũ, chỉ dời chỗ. `engine.dll`
+không có địa chỉ ghi cứng (mọi thứ tìm bằng chữ ký).
+
+Bản `server.dll` không có trong `kBan[]` thì plugin ghi `!! DIACHI: server.dll BAN LA` và **tắt** `noedict`,
+`swap`, `spotlight`, `wipeclear`, `mapclear`; `freegate`, `trap`, `hopbao` tự dò nên vẫn chạy.
+
 "vtable slot N" = hàm ảo thứ N (offset `N × 4`).
 
 ---
@@ -147,6 +181,12 @@ Phần đầu hàm này có một địa chỉ tuyệt đối; so khớp phải 
 ---
 
 ## Suy lại sau khi cập nhật
+
+Cách đã dùng cho bản 25/11: với mỗi hàm, lấy byte bản cũ, che mọi dword có relocation và toán hạng rel32 của
+`call` / `jmp` / `jcc`, tìm chỗ khớp **duy nhất** trong bản mới; địa chỉ dữ liệu đọc từ toán hạng ở cùng vị
+trí trong hàm đã khớp. Sau đó so **toàn thân** từng hàm và kiểm mọi cổng (prologue, số chỗ gọi, vtable) trên
+bản mới, rồi thêm một dòng vào `kBan[]`. Hiệu chuẩn: `MarkSurroundingBoundsDirty` do `hopbao` tự tìm lúc chạy
+phải trùng kết quả khớp.
 
 | thứ | cách tìm |
 |---|---|

@@ -20,7 +20,7 @@
 //  (file nay #include src/*.cpp) nen build.bat khong doi.
 //
 //    noedict.cpp  freegate.cpp  wipeclear.cpp  mapclear.cpp  swap.cpp
-//    spotlight.cpp (v2.1.0)  hopbao.cpp (v2.1.1)  baycapphat.cpp (trap)
+//    spotlight.cpp (v2.1.0)  hopbao.cpp (v2.1.1)  diachi.cpp (v2.1.2)  baycapphat.cpp (trap)
 //    doluong.cpp (heartbeat, loadprobe)  nonetkill.cpp (DA LOAI BO, giu de doc)
 //
 //  ------------------------------------------------------------------------
@@ -73,8 +73,9 @@
 //    duyet section .text        spotlight (QuetCall), hopbao (tim neo)
 //    stub VirtualAlloc + jmp    baycapphat (trap, engine.dll), hopbao - cung
 //      vao giua ham             cach ghi rel32 = dich - (cho + 4)
-//    dictionary (base+0x20CA70) noedict (ResolveClassVtable), swap, spotlight
-//    g_pGameRules (base+0x7F7F6C) wipeclear, mapclear
+//    dictionary                 noedict (ResolveClassVtable), swap, spotlight -
+//                               nay cung goi LayFactoryDictionary (diachi.cpp)
+//    g_pGameRules               wipeclear, mapclear (dia chi tu g_DC, diachi.cpp)
 //    ghi vtable                 WriteProtected (tienich); wipeclear, mapclear
 //                               tu goi VirtualProtect - tuong duong
 //    doc chuoi entity lump      nonetkill (ca lump), spotlight (tung khoi)
@@ -89,7 +90,9 @@
 //    docs/03-loi-da-biet.md  loi da biet
 //    docs/04-dia-chi.md      !! BANG DIA CHI server.dll / engine.dll (ImageBase
 //                            0x10000000, ban game ghi trong file) - kiem lai
-//                            dia chi o day sau moi lan Valve cap nhat game
+//                            dia chi o day sau moi lan Valve cap nhat game.
+//                            Dia chi chay that nam o src/diachi.cpp (kBan[], mot
+//                            dong moi ban); ban la thi module dung dia chi tu tat.
 //    docs/05-huong-da-bo.md  cac huong da bo va vi sao: nonetkill, mapclear=2,
 //                            phys, env_sprite ...
 //    docs/06-do-dac.md       do dac: log, loadprobe, heartbeat, trap, ent_test
@@ -173,6 +176,7 @@ PLUGIN_EXPOSE(SamplePlugin, g_SamplePlugin);
 #include "src/tienich.cpp"        // ghi vung nho, mo file, tim chu ky
 #include "src/nhatky.cpp"         // edictbudget.log
 #include "src/loi.cpp"            // hang so, bien engine, stage
+#include "src/diachi.cpp"         // bang dia chi server.dll theo ban game - TRUOC moi module dung dia chi
 #include "src/congcu_entity.cpp"  // ham server.dll dung chung de duyet/go entity
 #include "src/freegate.cpp"
 #include "src/baycapphat.cpp"
@@ -210,6 +214,15 @@ bool SamplePlugin::Load(PluginId id, ISmmAPI* ismm, char* error, size_t maxlen, 
     if (!ResolveEngineGlobals()) return true;
 
     LoadPatchSwitches();
+    // Nhan ban server.dll TRUOC moi module dung dia chi ghi cung. Ban la => tat cong tac cua
+    // cac module do (xem src/diachi.cpp); module tu do chu ky / neo van chay.
+    if (!DiaChi_OnLoad()) {
+        g_NoEdict = false;
+        g_Swap = 0;
+        g_Spotlight = 0;
+        g_WipeClear = 0;
+        g_MapClear = 0;
+    }
     // Dong trang thai - PHAI o day, ngoai moi nhanh dieu kien.
     EL_LOG("[EdictBudget] noedict=%d mapclear=%d mapclearmax=%d mapclearcarry=%d "
              "heartbeat=%d loadprobe=%d swap=%d swapmax=%d spotlight=%d hopbao=%d logconsole=%d",
@@ -286,7 +299,7 @@ void SamplePlugin::AllPluginsLoaded() {}
 bool SamplePlugin::Pause(char *error, size_t maxlen) { return true; }
 bool SamplePlugin::Unpause(char *error, size_t maxlen) { return true; }
 const char *SamplePlugin::GetLicense() { return "GPLv3"; }
-const char *SamplePlugin::GetVersion() { return "2.1.1"; }
+const char *SamplePlugin::GetVersion() { return "2.1.2"; }
 const char *SamplePlugin::GetDate() { return __DATE__; }
 const char *SamplePlugin::GetLogTag() { return "EDICTBUDGET"; }
 // Toan bo ma nguon nay do Claude (Anthropic) viet. Xem khoi TAC GIA o dau file.

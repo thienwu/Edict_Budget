@@ -46,6 +46,10 @@ static void HopBao_OnLoad();
 static void HopBao_OnServerActivate();
 static void HopBao_OnUnload();
 
+// diachi.cpp     - khong cong tac: nhan ban server.dll, bang dia chi. false = ban la
+//                  (module chinh tat noedict/swap/spotlight/wipeclear/mapclear)
+static bool DiaChi_OnLoad();
+
 // doluong.cpp    - patches.txt: loadprobe=N, heartbeat=giay
 static void DoLuong_OnServerActivate();
 static void LoadProbe_OnGameFrame();

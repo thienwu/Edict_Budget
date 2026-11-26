@@ -33,17 +33,14 @@
 //   CPointSpotlight::SpotlightCreate 0x1018E3D0  thiscall, khong tham so.
 //       Goi tu 0x1018F1A2 (CreateEfficientSpotlight), 0x1018ECB3, 0x1018ED08 (think).
 //       Quet ca .text: DUNG 3 call, 0 jmp, 0 con tro.
-//   PostConstructor (vtable slot 29) cua CPointSpotlight (vt RVA 0x630E64) va
-//       CSpotlightEnd (vt RVA 0x643B54) - hai vtable rieng, khong lop nao dung chung.
+//   PostConstructor (vtable slot 29) cua CPointSpotlight va CSpotlightEnd (vtable theo
+//       ban game, src/diachi.cpp) - hai vtable rieng, khong lop nao dung chung.
 #include <math.h>
 #include <stdlib.h>
 static int g_Spotlight = 0;     // 0 tat | 1 chi quan sat (ghi log) | 2 lam that
 
-#define SPOT_PARSE_RVA     0x1198F0u
-#define SPOT_CREATE_RVA    0x18E3D0u
-#define SPOT_POSTCTOR_RVA  0x55620u
-#define SPOT_VT_RVA        0x630E64u
-#define SPOT_END_VT_RVA    0x643B54u
+// Dia chi (ParseEntity, SpotlightCreate, PostConstructor, vtable CPointSpotlight /
+// CSpotlightEnd / dictionary, Create goc) lay tu bang theo ban game: src/diachi.cpp (g_DC).
 #define EFL_SERVER_ONLY_BIT (1u << 9)
 
 typedef const char* (__cdecl    *ParseEntity_t)(void**, const char*, void*);
@@ -59,9 +56,7 @@ static void**        g_SpotEndVt = NULL;
 // Moc dictionary Create RIENG cua module (KHONG sua swap.cpp). Noi chuoi: slot 1
 // dang tro gi (Create goc, hoac moc cua swap neu swap da cai truoc) thi goi tiep cai do.
 // Khi module da quyet cho MOT point_spotlight (g_SpotLopToi) thi goi THANG Create goc
-// 0x10206A40 de swap.txt khong doi lop lan nua.
-#define DICT_VT_RVA     0x654F48u
-#define DICT_CREATE_RVA 0x206A40u
+// (g_DC->dictCreate) de swap.txt khong doi lop lan nua.
 typedef void* (__fastcall *SpotDictCreate_t)(void*, void*, const char*);
 static void**           g_SpotDictVt  = NULL;
 static SpotDictCreate_t g_SpotDictKe  = NULL;   // gia tri slot 1 truoc khi moc
@@ -235,9 +230,10 @@ static bool InstallSpotlight() {
     static const uint8_t kParse[]  = { 0x55,0x8B,0xEC,0xB8,0x10,0x18,0x00,0x00,0xE8 };
     static const uint8_t kCreate[] = { 0x55,0x8B,0xEC,0x83,0xEC,0x6C,0xA1 };
     static const uint8_t kPost[]   = { 0x55,0x8B,0xEC,0x8B,0x45,0x08,0x56,0x8B,0xF1,0x85,0xC0 };
-    uint8_t* pParse  = base + SPOT_PARSE_RVA;
-    uint8_t* pCreate = base + SPOT_CREATE_RVA;
-    uint8_t* pPost   = base + SPOT_POSTCTOR_RVA;
+    if (!g_DC) { EL_LOG("[EdictBudget] SPOTLIGHT: server.dll ban la - BO QUA"); return false; }
+    uint8_t* pParse  = base + g_DC->parseEntity;
+    uint8_t* pCreate = base + g_DC->spotlightCreate;
+    uint8_t* pPost   = base + g_DC->postCtor;
     if (memcmp(pParse, kParse, sizeof(kParse)) || memcmp(pCreate, kCreate, sizeof(kCreate)) ||
         memcmp(pPost, kPost, sizeof(kPost))) {
         EL_LOG("[EdictBudget] SPOTLIGHT: prologue ParseEntity/SpotlightCreate/PostConstructor "
@@ -262,10 +258,10 @@ static bool InstallSpotlight() {
     // (chua bi noedict hay ai khac sua).
     g_SpotVt    = ResolveClassVtable(base, "point_spotlight");
     g_SpotEndVt = ResolveClassVtable(base, "spotlight_end");
-    if (g_SpotVt != (void**)(base + SPOT_VT_RVA) || g_SpotEndVt != (void**)(base + SPOT_END_VT_RVA)) {
+    if (g_SpotVt != (void**)(base + g_DC->vtSpotlight) || g_SpotEndVt != (void**)(base + g_DC->vtSpotlightEnd)) {
         EL_LOG("[EdictBudget] SPOTLIGHT: vtable point_spotlight=%p spotlight_end=%p khac du kien "
                "(%p / %p) - BO QUA", (void*)g_SpotVt, (void*)g_SpotEndVt,
-               (void*)(base + SPOT_VT_RVA), (void*)(base + SPOT_END_VT_RVA));
+               (void*)(base + g_DC->vtSpotlight), (void*)(base + g_DC->vtSpotlightEnd));
         return false;
     }
     if (g_SpotVt[29] != (void*)pPost || g_SpotEndVt[29] != (void*)pPost) {
@@ -275,29 +271,27 @@ static bool InstallSpotlight() {
     }
 
     // Cong 4: lop dich cua luat 1 phai ton tai.
-    // (GetEntityFactoryDictionary base+0x20CA70 duoc goi ca o cong 4 va cong 5 -
-    //  thua mot lan goi nhung vo hai; cung dia chi voi swap.cpp va ResolveClassVtable.)
+    // (EntityFactoryDictionary duoc goi ca o cong 4 va cong 5 - thua mot lan goi nhung vo
+    //  hai; qua LayFactoryDictionary cua diachi.cpp, chung voi swap.cpp va ResolveClassVtable.)
     {
-        typedef void* (__cdecl *GetDict_t)(void);
         typedef void* (__thiscall *FindFactory_t)(void*, const char*);
-        void* dict = ((GetDict_t)(base + 0x20CA70))();
+        void* dict = LayFactoryDictionary(base);
         void** dvt = dict ? *(void***)dict : NULL;
         if (!dvt || !((FindFactory_t)dvt[3])(dict, "beam_spotlight")) {
             EL_LOG("[EdictBudget] SPOTLIGHT: khong co factory beam_spotlight - BO QUA");
             return false;
         }
     }
-    // Cong 5: dictionary dung vtable CEntityFactoryDictionary (RVA 0x654F48), Create goc
-    // (RVA 0x206A40) dung prologue; slot 1 hien tai la Create goc HOAC moc cua swap.
+    // Cong 5: dictionary dung vtable CEntityFactoryDictionary (g_DC->vtDict), Create goc
+    // (g_DC->dictCreate) dung prologue; slot 1 hien tai la Create goc HOAC moc cua swap.
     {
         static const uint8_t kDictCreate[] = { 0x55,0x8B,0xEC,0x8B,0x01,0x8B,0x50,0x0C,0x56,0x8B,0x75,0x08 };
-        typedef void* (__cdecl *GetDict_t)(void);
-        void* dict = ((GetDict_t)(base + 0x20CA70))();
+        void* dict = LayFactoryDictionary(base);
         void** dvt = dict ? *(void***)dict : NULL;
-        uint8_t* goc = base + DICT_CREATE_RVA;
-        if (dvt != (void**)(base + DICT_VT_RVA) || memcmp(goc, kDictCreate, sizeof(kDictCreate))) {
+        uint8_t* goc = base + g_DC->dictCreate;
+        if (dvt != (void**)(base + g_DC->vtDict) || memcmp(goc, kDictCreate, sizeof(kDictCreate))) {
             EL_LOG("[EdictBudget] SPOTLIGHT: dictionary vtable=%p (can %p) hoac prologue Create goc "
-                   "khong khop - BO QUA", (void*)dvt, (void*)(base + DICT_VT_RVA));
+                   "khong khop - BO QUA", (void*)dvt, (void*)(base + g_DC->vtDict));
             return false;
         }
         g_SpotDictVt  = dvt;

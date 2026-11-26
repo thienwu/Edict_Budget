@@ -19,6 +19,42 @@ at runtime add the module's real base.
 
 If your md5 differs, don't use the RVAs in these tables — see **Re-deriving after an update**.
 
+### Two `server.dll` builds with an address table
+
+Valve updated the game on 25/11/2026 **without changing the version number**: the console still says
+`2.2.4.3`, build `10097`, exe build 30/06/2026. The plugin identifies the build by `TimeDateStamp` +
+`SizeOfImage` in the PE header of `server.dll` (table `kBan[]` in `src/src/diachi.cpp`), not by version.
+
+| | old build | 25/11/2026 build |
+|---|---|---|
+| `server.dll` md5 | `533888fb…` | `5e4d1e32333e3e1e798642bdd6564ad3` |
+| `server.dll` size / `TimeDateStamp` | 9,130,288 / `6A440E53` | 9,130,800 / `6AFCCCA0` |
+| `engine.dll` md5 | `a16cd381…` | `5768e2ff7fe4eb367aa7fa01540364e8` (4,818,224) |
+| `client.dll` md5 | `21565d29…` | `3e7bb093e12e0d670a136bd6137ee916` |
+
+The RVAs in the tables below are for the **old build**. The 25/11 build:
+
+| item | old | 25/11 |
+|---|---|---|
+| `EntityFactoryDictionary` | `0x20CA70` | `0x20CBF0` |
+| `PostConstructor` | `0x55620` | `0x55610` |
+| `RestartRound` | `0x2E0650` | `0x2E0750` |
+| `CTerrorGameRules` slot 38 | `0x2B8140` | `0x2B8230` |
+| `CleanupDeleteList` / `NextEnt` / `UTIL_Remove` | `0xB5D10` / `0xB4270` / `0x2071E0` | `0xB5DE0` / `0xB4340` / `0x207370` |
+| `MapEntity_ParseEntity` / `SpotlightCreate` | `0x1198F0` / `0x18E3D0` | `0x1199A0` / `0x18E5B0` |
+| dictionary `Create` / vtable | `0x206A40` / `0x654F48` | `0x206BD0` / `0x654FA0` |
+| vtable `point_spotlight` / `spotlight_end` | `0x630E64` / `0x643B54` | `0x630EBC` / `0x643BAC` |
+| `MarkSurroundingBoundsDirty` (found by `hopbao` itself) | `0x93A80` | `0x93B20` |
+| `DT_BaseEntity`, `g_pGameRules`, `gEntList`, `g_fInCleanupDelete`, preserve list, `CBaseEntity` vtable | | unchanged |
+
+All ten hooked functions, compared over the whole body (instruction sequence, addresses masked), are
+identical to the old build, only moved. `engine.dll` has no hard-coded address (everything is found by
+signature).
+
+If `server.dll` is not in `kBan[]`, the plugin logs `!! DIACHI: server.dll BAN LA` and **turns off**
+`noedict`, `swap`, `spotlight`, `wipeclear`, `mapclear`; `freegate`, `trap`, `hopbao` find their own targets
+and keep running.
+
 "vtable slot N" = the N-th virtual function (offset `N × 4`).
 
 ---
@@ -148,6 +184,12 @@ The start of this function contains an absolute address; matching must skip thos
 ---
 
 ## Re-deriving after an update
+
+Method used for the 25/11 build: for each function, take the old bytes, mask every relocated dword and the
+rel32 operand of `call` / `jmp` / `jcc`, and find the **unique** match in the new build; data addresses are read
+from the operand at the same position in the matched function. Then compare each function's **whole body**,
+check every gate (prologue, call counts, vtables) on the new build, and add a line to `kBan[]`. Calibration:
+`MarkSurroundingBoundsDirty`, which `hopbao` finds by itself at run time, must match the result.
 
 | item | how to find it |
 |---|---|

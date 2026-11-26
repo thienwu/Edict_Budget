@@ -132,6 +132,28 @@ bằng `changelevel`. Đối chứng: cùng map, `swap=2` (mọi `point_spotligh
 
 ---
 
+## v2.1.2 trên bản game 25/11/2026
+
+Máy chủ cục bộ, `server.dll` `5e4d1e32`, 26/11/2026; 4 bot (`sb_add`); wipe bằng `sm_slay @all`. Chưa có người
+chơi thật.
+
+| map / bước | kết quả |
+|---|---|
+| nạp v2.1.1 | sập (`server.dll+0x20CA70`, docs/03 mục 13) |
+| nạp v2.1.2 | `DIACHI` nhận bản 25/11; mọi module móc được |
+| `c6m1_riverbank` nạp | `num_edicts` 1895, trống 971, sống 881; 637 không edict |
+| `c6m1_riverbank` 3 lần wipe liên tiếp | `wipeclear` dọn cả 3; sau `RestartRound` trống 968 / 968 / 968; máy chủ sống |
+| `c1m1_hotel` 2 wipe → chuyển màn `c1m2_streets` | sống; trống 419 sau mỗi wipe |
+| `ch04_pripyat03` nạp + 2 wipe | `num_edicts` 1151 (sống 962), 2215 không edict; sau wipe trống 141; sống |
+| `defl_3` (`hopbao`) | `hub_blocker_0` chặn 7/7, `hub_blocker_1` 1/1; hộp bao xung quanh của cả 7 blocker đúng toạ độ (5 blocker ở cống không chồng nav vì cống không có nav) |
+| `the_hive_m4` (`spotlight=2`) | 312 `point_spotlight` + 312 `spotlight_end` không edict, 312 `beam` có edict |
+| `the_hive_m2` | 18 đèn có cha → `beam_spotlight` (có edict, quầng 60) |
+
+Cổng nhận bản thử ngoài game (nạp bản sao `server.dll`): bản cũ / bản mới nhận đúng; `TimeDateStamp` lạ →
+`BAN LA`, không gọi gì; prologue `EntityFactoryDictionary` hỏng → không gọi.
+
+---
+
 ## Kết quả đã có
 
 - 7 phiên chơi dài trên máy chủ thật: cả 7 kết thúc với **ít** entity hơn lúc bắt đầu (trung

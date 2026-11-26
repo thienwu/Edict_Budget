@@ -153,6 +153,8 @@ một dòng cảnh báo trong log).
   [docs/06-do-dac.md](docs/06-do-dac.md#spotlight).
 - `hopbao` (v2.1.1): máy chủ cục bộ, map `defl_3`, 4 bot — xem
   [docs/06-do-dac.md](docs/06-do-dac.md#hopbao).
+- v2.1.2 trên bản game 25/11/2026: máy chủ cục bộ, 4 bot — `c6m1_riverbank` 3 lần wipe, `ch04_pripyat03` 2 lần
+  wipe, chuyển màn, `defl_3`, `the_hive_m2`/`m4` — xem [docs/06-do-dac.md](docs/06-do-dac.md#v212-trên-bản-game-25112026).
 - Phần lớn số liệu còn lại là **đọc file map** (không chạy), dùng làm ước lượng.
 
 ---
@@ -166,6 +168,7 @@ một dòng cảnh báo trong log).
 | `v2.0.2` | sửa: máy chủ sập lúc khởi động khi `noedict.txt` có một trong 9 lớp (vd `beam_spotlight`); `noedict.txt` không còn bị cắt im lặng sau 32 dòng |
 | `v2.1.0` | thêm `spotlight` (mặc định tắt); mã chia module (`src/sample_mm.cpp` + `src/src/*.cpp`, vẫn một đơn vị biên dịch); gỡ khỏi mã và `patches.txt` các công tắc của hướng đã bỏ (trừ `nonetkill`); có gói dựng sẵn ở Releases |
 | `v2.1.1` | sửa: `func_nav_blocker` trong `noedict.txt` của v2.1.0 không chặn nav (map `defl_3`: cửa mở ngược hoặc không mở). Thêm `hopbao`, bật trong gói |
+| `v2.1.2` | sửa: plugin làm sập máy chủ lúc nạp sau bản cập nhật game 25/11/2026. Thêm bảng địa chỉ cho bản 25/11 (số phiên bản game vẫn 2.2.4.3); bản `server.dll` lạ thì tự tắt các module dùng địa chỉ ghi cứng |
 
 ---
 

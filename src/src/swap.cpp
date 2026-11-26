@@ -84,12 +84,13 @@ static bool InstallSwap() {
     if (!h) return false;
     uint8_t* base = (uint8_t*)h;
 
-    // GetEntityFactoryDictionary (RVA 0x20CA70) + FindFactory (slot 3): cung cach voi
-    // ResolveClassVtable (noedict.cpp) va InstallSpotlight (spotlight.cpp).
-    typedef void* (__cdecl *GetDict_t)(void);
+    // EntityFactoryDictionary + FindFactory (slot 3): cung cach voi ResolveClassVtable
+    // (noedict.cpp) va InstallSpotlight (spotlight.cpp). Dia chi theo ban game, prologue
+    // duoc kiem TRUOC khi goi (diachi.cpp). Truoc 26/11/2026 o day goi thang base+0x20CA70
+    // => ban game 25/11 dia chi do roi giua lenh => sap luc nap plugin.
     typedef void* (__thiscall *FindFactory_t)(void*, const char*);
-    GetDict_t getDict = (GetDict_t)(base + 0x20CA70);
-    void* dict = getDict();
+    if (!g_DC) { EL_LOG("[EdictBudget] SWAP: server.dll ban la - BO QUA"); return false; }
+    void* dict = LayFactoryDictionary(base);
     if (!dict) { EL_LOG("[EdictBudget] SWAP: khong lay duoc factory dictionary, BO QUA"); return false; }
 
     void** dvt = *(void***)dict;

@@ -138,6 +138,28 @@ VScript: for each `func_nav_blocker`, take the nav areas overlapping it
 
 ---
 
+## v2.1.2 on the 25/11/2026 game build
+
+Local server, `server.dll` `5e4d1e32`, 26/11/2026; 4 bots (`sb_add`); wipes with `sm_slay @all`. No real
+players yet.
+
+| map / step | result |
+|---|---|
+| load v2.1.1 | crash (`server.dll+0x20CA70`, docs/03 item 13) |
+| load v2.1.2 | `DIACHI` recognises the 25/11 build; every module hooks |
+| `c6m1_riverbank` load | `num_edicts` 1895, 971 free, 881 alive; 637 without an edict |
+| `c6m1_riverbank` 3 wipes in a row | `wipeclear` clears all 3; after `RestartRound` 968 / 968 / 968 free; server alive |
+| `c1m1_hotel` 2 wipes → map change to `c1m2_streets` | alive; 419 free after each wipe |
+| `ch04_pripyat03` load + 2 wipes | `num_edicts` 1151 (962 alive), 2215 without an edict; 141 free after wipe; alive |
+| `defl_3` (`hopbao`) | `hub_blocker_0` blocks 7/7, `hub_blocker_1` 1/1; surrounding bounds of all 7 blockers are real coordinates (the 5 sewer blockers overlap no nav because the sewer has no nav) |
+| `the_hive_m4` (`spotlight=2`) | 312 `point_spotlight` + 312 `spotlight_end` without an edict, 312 `beam` with one |
+| `the_hive_m2` | 18 parented lights → `beam_spotlight` (with an edict, halo 60) |
+
+Build gate tried outside the game (loading copies of `server.dll`): old / new builds recognised; unknown
+`TimeDateStamp` → `BAN LA`, nothing called; corrupted `EntityFactoryDictionary` prologue → not called.
+
+---
+
 ## Results so far
 
 - 7 long play sessions on a live server: all 7 ended with **fewer** entities than they started

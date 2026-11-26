@@ -284,26 +284,17 @@ static bool InstallMapClear() {
     GetModuleInformation(GetCurrentProcess(), h, &mi, sizeof(mi));
     uint8_t* b = (uint8_t*)mi.lpBaseOfDll;
 
-    void*** grPtr = (void***)(b + 0x7F7F6C);      // g_pGameRules
-    void** gr = *grPtr;
-    if (!gr) { EL_LOG("[EdictBudget] MAPCLEAR: g_pGameRules con NULL, hoan lai"); return false; }
-    void** vt = *(void***)gr;
+    // Dia chi theo ban game (src/diachi.cpp). Ban la => khong dong gi.
+    if (!g_DC) { EL_LOG("[EdictBudget] MAPCLEAR: server.dll ban la - BO QUA"); return false; }
 
-    // Cong cu go: nap neu wipeclear chua nap (mapclear chay doc lap duoc).
-    // CUNG dia chi voi InstallWipeClear (wipeclear.cpp) - sua o mot cho thi sua ca hai.
-    // g_pGameRules (0x7F7F6C) o tren cung chep tu wipeclear.
-    if (!g_CleanupDeleteList) g_CleanupDeleteList = (fnCleanupDeleteList_t)(b + 0x0B5D10);
-    if (!g_NextEnt)           g_NextEnt           = (fnNextEnt_t)          (b + 0x0B4270);
-    if (!g_UtilRemove)        g_UtilRemove        = (fnUtilRemove_t)       (b + 0x2071E0);
-    if (!g_EntList)           g_EntList           = (void*)                (b + 0x7E0760);
-    if (!g_PreserveList)      g_PreserveList      = (const char**)         (b + 0x7ACE40);
-
-// Cong an toan 1: prologue cua 0x102B8140 phai dung. Prologue chua dia chi
-// tuyet doi DA DOI THEO BASE nen phai dung MAT NA (nhu FindPattern, tienich.cpp).
+    // Cong an toan 1 - TRUOC moi lan doc dia chi ghi cung: prologue cua slot 38 phai dung.
+    // Prologue chua dia chi tuyet doi DA DOI THEO BASE nen phai dung MAT NA (nhu FindPattern,
+    // tienich.cpp). Truoc 26/11/2026 cong nay dung SAU lan doc g_pGameRules + vtable cua no
+    // => ban game khac co the doc rac va sap.
     static const uint8_t kSig[]  = {
         0x55,0x8B,0xEC,0x56,0x8B,0x35, 0,0,0,0, 0x8B,0x06,0x8B,0x50,0x68,0x8B };
     static const char    kMask[] = "xxxxxx????xxxxxx";
-    uint8_t* fn = b + 0x2B8140;
+    uint8_t* fn = b + g_DC->gameRulesSlot38;
     bool sigOk = true;
     for (size_t i = 0; i < sizeof(kSig); i++)
         if (kMask[i] == 'x' && fn[i] != kSig[i]) { sigOk = false; break; }
@@ -312,6 +303,20 @@ static bool InstallMapClear() {
                  "server.dll khac ban? BO QUA, khong dong gi.");
         return false;
     }
+
+    void*** grPtr = (void***)(b + g_DC->gameRules);   // g_pGameRules
+    void** gr = *grPtr;
+    if (!gr) { EL_LOG("[EdictBudget] MAPCLEAR: g_pGameRules con NULL, hoan lai"); return false; }
+    void** vt = *(void***)gr;
+
+    // Cong cu go: nap neu wipeclear chua nap (mapclear chay doc lap duoc).
+    // CUNG dia chi voi InstallWipeClear (wipeclear.cpp) - ca hai lay tu g_DC.
+    if (!g_CleanupDeleteList) g_CleanupDeleteList = (fnCleanupDeleteList_t)(b + g_DC->cleanupDeleteList);
+    if (!g_NextEnt)           g_NextEnt           = (fnNextEnt_t)          (b + g_DC->nextEnt);
+    if (!g_UtilRemove)        g_UtilRemove        = (fnUtilRemove_t)       (b + g_DC->utilRemove);
+    if (!g_EntList)           g_EntList           = (void*)                (b + g_DC->entList);
+    if (!g_PreserveList)      g_PreserveList      = (const char**)         (b + g_DC->preserveList);
+
     // Cong an toan 2: slot 38 phai dang tro dung ham do.
     void** slot = &vt[38];
     if (*slot != (void*)fn) {
@@ -329,8 +334,8 @@ static bool InstallMapClear() {
 
     LoadMapKill();
     LoadMapForceKill();
-    EL_LOG("[EdictBudget] MAPCLEAR: da moc vtable slot 38 (0x102B8140 @ %p), "
-             "mapclear=%d (%s)", (void*)fn, g_MapClear,
+    EL_LOG("[EdictBudget] MAPCLEAR: da moc vtable slot 38 (RVA 0x%X @ %p), "
+             "mapclear=%d (%s)", (unsigned)g_DC->gameRulesSlot38, (void*)fn, g_MapClear,
              g_MapClear >= 2 ? "DON THAT" : "CHI QUAN SAT");
     return true;
 }

@@ -209,6 +209,20 @@ vật **di chuyển** sẽ đứng ở chỗ cũ khi cha chạy. Đọc file 240
 
 ---
 
+## 13. Plugin làm sập máy chủ lúc nạp sau bản cập nhật game 25/11/2026 (v2.1.1 trở về trước)
+
+Valve đổi chỗ các hàm trong `server.dll`. Module `swap` gọi thẳng địa chỉ cũ của `EntityFactoryDictionary`
+(`server.dll+0x20CA70`) **trước** mọi phép kiểm ⇒ ở bản mới địa chỉ đó rơi giữa một lệnh khác ⇒ access
+violation ngay lúc nạp plugin. `mapclear` cũng đọc `g_pGameRules` và vtable của nó trước khi kiểm prologue.
+Các module khác (`noedict`, `spotlight`, `wipeclear`) kiểm trước nên tự tắt đúng.
+
+Sửa ở v2.1.2: bảng địa chỉ theo bản `server.dll` (nhận bằng `TimeDateStamp` + `SizeOfImage`, có cả bản 25/11);
+bản lạ thì tắt mọi module dùng địa chỉ ghi cứng; lời gọi `EntityFactoryDictionary` kiểm prologue trước; `mapclear`
+kiểm prologue trước khi đọc `g_pGameRules`. Chưa nâng được: đặt `swap=0`, `spotlight=0`, `mapclear=0` trong
+`patches.txt` để máy chủ không sập (các tính năng chính khi đó cũng tự tắt).
+
+---
+
 ## Đã sửa
 
 | tag | lỗi |
@@ -217,3 +231,4 @@ vật **di chuyển** sẽ đứng ở chỗ cũ khi cha chạy. Đọc file 240
 | `v2.0.2` | máy chủ sập lúc khởi động khi `noedict.txt` có `beam_spotlight`, `func_breakable`, `logic_choreographed_scene`, `logic_scene_list_manager`, `scene_manager`, `scripted_scene`, `sky_camera`, `weapon_basecsgrenade` hoặc `weapon_hunter_claw` (con trỏ suy ra không được chặn biên) |
 | `v2.0.2` | `noedict.txt` chỉ được đọc 32 dòng đầu, phần sau bị bỏ không báo |
 | `v2.1.1` | `func_nav_blocker` trong `noedict.txt` không chặn nav (mục 11) — thêm `hopbao` |
+| `v2.1.2` | sập lúc nạp sau bản cập nhật game 25/11/2026 (mục 13) — bảng địa chỉ theo bản game, tự tắt khi gặp bản lạ |
